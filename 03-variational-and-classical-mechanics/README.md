@@ -4,8 +4,8 @@ This category explains how equations of motion emerge from a single scalar quant
 
 ## Suggested order
 
-1. [Action and the calculus of variations](action-and-calculus-of-variations/README.md)
-2. [Lagrangian mechanics](lagrangian-mechanics/README.md)
+1. [Lagrangian mechanics](lagrangian-mechanics/README.md)
+2. [Action and the calculus of variations](action-and-calculus-of-variations/README.md)
 3. [Hamiltonian mechanics](hamiltonian-mechanics/README.md)
 4. [Euler–Lagrange problem workbook](../05-workbooks/euler-lagrange-workbook/README.md)
 

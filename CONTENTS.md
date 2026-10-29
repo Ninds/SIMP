@@ -32,13 +32,13 @@ A separate derivation of the scalar Laplacian in spherical coordinates, includin
 
 [Category introduction and sequence](03-variational-and-classical-mechanics/README.md)
 
-### [Action and the calculus of variations](03-variational-and-classical-mechanics/action-and-calculus-of-variations/README.md)
-
-Builds from ordinary derivatives to variations of an entire path, derives the Euler–Lagrange equation, and explains endpoint conditions, total derivatives, and the second variation.
-
 ### [Lagrangian mechanics](03-variational-and-classical-mechanics/lagrangian-mechanics/README.md)
 
 Shows how constraints and coordinates lead naturally to (L=T-V), then develops cyclic coordinates, energy, polar motion, and small oscillations through worked examples.
+
+### [Action and the calculus of variations](03-variational-and-classical-mechanics/action-and-calculus-of-variations/README.md)
+
+Builds from ordinary derivatives to variations of an entire path, derives the Euler–Lagrange equation used in the preceding mechanics notes, and explains endpoint conditions, total derivatives, and the second variation.
 
 ### [Hamiltonian mechanics](03-variational-and-classical-mechanics/hamiltonian-mechanics/README.md)
 
@@ -76,7 +76,7 @@ A patient illustrated derivation of the one-dimensional heat equation from an un
 
 ### Mechanics route
 
-Action and variations → Lagrangian mechanics → polar-coordinate vectors → Hamiltonian mechanics → workbook.
+Lagrangian mechanics → action and variations → polar-coordinate vectors → Hamiltonian mechanics → workbook.
 
 ### Mathematics-and-physics route
 

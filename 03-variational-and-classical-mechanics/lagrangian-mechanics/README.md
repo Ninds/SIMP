@@ -10,4 +10,4 @@ Topics include generalised coordinates, cyclic coordinates, conserved quantities
 - [Typeset PDF](lagrangian-mechanics.pdf)
 - [LaTeX source](lagrangian-mechanics.tex)
 
-Use the [problem workbook](../../05-workbooks/euler-lagrange-workbook/README.md) for practice, then continue to [Hamiltonian mechanics](../hamiltonian-mechanics/README.md).
+Continue with [action and the calculus of variations](../action-and-calculus-of-variations/README.md) to derive the Euler–Lagrange equation from stationary action. Use the [problem workbook](../../05-workbooks/euler-lagrange-workbook/README.md) for practice, then continue to [Hamiltonian mechanics](../hamiltonian-mechanics/README.md).
