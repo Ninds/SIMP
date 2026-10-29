@@ -1,0 +1,289 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../../intuitmath}
+\hypersetup{pdftitle={Integral Theorems: Boundary and Interior},pdfauthor={Mathematics and Physics: Intuition First}}
+\renewcommand{\sectionmark}[1]{\markboth{#1}{}}
+
+\begin{document}
+\tutorialtitle{Integral Theorems}{Why boundaries know about interiors}{Dot products, circulation, flux, divergence, and curl}
+\tableofcontents
+\clearpage
+
+\section{One pattern behind several theorems}
+
+The fundamental theorem of calculus says
+\[
+\int_a^b f'(x)\,\dd x=f(b)-f(a).
+\]
+An accumulated derivative in the interior equals a net change on the boundary. Green's theorem, the divergence theorem, and Stokes' theorem repeat this pattern in higher dimensions.
+
+\begin{resultbox}[The shared architecture]
+\[
+\boxed{\int_{\text{interior}}(\text{derivative})
+=\int_{\text{boundary}}(\text{original quantity}).}
+\]
+The derivative and the kind of boundary integral change with dimension, but the logic remains the same.
+\end{resultbox}
+
+\section{The dot product selects a component}
+
+If $\vect a$ and $\vect b$ make an angle $\theta$, then
+\[
+\vect a\cdot\vect b=|\vect a|\,|\vect b|\cos\theta.
+\]
+When $\vect u$ is a unit vector,
+\[
+\vect F\cdot\vect u
+\]
+is the signed component of $\vect F$ along $\vect u$.
+
+This single idea explains the two most common vector integrals:
+
+\begin{itemize}
+\item $\vect F\cdot\vect t$ measures the component tangent to a curve;
+\item $\vect F\cdot\vect n$ measures the component normal to a surface.
+\end{itemize}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0,>=Latex]
+  \draw[ink!55,line width=1pt] (-2.7,0) to[out=10,in=185] (2.6,.8);
+  \coordinate (P) at (0,.34);
+  \draw[->,teal,line width=1.5pt] (P)--++(1.5,.25) node[right]{$\vect t$};
+  \draw[->,gold,line width=1.5pt] (P)--++(-.22,1.35) node[above]{$\vect n$};
+  \draw[->,blue,line width=1.8pt] (P)--++(1.25,1.4) node[above right]{$\vect F$};
+  \draw[blue!45,dashed] ($(P)+(1.25,1.4)$)--($(P)+(1.48,.25)$);
+  \fill[ink] (P) circle (2pt);
+\end{tikzpicture}
+\end{center}
+
+\section{Line integrals: adding along a curve}
+
+Let a curve be parametrised by $\vect r(s)$. The vector line element is
+\[
+\dd\vect r=\td{\vect r}{s}\dd s.
+\]
+For a vector field $\vect F$,
+\[
+\int_C\vect F\cdot\dd\vect r
+=\int_{s_0}^{s_1}\vect F(\vect r(s))\cdot\td{\vect r}{s}\,\dd s.
+\]
+The dot product keeps only the tangential component. Physically this may represent work; geometrically it measures circulation along the curve.
+
+Reversing the orientation changes the sign:
+\[
+\int_{-C}\vect F\cdot\dd\vect r=-\int_C\vect F\cdot\dd\vect r.
+\]
+
+\section{Surface integrals: adding through a surface}
+
+For an oriented surface with unit normal $\vect n$,
+\[
+\boxed{\iint_S\vect F\cdot\vect n\,\dd S}
+\]
+measures flux through $S$. Positive contributions point with the chosen normal; negative contributions point against it.
+
+If $S$ is parametrised by $\vect r(u,v)$, then
+\[
+\vect n\,\dd S
+=\left(\pd{\vect r}{u}\times\pd{\vect r}{v}\right)\dd u\,\dd v.
+\]
+The order of the parameters fixes the orientation. Swapping $u$ and $v$ reverses the normal and the flux sign.
+
+\section{The gradient theorem}
+
+For a scalar field $\phi$ and a curve from $A$ to $B$,
+\[
+\boxed{\int_C\grad\phi\cdot\dd\vect r=\phi(B)-\phi(A).}
+\]
+
+To see why, parametrise the curve by $\vect r(s)$. The chain rule gives
+\[
+\td{}{s}\phi(\vect r(s))
+=\grad\phi\cdot\td{\vect r}{s}.
+\]
+Integrating with respect to $s$ gives the theorem directly.
+
+Consequences:
+
+\begin{itemize}
+\item The integral depends only on the endpoints, not the path.
+\item Around a closed curve, $\oint_C\grad\phi\cdot\dd\vect r=0$.
+\item A field of the form $\vect F=\grad\phi$ is conservative on a suitable domain.
+\end{itemize}
+
+\begin{warningbox}[Domain matters]
+A curl-free field need not possess a single-valued potential on a domain with a hole. Local derivative tests and global topology are separate pieces of information.
+\end{warningbox}
+
+\section{Green's theorem in the plane}
+
+Let $C$ be the positively oriented boundary of a planar region $D$, and let
+\[
+\vect F=(P,Q).
+\]
+The circulation form is
+\[
+\boxed{
+\oint_C P\,\dd x+Q\,\dd y
+=\iint_D\left(\pd{Q}{x}-\pd{P}{y}\right)\dd A.}
+\]
+The quantity
+\[
+\pd{Q}{x}-\pd{P}{y}
+\]
+measures local planar rotation. Green's theorem says that total microscopic rotation inside equals macroscopic circulation around the edge.
+
+The flux form is
+\[
+\boxed{
+\oint_C\vect F\cdot\vect n\,\dd s
+=\iint_D\left(\pd{P}{x}+\pd{Q}{y}\right)\dd A.}
+\]
+Here the interior derivative is the two-dimensional divergence.
+
+\begin{intuition}[Why internal edges cancel]
+Split $D$ into tiny cells. Each internal edge belongs to two cells with opposite orientations, so its two boundary integrals cancel. Only the outer boundary survives. The small-cell circulation is approximated by curl times area; summing produces Green's theorem.
+\end{intuition}
+
+\section{Divergence: local source strength}
+
+For
+\[
+\vect F=(F_x,F_y,F_z),
+\]
+the divergence is
+\[
+\boxed{\grad\cdot\vect F
+=\pd{F_x}{x}+\pd{F_y}{y}+\pd{F_z}{z}.}
+\]
+It measures the net outward flux per unit volume in the limit of a small volume:
+\[
+\grad\cdot\vect F
+=\lim_{V\to0}\frac{1}{\operatorname{vol}(V)}
+\iint_{\partial V}\vect F\cdot\vect n\,\dd S.
+\]
+Positive divergence indicates local source-like behaviour; negative divergence indicates sink-like behaviour.
+
+\section{The divergence theorem}
+
+For a volume $V$ with outward-oriented boundary $\partial V$,
+\[
+\boxed{
+\iiint_V\grad\cdot\vect F\,\dd V
+=\iint_{\partial V}\vect F\cdot\vect n\,\dd S.}
+\]
+
+The left side adds local source strength throughout the volume. The right side measures the total amount leaving through the boundary.
+
+\subsection{Example: a radial linear field}
+
+Let
+\[
+\vect F=(x,y,z).
+\]
+Then
+\[
+\grad\cdot\vect F=3.
+\]
+For a ball of radius $R$,
+\[
+\iiint_V3\,\dd V=3\left(\frac43\pi R^3\right)=4\pi R^3.
+\]
+On the sphere, $\vect F=R\vect n$, so
+\[
+\iint_{\partial V}\vect F\cdot\vect n\,\dd S
+=R(4\pi R^2)=4\pi R^3.
+\]
+The two descriptions agree.
+
+\section{Curl: local circulation density}
+
+The curl is
+\[
+\boxed{
+\grad\times\vect F
+=\begin{vmatrix}
+\vect e_x&\vect e_y&\vect e_z\\
+\partial_x&\partial_y&\partial_z\\
+F_x&F_y&F_z
+\end{vmatrix}.}
+\]
+Its component along a unit normal $\vect n$ is the limiting circulation per unit area in the plane perpendicular to $\vect n$:
+\[
+(\grad\times\vect F)\cdot\vect n
+=\lim_{A\to0}\frac{1}{A}\oint_{\partial A}\vect F\cdot\dd\vect r.
+\]
+The right-hand rule links the positive orientation of the boundary to the chosen normal.
+
+\section{Stokes' theorem}
+
+For an oriented surface $S$ with boundary $\partial S$,
+\[
+\boxed{
+\iint_S(\grad\times\vect F)\cdot\vect n\,\dd S
+=\oint_{\partial S}\vect F\cdot\dd\vect r.}
+\]
+The left side adds local circulation density across the surface. The right side measures circulation around the rim.
+
+\begin{center}
+\begin{tikzpicture}[scale=1.05,>=Latex]
+  \draw[fill=softblue,draw=blue,line width=1pt] (-2,0) .. controls (-1.2,1.3) and (1.2,1.1) .. (2,.15) .. controls (1.1,-1.15) and (-1.1,-.95) .. cycle;
+  \draw[blue,line width=1.6pt,->] (-2,0) .. controls (-1.2,1.3) and (1.2,1.1) .. (2,.15);
+  \draw[blue,line width=1.6pt,->] (2,.15) .. controls (1.1,-1.15) and (-1.1,-.95) .. (-2,0);
+  \coordinate (P) at (.1,.15);
+  \draw[->,gold,line width=1.5pt] (P)--++(.35,1.5) node[above]{$\vect n$};
+  \node[ink] at (.2,-.35){$S$};
+  \node[blue] at (2.25,.55){$\partial S$};
+\end{tikzpicture}
+\end{center}
+
+Stokes' theorem is independent of which spanning surface is chosen, provided the field is smooth on the region between the surfaces and the orientations agree.
+
+\section{Differential identities from boundary cancellation}
+
+Because the boundary of a boundary is empty, applying these theorems twice suggests two identities:
+\[
+\boxed{\grad\times(\grad\phi)=\vect0,}
+\qquad
+\boxed{\grad\cdot(\grad\times\vect F)=0.}
+\]
+
+For example, Stokes' theorem applied to $\grad\phi$ gives zero circulation around every sufficiently small closed curve, forcing its curl to vanish.
+
+\section{Choosing the correct theorem}
+
+\begin{center}
+\begin{tabular}{p{.22\textwidth}p{.29\textwidth}p{.36\textwidth}}
+\textbf{Boundary integral} & \textbf{Interior derivative} & \textbf{Theorem}\\[1mm]
+$\phi(B)-\phi(A)$ & $\grad\phi$ along a curve & Gradient theorem\\
+circulation around a plane curve & scalar planar curl & Green, circulation form\\
+flux across a closed curve & planar divergence & Green, flux form\\
+flux across a closed surface & divergence in a volume & Divergence theorem\\
+circulation around a space curve & normal curl across a surface & Stokes\\
+\end{tabular}
+\end{center}
+
+\section{Orientation checklist}
+
+\begin{enumerate}
+\item For a closed volume, use the outward normal.
+\item For a surface with boundary, choose the normal first.
+\item Curl the fingers of the right hand in the positive boundary direction; the thumb gives the compatible normal.
+\item Reversing either the normal or the boundary orientation changes the sign.
+\item State the orientation in the solution instead of leaving it implicit.
+\end{enumerate}
+
+\section{Common mistakes}
+
+\begin{itemize}
+\item Using $\vect F\cdot\vect n$ when the theorem requires the tangential component $\vect F\cdot\dd\vect r$.
+\item Applying the divergence theorem to an open surface without adding the missing cap.
+\item Forgetting that Stokes requires a boundary orientation compatible with the normal.
+\item Assuming curl-free automatically means globally conservative without checking the domain.
+\item Expanding a difficult surface integral when the corresponding volume integral is easy, or vice versa.
+\end{itemize}
+
+\begin{checkBox}[The unifying mental picture]
+Tile the interior into tiny pieces. Boundary contributions on internal interfaces cancel in pairs. What remains is the outer boundary, while the sum of local derivative information becomes the interior integral.
+\end{checkBox}
+
+\end{document}

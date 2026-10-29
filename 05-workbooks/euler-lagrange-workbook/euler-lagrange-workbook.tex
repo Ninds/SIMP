@@ -1,0 +1,867 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{../../intuitmath}
+\usepackage{setspace}
+\hypersetup{pdftitle={Euler-Lagrange Equations: Illustrated Problem Workbook},pdfauthor={Mathematics and Physics: Intuition First}}
+\renewcommand{\sectionmark}[1]{\markboth{#1}{}}
+\setstretch{1.18}
+
+\newcommand{\problemstart}[3]{%
+  \clearpage
+  \phantomsection\addcontentsline{toc}{section}{Problem #1: #2}
+  {\Large\bfseries\color{ink}Problem #1: #2\par}
+  \vspace{2mm}{\color{blue}\rule{\textwidth}{0.8pt}}\vspace{3mm}
+  {\small\color{ink!75}\textbf{Focus:} #3\par}\vspace{3mm}}
+
+\newcommand{\solutionstart}[2]{%
+  \clearpage
+  \phantomsection\addcontentsline{toc}{section}{Solution #1: #2}
+  {\Large\bfseries\color{ink}Solution #1: #2\par}
+  \vspace{2mm}{\color{teal}\rule{\textwidth}{0.8pt}}\vspace{4mm}}
+
+\newcommand{\workingspace}{%
+  \vfill
+  {\small\bfseries\color{ink}Working space}\par\vspace{2mm}
+  \begin{tikzpicture}[x=.995\textwidth,y=1cm]
+    \foreach \y in {0,-0.72,-1.44,-2.16,-2.88,-3.60,-4.32}{
+      \draw[ink!28,line width=.35pt] (0,\y)--(1,\y);
+    }
+  \end{tikzpicture}}
+
+\begin{document}
+\begin{titlepage}\thispagestyle{empty}
+\vspace*{10mm}{\color{blue}\rule{\textwidth}{1.2pt}}\vspace{10mm}
+{\Huge\bfseries\color{ink}Euler--Lagrange Equations\par}\vspace{3mm}
+{\LARGE\color{blue}Illustrated Problem Workbook\par}\vspace{5mm}
+{\large\color{ink}Fifteen progressive problems with spacious working pages and complete solutions\par}
+\vspace{12mm}
+\begin{center}
+\begin{tikzpicture}[scale=1.0,>=Latex]
+  \draw[ink!55,line width=1pt] (-4.6,0)--(4.6,0);
+  \draw[decorate,decoration={coil,aspect=.45,segment length=5mm,amplitude=4mm},blue,line width=1.2pt] (-4.3,0)--(-1.0,0);
+  \draw[fill=teal!25,draw=teal,line width=1.2pt] (-1.0,-.55) rectangle (.2,.55);
+  \draw[->,gold,line width=1.3pt] (.2,.85)--(2.7,.85) node[right]{$q$};
+  \draw[ink,line width=1.2pt] (3.4,2.2)--(3.4,.9);
+  \draw[blue,line width=1.3pt] (3.4,.9)--(4.25,-.6);
+  \fill[teal] (4.25,-.6) circle (4pt);
+  \draw[gold,->] (3.4,.25) arc[start angle=-90,end angle=-61,radius=.65];
+  \node[gold] at (3.75,.08){$\theta$};
+\end{tikzpicture}
+\end{center}
+\vfill
+\begin{intuition}[The habit this workbook develops]
+For every system: choose independent coordinates, express each position, calculate $T$ and $V$, form $L=T-V$, and only then apply the Euler--Lagrange equations.
+\end{intuition}
+\vspace{7mm}{\color{blue}\rule{\textwidth}{1.2pt}\par}
+\end{titlepage}
+
+\tableofcontents
+\clearpage
+
+\section*{Quick reference}
+\addcontentsline{toc}{section}{Quick reference}
+
+For coordinates $q_i$,
+\[
+\boxed{\td{}{t}\left(\pd{L}{\dot q_i}\right)-\pd{L}{q_i}=0.}
+\]
+
+For ordinary conservative systems,
+\[
+L=T-V,
+\qquad
+p_i=\pd{L}{\dot q_i}.
+\]
+
+If $q_j$ is absent from $L$, then $p_j$ is conserved. If $L$ has no explicit time dependence and the kinetic energy is quadratic in velocities, then $T+V$ is conserved.
+
+\begin{checkBox}[Before differentiating]
+State the coordinate direction, the zero of potential, and every geometric relation. Most sign errors occur before the Euler--Lagrange equation is used.
+\end{checkBox}
+
+\subsection*{Progression}
+
+\begin{enumerate}
+\item Problems 1--5: one coordinate and careful energy construction.
+\item Problems 6--10: constraints, moving supports, cyclic coordinates, and effective potentials.
+\item Problems 11--15: curved constraints, coupled systems, velocity-dependent terms, and normal modes.
+\end{enumerate}
+
+% -----------------------------------------------------------------------------
+\problemstart{1}{Harmonic oscillator}{Applying the equation to a given Lagrangian}
+
+A particle has Lagrangian
+\[
+L(x,\dot x)=\frac12m\dot x^2-\frac12kx^2.
+\]
+
+\begin{enumerate}
+\item Calculate $\partial L/\partial\dot x$ and $\partial L/\partial x$.
+\item Derive the equation of motion.
+\item Show that $E=\tfrac12m\dot x^2+\tfrac12kx^2$ is constant along a solution.
+\item State the angular frequency.
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex]
+  \draw[ink,line width=1.4pt] (-4,-1)--(-4,1);
+  \foreach \y in {-0.8,-0.4,0,0.4,0.8}{\draw[ink!50] (-4.35,\y-.2)--(-4,\y);}
+  \draw[decorate,decoration={coil,aspect=.45,segment length=4mm,amplitude=3mm},blue,line width=1.2pt] (-4,0)--(-.8,0);
+  \draw[fill=teal!25,draw=teal,line width=1.2pt] (-.8,-.55) rectangle (.5,.55);
+  \draw[->,gold,line width=1.3pt] (.5,.85)--(3,.85) node[right]{$x$};
+\end{tikzpicture}
+\end{center}
+\workingspace
+
+\problemstart{2}{Simple pendulum}{Building $T$ and $V$ from geometry}
+
+A bob of mass $m$ is attached to a massless rod of length $\ell$. Let $\theta$ be measured from the downward vertical.
+
+\begin{enumerate}
+\item Write the Cartesian position of the bob.
+\item Show that $v^2=\ell^2\dot\theta^2$.
+\item Choose the lowest point as $V=0$ and construct $L$.
+\item Derive the exact equation of motion and its small-angle approximation.
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex]
+  \fill[ink] (0,2.3) circle (2.4pt);
+  \draw[ink!40,dashed] (0,2.3)--(0,-1.0);
+  \draw[blue,line width=1.5pt] (0,2.3)--(1.45,-.25) node[midway,right]{$\ell$};
+  \fill[teal] (1.45,-.25) circle (4pt) node[right]{$m$};
+  \draw[gold,->] (0,1.35) arc[start angle=-90,end angle=-57,radius=.95];
+  \node[gold] at (.45,1.16){$\theta$};
+  \draw[->,red] (1.45,-.25)--++(0,-1.0) node[below]{$m\vect g$};
+\end{tikzpicture}
+\end{center}
+\workingspace
+
+\problemstart{3}{Bead on a rotating rod with a spring}{Time-dependent geometry with one coordinate}
+
+A bead of mass $m$ slides without friction along a horizontal rod rotating at constant angular speed $\Omega$. A spring of stiffness $k$ connects the bead to the rotation axis. Let $r$ be the spring extension and take the natural length to be zero.
+
+\begin{enumerate}
+\item Show that $v^2=\dot r^2+\Omega^2r^2$.
+\item Construct the Lagrangian.
+\item Derive the radial equation.
+\item For what relation between $k$, $m$, and $\Omega$ is $r=0$ stable?
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex]
+  \fill[ink] (0,0) circle (3pt) node[below]{$O$};
+  \draw[ink!45,dashed] (-2.3,0)--(3.8,0);
+  \draw[blue,line width=1.4pt] (0,0)--(3.2,1.85);
+  \draw[decorate,decoration={coil,aspect=.45,segment length=4mm,amplitude=3mm},gold,line width=1.1pt] (0,0)--(2.1,1.21);
+  \fill[teal] (2.3,1.33) circle (4pt) node[above]{$m$};
+  \draw[red,->] (1.0,0) arc[start angle=0,end angle=30,radius=1.0];
+  \node[red] at (1.15,.33){$\Omega t$};
+  \node[blue] at (1.35,1.05){$r$};
+\end{tikzpicture}
+\end{center}
+\workingspace
+
+\problemstart{4}{Particle in a central potential}{Polar kinetic energy and a cyclic coordinate}
+
+A particle of mass $m$ moves in a plane under a potential $V(r)$.
+
+\begin{enumerate}
+\item Use polar coordinates to write $T$ and $L$.
+\item Derive the $r$ and $\theta$ equations.
+\item Identify the conserved angular momentum $J$.
+\item Eliminate $\dot\theta$ from the radial equation using $J$.
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex]
+  \draw[->,ink!55] (-.4,0)--(4.7,0) node[right]{$x$};
+  \draw[->,ink!55] (0,-.4)--(0,3.6) node[above]{$y$};
+  \coordinate (P) at (3.4,2.35);
+  \draw[->,blue,line width=1.6pt] (0,0)--(P) node[midway,above]{$r$};
+  \fill[teal] (P) circle (4pt) node[right]{$m$};
+  \draw[gold,->] (.9,0) arc[start angle=0,end angle=34.7,radius=.9];
+  \node[gold] at (1.12,.32){$\theta$};
+  \draw[->,red,line width=1.2pt] (P)--++(-1.0,-.7) node[below left]{$\vect F(r)$};
+\end{tikzpicture}
+\end{center}
+\workingspace
+
+\problemstart{5}{Spring on an inclined plane}{Potential-energy signs and equilibrium}
+
+A block of mass $m$ slides without friction down a plane inclined at angle $\alpha$. A spring of stiffness $k$ lies along the plane and has extension $s$, measured positively down the slope from its natural length.
+
+\begin{enumerate}
+\item Write $T$ and the gravitational and spring potentials.
+\item Derive the equation for $s(t)$.
+\item Find the equilibrium extension.
+\item Find the small-oscillation frequency about equilibrium.
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex]
+  \draw[ink,line width=1.2pt] (-3,-1.5)--(3.4,1.5)--(3.4,-1.5)--cycle;
+  \draw[decorate,decoration={coil,aspect=.45,segment length=4mm,amplitude=3mm},blue,line width=1.1pt] (-2.65,-1.33)--(.25,.03);
+  \draw[fill=teal!25,draw=teal,line width=1.2pt,rotate around={25:(.9,.35)}] (.35,-.15) rectangle (1.45,.85);
+  \draw[gold,->] (-1.9,-1.5) arc[start angle=0,end angle=25,radius=1.0];
+  \node[gold] at (-.95,-1.2){$\alpha$};
+  \draw[->,red] (1.15,.95)--++(0,-1.0) node[below]{$m\vect g$};
+\end{tikzpicture}
+\end{center}
+\workingspace
+
+\problemstart{6}{Atwood machine}{Using a string constraint to remove a coordinate}
+
+Two masses $m_1>m_2$ are joined by a light inextensible string over a frictionless pulley. Let $x$ be the downward displacement of $m_1$; the upward displacement of $m_2$ is then also $x$.
+
+\begin{enumerate}
+\item Express the total kinetic and potential energies in terms of $x$.
+\item Derive the acceleration.
+\item Explain why the string tension does not appear in the reduced Lagrangian.
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex]
+  \draw[ink,line width=1.2pt] (0,1.8) circle (.75);
+  \draw[blue,line width=1.3pt] (-.75,1.8)--(-.75,-1.25);
+  \draw[blue,line width=1.3pt] (.75,1.8)--(.75,-.6);
+  \draw[blue,line width=1.3pt] (-.75,1.8) arc[start angle=180,end angle=0,radius=.75];
+  \draw[fill=teal!25,draw=teal] (-1.2,-2.0) rectangle (-.3,-1.25) node[midway]{$m_1$};
+  \draw[fill=gold!22,draw=gold] (.3,-1.35) rectangle (1.2,-.6) node[midway]{$m_2$};
+  \draw[->,red] (-1.55,-.8)--(-1.55,-1.7) node[below]{$x$};
+\end{tikzpicture}
+\end{center}
+\workingspace
+
+\problemstart{7}{Pendulum with a moving support}{An explicitly time-dependent Lagrangian}
+
+The support of a pendulum moves horizontally according to a prescribed function $X(t)$. The bob has mass $m$, the rod has length $\ell$, and $\theta$ is measured from the downward vertical.
+
+\begin{enumerate}
+\item Write the bob coordinates $x$ and $y$.
+\item Construct $T$, $V$, and $L$.
+\item Show that
+\[
+\ell\ddot\theta+g\sin\theta+\ddot X\cos\theta=0.
+\]
+\item State the equation when $X(t)=A\cos\Omega t$.
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex]
+  \draw[ink!55,line width=1pt] (-3,2)--(3,2);
+  \draw[fill=gold!22,draw=gold] (-.55,1.75) rectangle (.55,2.25);
+  \draw[->,blue] (-2.4,2.55)--(2.4,2.55) node[right]{$X(t)$};
+  \draw[blue,line width=1.4pt] (0,1.75)--(1.25,-.5);
+  \fill[teal] (1.25,-.5) circle (4pt) node[right]{$m$};
+  \draw[ink!40,dashed] (0,1.75)--(0,-.8);
+  \draw[gold,->] (0,.9) arc[start angle=-90,end angle=-61,radius=.85];
+  \node[gold] at (.42,.72){$\theta$};
+\end{tikzpicture}
+\end{center}
+\workingspace
+
+\problemstart{8}{Bead on a rotating vertical hoop}{Equilibria in a rotating constraint}
+
+A bead of mass $m$ moves on a vertical circular hoop of radius $a$. The hoop rotates at constant angular speed $\Omega$ about its vertical diameter. Let $\theta$ be measured from the lowest point.
+
+\begin{enumerate}
+\item Show that
+\[
+v^2=a^2\dot\theta^2+\Omega^2a^2\sin^2\theta.
+\]
+\item Construct $L$ and derive the equation of motion.
+\item Find all equilibrium angles.
+\item When do off-axis equilibria exist?
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex]
+  \draw[ink!55,line width=1.1pt] (0,0) ellipse (2.3 and 1.35);
+  \draw[ink!40,dashed] (0,-2.2)--(0,2.2);
+  \coordinate (P) at (1.65,-.82);
+  \fill[teal] (P) circle (4pt) node[right]{$m$};
+  \draw[blue,line width=1.2pt] (0,0)--(P) node[midway,below]{$a$};
+  \draw[gold,->] (0,-.75) arc[start angle=-90,end angle=-27,radius=.75];
+  \node[gold] at (.55,-.63){$\theta$};
+  \draw[red,->] (-.45,1.65) arc[start angle=130,end angle=410,x radius=.45,y radius=.2];
+  \node[red] at (.85,1.75){$\Omega$};
+\end{tikzpicture}
+\end{center}
+\workingspace
+
+\problemstart{9}{Two coupled oscillators}{Coupled Euler--Lagrange equations and normal modes}
+
+Two equal masses $m$ lie on a frictionless line. Three identical springs of stiffness $k$ connect wall--mass--mass--wall. Let $x_1,x_2$ be displacements from equilibrium.
+
+\begin{enumerate}
+\item Construct $T$, $V$, and $L$.
+\item Derive the two coupled equations.
+\item Try $x_i=A_i\cos\omega t$ and find the two normal frequencies.
+\item Describe the relative motion in each mode.
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex]
+  \draw[ink,line width=1.3pt] (-4,-.8)--(-4,.8) (4,-.8)--(4,.8);
+  \draw[decorate,decoration={coil,aspect=.45,segment length=3mm,amplitude=2.5mm},blue] (-4,0)--(-2.1,0);
+  \draw[fill=teal!25,draw=teal] (-2.1,-.5) rectangle (-1.1,.5) node[midway]{$m$};
+  \draw[decorate,decoration={coil,aspect=.45,segment length=3mm,amplitude=2.5mm},blue] (-1.1,0)--(1.1,0);
+  \draw[fill=teal!25,draw=teal] (1.1,-.5) rectangle (2.1,.5) node[midway]{$m$};
+  \draw[decorate,decoration={coil,aspect=.45,segment length=3mm,amplitude=2.5mm},blue] (2.1,0)--(4,0);
+  \draw[->,gold] (-2.1,.8)--(-1.0,.8) node[right]{$x_1$};
+  \draw[->,gold] (1.1,.8)--(2.2,.8) node[right]{$x_2$};
+\end{tikzpicture}
+\end{center}
+\workingspace
+
+\problemstart{10}{Kepler potential and effective energy}{Cyclic coordinates and stability of circular motion}
+
+A particle moves in
+\[
+V(r)=-\frac{\mu}{r},\qquad \mu>0.
+\]
+
+\begin{enumerate}
+\item Use the conserved angular momentum $J=mr^2\dot\theta$ to define
+\[
+U_{\rm eff}(r)=\frac{J^2}{2mr^2}-\frac{\mu}{r}.
+\]
+\item Find the circular-orbit radius $r_0$.
+\item Show that the circular orbit is stable by evaluating $U_{\rm eff}''(r_0)$.
+\item Find the angular frequency of the circular orbit.
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[x=1.0cm,y=1.0cm,>=Latex]
+  \draw[->,ink!55] (0,0)--(6.3,0) node[right]{$r$};
+  \draw[->,ink!55] (.6,-2.1)--(.6,2.8) node[above]{$U_{\rm eff}$};
+  \draw[blue,line width=1.5pt] plot[smooth] coordinates {(.9,2.5) (1.2,.2) (1.7,-1.15) (2.5,-1.55) (3.5,-1.35) (5.8,-.8)};
+  \draw[gold,dashed] (2.5,-1.55)--(2.5,0) node[above]{$r_0$};
+  \fill[teal] (2.5,-1.55) circle (3pt);
+\end{tikzpicture}
+\end{center}
+\workingspace
+
+\problemstart{11}{Bead constrained to a parabola}{Kinetic energy on a curved track}
+
+A bead of mass $m$ slides without friction on the vertical curve
+\[
+y=ax^2,qquad a>0.
+\]
+Use $x$ as the coordinate and take gravity downward.
+
+\begin{enumerate}
+\item Show that
+\[
+v^2=(1+4a^2x^2)\dot x^2.
+\]
+\item Construct the Lagrangian.
+\item Derive the exact equation of motion.
+\item Linearise near $x=0$ and find the small-oscillation frequency.
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[x=1.25cm,y=.8cm,>=Latex]
+  \draw[->,ink!55] (-3.2,0)--(3.2,0) node[right]{$x$};
+  \draw[->,ink!55] (0,-.3)--(0,4) node[above]{$y$};
+  \draw[blue,line width=1.5pt,domain=-2.2:2.2,samples=80] plot (\x,{.65*\x*\x});
+  \fill[teal] (1.25,1.016) circle (4pt) node[right]{$m$};
+  \draw[->,red] (1.25,1.016)--++(0,-1) node[below]{$m\vect g$};
+\end{tikzpicture}
+\end{center}
+\workingspace
+
+\problemstart{12}{Bead on a cone}{Two coordinates and an effective radial potential}
+
+A bead moves without friction on the cone $z=cr$, where $(r,\phi,z)$ are cylindrical coordinates and $c>0$. Gravity acts downward.
+
+\begin{enumerate}
+\item Show that
+\[
+T=\frac12m\left[(1+c^2)\dot r^2+r^2\dot\phi^2\right].
+\]
+\item Construct $L$ and identify the conserved momentum.
+\item Derive the radial equation.
+\item Write the effective potential after eliminating $\dot\phi$.
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex]
+  \draw[ink!55] (-2.6,1.8)--(0,-1.6)--(2.6,1.8);
+  \draw[ink!45] (0,1.8) ellipse (2.6 and .65);
+  \draw[blue,line width=1.4pt] (0,-1.6)--(1.25,.4) node[midway,right]{$r$};
+  \fill[teal] (1.25,.4) circle (4pt) node[right]{$m$};
+  \draw[gold,->] (.55,.3) arc[start angle=210,end angle=500,x radius=.55,y radius=.18];
+  \node[gold] at (1.0,.05){$\phi$};
+\end{tikzpicture}
+\end{center}
+\workingspace
+
+\problemstart{13}{Equal double pendulum}{A genuinely coupled nonlinear system}
+
+Two equal masses $m$ are joined by two massless rods of equal length $\ell$. Angles $\theta_1,\theta_2$ are measured from the downward vertical.
+
+\begin{enumerate}
+\item Write both mass positions.
+\item Show that, with $\Delta=\theta_1-\theta_2$,
+\[
+T=\frac12m\ell^2\left(2\dot\theta_1^2+\dot\theta_2^2+2\dot\theta_1\dot\theta_2\cos\Delta\right).
+\]
+\item Construct $V$ and $L$.
+\item Derive the two coupled Euler--Lagrange equations.
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex]
+  \fill[ink] (0,2.5) circle (2.5pt);
+  \draw[ink!35,dashed] (0,2.5)--(0,-2.2);
+  \draw[blue,line width=1.4pt] (0,2.5)--(1.15,.55);
+  \fill[teal] (1.15,.55) circle (4pt) node[right]{$m$};
+  \draw[blue,line width=1.4pt] (1.15,.55)--(.5,-1.65);
+  \fill[teal] (.5,-1.65) circle (4pt) node[right]{$m$};
+  \draw[gold,->] (0,1.65) arc[start angle=-90,end angle=-60,radius=.85];
+  \node[gold] at (.4,1.48){$\theta_1$};
+  \draw[gold,->] (1.15,-.1) arc[start angle=-90,end angle=-106,radius=.65];
+  \node[gold] at (.85,-.2){$\theta_2$};
+\end{tikzpicture}
+\end{center}
+\workingspace
+
+\problemstart{14}{Charged particle in a magnetic field}{A velocity-dependent Lagrangian}
+
+A particle of charge $q$ and mass $m$ moves in the $xy$-plane in a uniform magnetic field $B\vect e_z$. Consider
+\[
+L=\frac12m(\dot x^2+\dot y^2)+\frac{qB}{2}(x\dot y-y\dot x).
+\]
+
+\begin{enumerate}
+\item Derive the equations for $x$ and $y$.
+\item Show that the speed is constant.
+\item Show that the motion is circular and find its angular frequency magnitude.
+\item Explain why $T-V$ is too narrow a template for this example even though the Euler--Lagrange equations still apply.
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex]
+  \draw[->,ink!55] (-2.7,0)--(2.9,0) node[right]{$x$};
+  \draw[->,ink!55] (0,-2.4)--(0,2.6) node[above]{$y$};
+  \draw[blue,line width=1.5pt,->] (1.9,0) arc[start angle=0,end angle=330,radius=1.9];
+  \fill[teal] (1.3,1.38) circle (4pt);
+  \foreach \x in {-2,-1,1,2}{\node[red] at (\x,-1.8){$\times$};}
+  \node[red] at (1.9,2.2){$\vect B$ into page};
+\end{tikzpicture}
+\end{center}
+\workingspace
+
+\problemstart{15}{Coupled pendulums: small oscillations}{Normal modes from a quadratic Lagrangian}
+
+Two equal pendulums of mass $m$ and length $\ell$ are coupled by a weak horizontal spring of stiffness $k$ joining the bobs. For small angles, the spring extension is approximately $\ell(\theta_2-\theta_1)$.
+
+\begin{enumerate}
+\item Write the quadratic small-angle Lagrangian.
+\item Derive the linear equations.
+\item Find the in-phase and anti-phase normal frequencies.
+\item Which mode stretches the coupling spring?
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex]
+  \fill[ink] (-2.2,2.1) circle (2.3pt) (2.2,2.1) circle (2.3pt);
+  \draw[blue,line width=1.4pt] (-2.2,2.1)--(-1.65,-.25);
+  \draw[blue,line width=1.4pt] (2.2,2.1)--(1.65,-.25);
+  \fill[teal] (-1.65,-.25) circle (4pt) (1.65,-.25) circle (4pt);
+  \draw[decorate,decoration={coil,aspect=.45,segment length=3mm,amplitude=2.5mm},gold,line width=1.1pt] (-1.6,-.25)--(1.6,-.25);
+  \draw[ink!35,dashed] (-2.2,2.1)--(-2.2,-.7) (2.2,2.1)--(2.2,-.7);
+  \node[gold] at (0,.15){$k$};
+\end{tikzpicture}
+\end{center}
+\workingspace
+
+% =============================================================================
+\clearpage
+\part*{Worked solutions}
+\addcontentsline{toc}{part}{Worked solutions}
+
+\solutionstart{1}{Harmonic oscillator}
+\[
+\pd{L}{\dot x}=m\dot x,
+\qquad
+\pd{L}{x}=-kx.
+\]
+Therefore
+\[
+\boxed{m\ddot x+kx=0.}
+\]
+Multiply by $\dot x$:
+\[
+m\ddot x\dot x+kx\dot x=0
+=\td{}{t}\left(\frac12m\dot x^2+\frac12kx^2\right).
+\]
+Hence $E$ is constant. Comparing with $\ddot x+\omega^2x=0$ gives
+\[
+\boxed{\omega=\sqrt{k/m}.}
+\]
+
+\solutionstart{2}{Simple pendulum}
+The bob position is
+\[
+x=\ell\sin\theta,
+\qquad y=-\ell\cos\theta.
+\]
+Thus
+\[
+\dot x=\ell\cos\theta\dot\theta,
+\qquad
+\dot y=\ell\sin\theta\dot\theta,
+\]
+and $v^2=\ell^2\dot\theta^2$. With $V=mg\ell(1-\cos\theta)$,
+\[
+L=\frac12m\ell^2\dot\theta^2-mg\ell(1-\cos\theta).
+\]
+The equation is
+\[
+\boxed{\ddot\theta+\frac g\ell\sin\theta=0.}
+\]
+For small angles, $\sin\theta\approx\theta$:
+\[
+\ddot\theta+\frac g\ell\theta=0.
+\]
+
+\solutionstart{3}{Bead on a rotating rod with a spring}
+In polar coordinates with prescribed $\theta=\Omega t$,
+\[
+v^2=\dot r^2+r^2\Omega^2.
+\]
+Therefore
+\[
+L=\frac12m(\dot r^2+\Omega^2r^2)-\frac12kr^2.
+\]
+Now
+\[
+\pd{L}{\dot r}=m\dot r,
+\qquad
+\pd{L}{r}=(m\Omega^2-k)r.
+\]
+Hence
+\[
+\boxed{m\ddot r+(k-m\Omega^2)r=0.}
+\]
+The origin is stable when
+\[
+\boxed{k>m\Omega^2.}
+\]
+At equality the quadratic restoring term vanishes.
+
+\solutionstart{4}{Particle in a central potential}
+The polar speed is
+\[
+v^2=\dot r^2+r^2\dot\theta^2,
+\]
+so
+\[
+L=\frac12m(\dot r^2+r^2\dot\theta^2)-V(r).
+\]
+For $r$,
+\[
+\boxed{m\ddot r-mr\dot\theta^2+V'(r)=0.}
+\]
+For $\theta$,
+\[
+\td{}{t}(mr^2\dot\theta)=0,
+\qquad
+\boxed{J=mr^2\dot\theta.}
+\]
+Substitution gives
+\[
+\boxed{m\ddot r-\frac{J^2}{mr^3}+V'(r)=0.}
+\]
+
+\solutionstart{5}{Spring on an inclined plane}
+With $s$ positive down the slope,
+\[
+T=\frac12m\dot s^2,
+\qquad
+V=\frac12ks^2-mgs\sin\alpha.
+\]
+Thus
+\[
+L=\frac12m\dot s^2-\frac12ks^2+mgs\sin\alpha.
+\]
+The equation is
+\[
+\boxed{m\ddot s+ks-mg\sin\alpha=0.}
+\]
+At equilibrium,
+\[
+\boxed{s_{\rm eq}=\frac{mg\sin\alpha}{k}.}
+\]
+Writing $s=s_{\rm eq}+\xi$ gives $m\ddot\xi+k\xi=0$, so $\omega=\sqrt{k/m}$.
+
+\solutionstart{6}{Atwood machine}
+The string constraint gives both masses the same speed magnitude:
+\[
+T=\frac12(m_1+m_2)\dot x^2.
+\]
+As $m_1$ moves down by $x$, its potential decreases by $m_1gx$; as $m_2$ moves up, its potential increases by $m_2gx$:
+\[
+V=(m_2-m_1)gx.
+\]
+Therefore
+\[
+L=\frac12(m_1+m_2)\dot x^2+(m_1-m_2)gx.
+\]
+The equation is
+\[
+(m_1+m_2)\ddot x=(m_1-m_2)g,
+\]
+so
+\[
+\boxed{\ddot x=\frac{m_1-m_2}{m_1+m_2}g.}
+\]
+The internal tension is absent because the constraint has already reduced the system to its allowed motion.
+
+\solutionstart{7}{Pendulum with a moving support}
+The bob position is
+\[
+x=X(t)+\ell\sin\theta,
+\qquad y=-\ell\cos\theta.
+\]
+Hence
+\[
+T=\frac12m\left(\dot X^2+2\ell\dot X\cos\theta\dot\theta+\ell^2\dot\theta^2\right),
+\qquad
+V=-mg\ell\cos\theta.
+\]
+After differentiating, the terms proportional to $\dot X\dot\theta\sin\theta$ cancel, leaving
+\[
+\boxed{\ell\ddot\theta+g\sin\theta+\ddot X\cos\theta=0.}
+\]
+For $X=A\cos\Omega t$,
+\[
+\ell\ddot\theta+g\sin\theta-A\Omega^2\cos\Omega t\cos\theta=0.
+\]
+
+\solutionstart{8}{Bead on a rotating vertical hoop}
+The distance from the rotation axis is $a\sin\theta$, while motion along the hoop contributes $a\dot\theta$. Thus
+\[
+T=\frac12ma^2\left(\dot\theta^2+\Omega^2\sin^2\theta\right),
+\qquad
+V=-mga\cos\theta.
+\]
+Therefore
+\[
+L=\frac12ma^2(\dot\theta^2+\Omega^2\sin^2\theta)+mga\cos\theta.
+\]
+The equation is
+\[
+\boxed{\ddot\theta=\Omega^2\sin\theta\cos\theta-\frac ga\sin\theta.}
+\]
+Equilibria satisfy
+\[
+\sin\theta\left(\Omega^2\cos\theta-\frac ga\right)=0.
+\]
+Thus $\theta=0,\pi$, and off-axis equilibria obey
+\[
+\boxed{\cos\theta=\frac{g}{a\Omega^2}.}
+\]
+They exist when $\Omega^2\ge g/a$.
+
+\solutionstart{9}{Two coupled oscillators}
+The energies are
+\[
+T=\frac12m(\dot x_1^2+\dot x_2^2),
+\]
+\[
+V=\frac12k x_1^2+\frac12k(x_2-x_1)^2+\frac12k x_2^2.
+\]
+The equations are
+\[
+\boxed{m\ddot x_1+2kx_1-kx_2=0,}
+\qquad
+\boxed{m\ddot x_2+2kx_2-kx_1=0.}
+\]
+For $(A_1,A_2)=(1,1)$,
+\[
+\omega_+^2=\frac{k}{m};
+\]
+the middle spring is unstretched. For $(1,-1)$,
+\[
+\omega_-^2=\frac{3k}{m};
+\]
+the masses move oppositely and the middle spring stretches most strongly.
+
+\solutionstart{10}{Kepler potential and effective energy}
+The radial energy is
+\[
+E=\frac12m\dot r^2+U_{\rm eff}(r),
+\qquad
+U_{\rm eff}=\frac{J^2}{2mr^2}-\frac\mu r.
+\]
+A circular orbit is a stationary point:
+\[
+U_{\rm eff}'=-\frac{J^2}{mr^3}+\frac\mu{r^2}=0.
+\]
+Hence
+\[
+\boxed{r_0=\frac{J^2}{m\mu}.}
+\]
+Also
+\[
+U_{\rm eff}''(r_0)=\frac{3J^2}{mr_0^4}-\frac{2\mu}{r_0^3}
+=\frac{\mu}{r_0^3}>0,
+\]
+so the orbit is stable. Using $mr_0\omega^2=\mu/r_0^2$,
+\[
+\boxed{\omega^2=\frac{\mu}{mr_0^3}.}
+\]
+
+\solutionstart{11}{Bead constrained to a parabola}
+Since $y=ax^2$,
+\[
+\dot y=2ax\dot x,
+\qquad
+v^2=\dot x^2+\dot y^2=(1+4a^2x^2)\dot x^2.
+\]
+Thus
+\[
+L=\frac12m(1+4a^2x^2)\dot x^2-mgax^2.
+\]
+The exact equation is
+\[
+\boxed{(1+4a^2x^2)\ddot x+4a^2x\dot x^2+2gax=0.}
+\]
+Near $x=0$, nonlinear terms are negligible:
+\[
+\ddot x+2ga\,x=0,
+\qquad
+\boxed{\omega=\sqrt{2ga}.}
+\]
+
+\solutionstart{12}{Bead on a cone}
+With $z=cr$, $\dot z=c\dot r$, so
+\[
+T=\frac12m[(1+c^2)\dot r^2+r^2\dot\phi^2],
+\qquad V=mgcr.
+\]
+The angle is cyclic:
+\[
+\boxed{J=mr^2\dot\phi.}
+\]
+The radial equation is
+\[
+\boxed{m(1+c^2)\ddot r-mr\dot\phi^2+mgc=0.}
+\]
+Eliminating $\dot\phi$ gives
+\[
+\frac12m(1+c^2)\dot r^2+U_{\rm eff}(r)=E,
+\]
+with
+\[
+\boxed{U_{\rm eff}(r)=\frac{J^2}{2mr^2}+mgcr.}
+\]
+
+\solutionstart{13}{Equal double pendulum}
+The positions are
+\[
+x_1=\ell\sin\theta_1,
+\quad y_1=-\ell\cos\theta_1,
+\]
+\[
+x_2=x_1+\ell\sin\theta_2,
+\quad y_2=y_1-\ell\cos\theta_2.
+\]
+This yields
+\[
+T=\frac12m\ell^2(2\dot\theta_1^2+\dot\theta_2^2+2\dot\theta_1\dot\theta_2\cos\Delta),
+\]
+\[
+V=-mg\ell(2\cos\theta_1+\cos\theta_2).
+\]
+The equations are
+\[
+\boxed{
+2\ddot\theta_1+\ddot\theta_2\cos\Delta
++\dot\theta_2^2\sin\Delta
++2\frac g\ell\sin\theta_1=0,}
+\]
+\[
+\boxed{
+\ddot\theta_2+\ddot\theta_1\cos\Delta
+-\dot\theta_1^2\sin\Delta
++\frac g\ell\sin\theta_2=0.}
+\]
+
+\solutionstart{14}{Charged particle in a magnetic field}
+For $x$,
+\[
+\pd{L}{\dot x}=m\dot x-\frac{qB}{2}y,
+\qquad
+\pd{L}{x}=\frac{qB}{2}\dot y.
+\]
+For $y$ the analogous calculation gives
+\[
+\boxed{m\ddot x=qB\dot y,}
+\qquad
+\boxed{m\ddot y=-qB\dot x.}
+\]
+Then
+\[
+\td{}{t}(\dot x^2+\dot y^2)
+=2\dot x\ddot x+2\dot y\ddot y=0,
+\]
+so the speed is constant. The acceleration is always perpendicular to velocity, producing circular motion with
+\[
+\boxed{|\omega_c|=\frac{|qB|}{m}.}
+\]
+The term linear in velocity represents magnetic coupling through a vector potential; the Euler--Lagrange formalism is broader than the simple template $T-V$.
+
+\solutionstart{15}{Coupled pendulums: small oscillations}
+To quadratic order,
+\[
+T=\frac12m\ell^2(\dot\theta_1^2+\dot\theta_2^2),
+\]
+\[
+V=\frac12mg\ell(\theta_1^2+\theta_2^2)
++\frac12k\ell^2(\theta_2-\theta_1)^2.
+\]
+The equations are
+\[
+m\ell^2\ddot\theta_1+mg\ell\theta_1+k\ell^2(\theta_1-\theta_2)=0,
+\]
+\[
+m\ell^2\ddot\theta_2+mg\ell\theta_2+k\ell^2(\theta_2-\theta_1)=0.
+\]
+For the in-phase mode $(1,1)$, the spring does not stretch:
+\[
+\boxed{\omega_{\rm in}^2=\frac g\ell.}
+\]
+For the anti-phase mode $(1,-1)$,
+\[
+\boxed{\omega_{\rm anti}^2=\frac g\ell+\frac{2k}{m}.}
+\]
+Only the anti-phase mode stretches the coupling spring to first order.
+
+\clearpage
+\section*{Final checklist}
+\addcontentsline{toc}{section}{Final checklist}
+
+Before accepting an equation of motion, ask:
+
+\begin{itemize}
+\item Are the coordinates independent?
+\item Does every term in $T$ have units of energy?
+\item Is the zero and sign of $V$ declared?
+\item Does a cyclic coordinate give the expected conserved quantity?
+\item Does the equation reduce correctly when a coupling, rotation, or angle is set to zero?
+\item Is the small-angle or small-displacement approximation stated only after the exact equation?
+\end{itemize}
+
+\begin{resultbox}[What fluency looks like]
+The goal is not to memorise fifteen answers. It is to make the sequence
+\[
+\text{geometry}\to\text{coordinates}\to T,V\to L\to\text{equations}
+\]
+feel routine enough that attention can move to interpretation.
+\end{resultbox}
+
+\end{document}

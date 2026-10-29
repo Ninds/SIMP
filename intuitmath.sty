@@ -1,0 +1,67 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{intuitmath}[2026/10/29 Intuition-first mathematics and physics style]
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage{lmodern}
+\RequirePackage[a4paper,margin=23mm,headheight=15pt]{geometry}
+\RequirePackage{microtype}
+\RequirePackage{amsmath,amssymb,mathtools,bm}
+\RequirePackage{xcolor}
+\RequirePackage{tikz}
+\usetikzlibrary{arrows.meta,calc,positioning,angles,quotes,decorations.pathmorphing}
+\RequirePackage[most]{tcolorbox}
+\RequirePackage{enumitem}
+\RequirePackage{fancyhdr}
+\RequirePackage{titlesec}
+\RequirePackage{hyperref}
+
+\definecolor{ink}{HTML}{17324D}
+\definecolor{blue}{HTML}{176B87}
+\definecolor{teal}{HTML}{2A9D8F}
+\definecolor{gold}{HTML}{D7922B}
+\definecolor{red}{HTML}{B94A48}
+\definecolor{softblue}{HTML}{EAF4F8}
+\definecolor{softgreen}{HTML}{EAF7F3}
+\definecolor{softgold}{HTML}{FFF6E6}
+\definecolor{softred}{HTML}{FBECEC}
+
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=teal}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{ink}\leftmark}
+\fancyhead[R]{\small\color{blue}Intuition first}
+\fancyfoot[C]{\small\color{ink}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\titleformat{\section}{\Large\bfseries\color{ink}}{\color{blue}\thesection}{0.7em}{}
+\titleformat{\subsection}{\large\bfseries\color{ink}}{\color{teal}\thesubsection}{0.7em}{}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.58em}
+\setlist[itemize]{leftmargin=1.5em,itemsep=0.25em,topsep=0.3em}
+\setlist[enumerate]{leftmargin=1.7em,itemsep=0.35em,topsep=0.3em}
+\allowdisplaybreaks
+
+\newcommand{\dd}{\mathop{}\!\mathrm d}
+\newcommand{\e}{\mathrm e}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+\newcommand{\grad}{\boldsymbol\nabla}
+\newcommand{\vect}[1]{\bm{#1}}
+\newcommand{\pd}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\td}[2]{\frac{\dd #1}{\dd #2}}
+
+\newtcolorbox{intuition}[1][]{enhanced,breakable,colback=softblue,colframe=blue,boxrule=.8pt,arc=2mm,left=3mm,right=3mm,top=2mm,bottom=2mm,title={#1},fonttitle=\bfseries,coltitle=ink}
+\newtcolorbox{resultbox}[1][]{enhanced,breakable,colback=softgreen,colframe=teal,boxrule=.9pt,arc=2mm,left=3mm,right=3mm,top=2mm,bottom=2mm,title={#1},fonttitle=\bfseries,coltitle=ink}
+\newtcolorbox{checkBox}[1][]{enhanced,breakable,colback=softgold,colframe=gold,boxrule=.8pt,arc=2mm,left=3mm,right=3mm,top=2mm,bottom=2mm,title={#1},fonttitle=\bfseries,coltitle=ink}
+\newtcolorbox{warningbox}[1][]{enhanced,breakable,colback=softred,colframe=red,boxrule=.8pt,arc=2mm,left=3mm,right=3mm,top=2mm,bottom=2mm,title={#1},fonttitle=\bfseries,coltitle=ink}
+
+\newcommand{\tutorialtitle}[3]{%
+\begin{titlepage}\thispagestyle{empty}\vspace*{14mm}
+{\color{blue}\rule{\textwidth}{1.2pt}}\vspace{10mm}
+{\Huge\bfseries\color{ink}#1\par}\vspace{4mm}
+{\LARGE\color{blue}#2\par}\vspace{7mm}
+{\large\color{ink}#3\par}\vfill
+\begin{intuition}[How to read this tutorial]
+Pause at each boxed result and ask what it says geometrically or physically. The derivation is part of the explanation, not a hurdle to skip.
+\end{intuition}\vspace{8mm}
+{\color{blue}\rule{\textwidth}{1.2pt}\par}\end{titlepage}}

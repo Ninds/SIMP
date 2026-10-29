@@ -1,0 +1,294 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../../intuitmath}
+\hypersetup{pdftitle={Why Hamiltonian Mechanics?},pdfauthor={Mathematics and Physics: Intuition First}}
+\renewcommand{\sectionmark}[1]{\markboth{#1}{}}
+
+\begin{document}
+\tutorialtitle{Why Hamiltonian Mechanics?}{Predicting the next instant from position and momentum}{Discovering Hamilton's equations before deriving them}
+\tableofcontents
+\clearpage
+
+\section{The question that motivates the formalism}
+
+Lagrangian mechanics describes a configuration using $q$ and a velocity $\dot q$. It also introduces the conjugate momentum
+\[
+p=\pd{L}{\dot q}.
+\]
+For an ordinary particle, $p=m\dot q$, so position and momentum contain the same instantaneous information as position and velocity.
+
+This suggests a practical question:
+
+\begin{intuition}[What we actually need]
+If the particle is currently at $(q,p)$, how do we find its position and momentum a moment later?
+\end{intuition}
+
+For a short interval $\Delta t$,
+\[
+q(t+\Delta t)\approx q(t)+\dot q\,\Delta t,
+\qquad
+p(t+\Delta t)\approx p(t)+\dot p\,\Delta t.
+\]
+We therefore need two rates:
+\[
+\dot q=f(q,p,t),
+\qquad
+\dot p=g(q,p,t).
+\]
+No partial derivatives of the Hamiltonian have been assumed. We have merely identified the information required to evolve the state.
+
+\section{Discovering the equations for a familiar particle}
+
+For a particle in a potential $V(q)$, define
+\[
+H(q,p)=\frac{p^2}{2m}+V(q).
+\]
+We already know
+\[
+\dot q=\frac pm,
+\qquad
+\dot p=F=-\td{V}{q}.
+\]
+Now differentiate $H$:
+\[
+\pd{H}{p}=\frac pm=\dot q,
+\qquad
+\pd{H}{q}=\td{V}{q}=-\dot p.
+\]
+
+\begin{resultbox}[Hamilton's equations, discovered]
+\[
+\boxed{
+\dot q=\pd{H}{p},
+\qquad
+\dot p=-\pd{H}{q}.}
+\]
+The two rates needed to predict the next instant are already contained in the two partial derivatives of a single function.
+\end{resultbox}
+
+\section{Why this is significant}
+
+Newton's equation is usually second order:
+\[
+m\ddot q=F(q).
+\]
+Hamilton's formulation replaces it with two coupled first-order equations for the state $(q,p)$. This is not less information: specifying $q$ and $p$ is equivalent to specifying $q$ and $\dot q$ for a regular mechanical system.
+
+The pair $(q,p)$ is a point in \emph{phase space}. As time changes, the state traces a curve there.
+
+\begin{center}
+\begin{tikzpicture}[x=1.25cm,y=1.0cm,>=Latex]
+  \draw[->,ink!65] (-3.1,0)--(3.35,0) node[right]{$q$};
+  \draw[->,ink!65] (0,-2.4)--(0,2.65) node[above]{$p$};
+  \draw[blue,line width=1.6pt,->] (2.55,0) arc[start angle=0,end angle=325,x radius=2.55,y radius=1.75];
+  \fill[teal] (1.35,1.49) circle (3pt) node[above right]{$(q,p)$};
+  \draw[->,gold,line width=1.2pt] (1.35,1.49)--++(-.75,.32) node[above left]{$(\dot q,\dot p)$};
+  \node[ink] at (2.35,2.15){one oscillator orbit};
+\end{tikzpicture}
+\end{center}
+
+At every point, Hamilton's equations assign the tangent vector
+\[
+(\dot q,\dot p)=\left(\pd{H}{p},-\pd{H}{q}\right).
+\]
+The Hamiltonian is therefore a rule for the flow through phase space.
+
+\section{Why change variables from velocity to momentum?}
+
+The Lagrangian is naturally a function of $(q,\dot q,t)$. We want a new function of $(q,p,t)$. Merely replacing symbols is not enough because $p$ is defined by a derivative of $L$.
+
+The required change is the Legendre transform:
+\[
+\boxed{H(q,p,t)=p\dot q-L(q,\dot q,t),}
+\]
+where $\dot q$ is re-expressed in terms of $(q,p,t)$ using
+\[
+p=\pd{L}{\dot q}.
+\]
+
+\begin{intuition}[What the Legendre transform does]
+It replaces the slope-like variable $\dot q$ by the conjugate slope $p$. The correction term $p\dot q$ preserves the information while changing which variable is independent.
+\end{intuition}
+
+For
+\[
+L=\frac12m\dot q^2-V(q),
+\qquad p=m\dot q,
+\]
+we have $\dot q=p/m$ and
+\begin{align*}
+H&=p\frac pm-\left[\frac12m\left(\frac pm\right)^2-V(q)\right]\\
+&=\frac{p^2}{2m}+V(q)=T+V.
+\end{align*}
+This familiar equality relies on ordinary quadratic kinetic energy and a velocity-independent potential; $H$ is not automatically ``the energy'' in every model.
+
+\section{General derivation of Hamilton's equations}
+
+Begin with
+\[
+H=p\dot q-L.
+\]
+Take a total differential:
+\[
+\dd H=\dot q\,\dd p+p\,\dd\dot q-\dd L.
+\]
+Since
+\[
+\dd L=\pd{L}{q}\dd q+\pd{L}{\dot q}\dd\dot q+\pd{L}{t}\dd t
+\]
+and $p=\partial L/\partial\dot q$, the two terms containing $\dd\dot q$ cancel:
+\[
+\dd H=\dot q\,\dd p-\pd{L}{q}\dd q-\pd{L}{t}\dd t.
+\]
+The Euler--Lagrange equation gives
+\[
+\pd{L}{q}=\dot p.
+\]
+Therefore
+\[
+\dd H=\dot q\,\dd p-\dot p\,\dd q-\pd{L}{t}\dd t.
+\]
+But $H=H(q,p,t)$ also implies
+\[
+\dd H=\pd{H}{q}\dd q+\pd{H}{p}\dd p+\pd{H}{t}\dd t.
+\]
+Comparing independent coefficients yields
+\[
+\boxed{
+\dot q=\pd{H}{p},
+\qquad
+\dot p=-\pd{H}{q},
+\qquad
+\pd{H}{t}=-\pd{L}{t}.}
+\]
+
+\section{Many degrees of freedom}
+
+For coordinates $q_i$ and momenta
+\[
+p_i=\pd{L}{\dot q_i},
+\]
+define
+\[
+H(\vect q,\vect p,t)=\sum_i p_i\dot q_i-L.
+\]
+Then
+\[
+\boxed{
+\dot q_i=\pd{H}{p_i},
+\qquad
+\dot p_i=-\pd{H}{q_i}.}
+\]
+The phase space has dimension $2n$: one coordinate and one conjugate momentum for each degree of freedom.
+
+\section{Worked example: harmonic oscillator}
+
+For
+\[
+H(q,p)=\frac{p^2}{2m}+\frac12kq^2,
+\]
+Hamilton's equations give
+\[
+\dot q=\frac pm,
+\qquad
+\dot p=-kq.
+\]
+Differentiate the first equation and insert the second:
+\[
+\ddot q=\frac{\dot p}{m}=-\frac kmq.
+\]
+Thus
+\[
+\ddot q+\omega^2q=0,
+\qquad \omega=\sqrt{k/m}.
+\]
+
+The constant-energy curves satisfy
+\[
+\frac{p^2}{2m}+\frac12kq^2=E,
+\]
+which are ellipses in the $(q,p)$ plane. The oscillator moves around one ellipse without crossing to another energy.
+
+\section{Conservation of the Hamiltonian}
+
+Along a trajectory,
+\begin{align*}
+\td{H}{t}
+&=\pd{H}{q}\dot q+\pd{H}{p}\dot p+\pd{H}{t}\\
+&=(-\dot p)\dot q+(\dot q)\dot p+\pd{H}{t}\\
+&=\pd{H}{t}.
+\end{align*}
+Therefore, if $H$ has no explicit time dependence,
+\[
+\boxed{H=\text{constant along the motion}.}
+\]
+
+\section{Poisson brackets}
+
+For functions $A(q,p,t)$ and $B(q,p,t)$ define
+\[
+\{A,B\}=\pd{A}{q}\pd{B}{p}-\pd{A}{p}\pd{B}{q}.
+\]
+Hamilton's equations can be written
+\[
+\dot q=\{q,H\},
+\qquad
+\dot p=\{p,H\}.
+\]
+More generally,
+\[
+\boxed{\td{A}{t}=\{A,H\}+\pd{A}{t}.}
+\]
+If $A$ has no explicit time dependence and $\{A,H\}=0$, then $A$ is conserved.
+
+The basic bracket is
+\[
+\{q,p\}=1.
+\]
+This compact algebra becomes the classical precursor of commutators in quantum mechanics.
+
+\section{Phase-space geometry}
+
+In two-dimensional phase space the velocity field is
+\[
+\vect v_{\rm ph}=\left(\pd{H}{p},-\pd{H}{q}\right).
+\]
+Its divergence is
+\[
+\pd{}{q}\left(\pd{H}{p}\right)
++\pd{}{p}\left(-\pd{H}{q}\right)=0
+\]
+when mixed derivatives commute. Small phase-space areas are neither compressed nor expanded by Hamiltonian flow. This is the local heart of Liouville's theorem.
+
+\section{When the Legendre transform can fail}
+
+To solve $p=\partial L/\partial\dot q$ for $\dot q$, the velocity Hessian must be invertible. In one dimension this means
+\[
+\frac{\partial^2L}{\partial\dot q^2}\neq0.
+\]
+If it is singular, the system contains constraints and needs a more careful Hamiltonian treatment. The standard equations remain correct for regular Lagrangians.
+
+\section{A numerical viewpoint}
+
+Hamilton's equations are an initial-value system. Given $(q_0,p_0)$, a simple first step is
+\[
+q_{n+1}=q_n+\Delta t\,\pd{H}{p}(q_n,p_n),
+\qquad
+p_{n+1}=p_n-\Delta t\,\pd{H}{q}(q_n,p_n).
+\]
+This explicit Euler rule is easy but does not preserve Hamiltonian geometry well over long times. Symplectic methods alter the update order to respect phase-space structure more faithfully.
+
+\section{What to remember}
+
+\begin{enumerate}
+\item Position and momentum specify the instantaneous state.
+\item Predicting the next instant requires $\dot q$ and $\dot p$.
+\item For a familiar particle, these rates are the two partial derivatives of $H$ with opposite signs.
+\item The Legendre transform proves that the same structure follows generally from a regular Lagrangian.
+\item The Hamiltonian generates a flow through phase space.
+\end{enumerate}
+
+\begin{checkBox}[The central insight]
+Hamilton's equations are not arbitrary formulas involving partial derivatives. They say that a single scalar function contains the two local rates needed to move the complete state $(q,p)$ forward in time.
+\end{checkBox}
+
+\end{document}

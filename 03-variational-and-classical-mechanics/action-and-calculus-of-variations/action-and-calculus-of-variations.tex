@@ -1,0 +1,247 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../../intuitmath}
+\hypersetup{pdftitle={Action and the Calculus of Variations},pdfauthor={Mathematics and Physics: Intuition First}}
+\renewcommand{\sectionmark}[1]{\markboth{#1}{}}
+
+\begin{document}
+\tutorialtitle{Action and the Calculus of Variations}{Why mechanics compares whole paths}{From a small change of a curve to the Euler--Lagrange equation}
+\tableofcontents
+\clearpage
+
+\section{The new kind of question}
+
+Ordinary calculus asks how a number changes when we change another number. If
+\[
+f(x)=x^2,
+\]
+then $f'(x)$ measures the response to a small change $x\mapsto x+\varepsilon$.
+
+The calculus of variations asks a similar question about an entire function. A path
+\[
+q:[t_0,t_1]\longrightarrow\R
+\]
+is the object being changed. A \emph{functional} assigns one number to the whole path. The central example in mechanics is the action
+\[
+\boxed{S[q]=\int_{t_0}^{t_1}L(q,\dot q,t)\,\dd t.}
+\]
+
+The square brackets are a useful reminder: $S$ consumes a function $q(t)$, not merely its value at one instant.
+
+\begin{intuition}[A landscape whose points are curves]
+Imagine that every admissible path is one point in a vast ``space of paths''. The action gives a height to each point. A physical path is stationary when every allowed infinitesimal direction through this space produces no first-order change in height.
+\end{intuition}
+
+\section{Why an integral over time?}
+
+The Lagrangian $L(q,\dot q,t)$ measures something locally, at one instant. The action adds that local contribution along the entire history. For an ordinary conservative particle,
+\[
+L=T-V.
+\]
+The action therefore balances motion and potential along a path rather than choosing the smallest energy at every instant.
+
+\begin{warningbox}[Stationary does not always mean smallest]
+The physical path makes the first variation vanish. It may give a local minimum, a local maximum, or a saddle value of the action. ``Principle of stationary action'' is more accurate than ``principle of least action''.
+\end{warningbox}
+
+\section{How to vary a path}
+
+Choose a reference path $q(t)$ and a smooth shape $\eta(t)$. Define a one-parameter family
+\[
+q_\varepsilon(t)=q(t)+\varepsilon\eta(t).
+\]
+The small number $\varepsilon$ controls the size of the change; $\eta$ controls its shape.
+
+If the endpoints are fixed, every neighbouring path must begin and end at the same places, so
+\[
+\boxed{\eta(t_0)=\eta(t_1)=0.}
+\]
+
+\begin{center}
+\begin{tikzpicture}[x=1.25cm,y=1.05cm,>=Latex]
+  \draw[->,ink!65] (0,0) -- (6.5,0) node[right] {$t$};
+  \draw[->,ink!65] (0,-0.2) -- (0,3.5) node[above] {$q$};
+  \draw[blue,line width=1.6pt] plot[smooth] coordinates {(0.4,.7) (1.4,1.2) (2.5,2.15) (3.7,2.35) (5.0,1.55) (6.0,1.1)};
+  \draw[teal,dashed,line width=1.4pt] plot[smooth] coordinates {(0.4,.7) (1.4,1.55) (2.5,1.75) (3.7,2.75) (5.0,1.3) (6.0,1.1)};
+  \fill[ink] (0.4,.7) circle (2pt) (6.0,1.1) circle (2pt);
+  \node[blue] at (4.7,2.15) {$q(t)$};
+  \node[teal] at (3.9,3.02) {$q(t)+\varepsilon\eta(t)$};
+  \draw[<->,gold,line width=1pt] (2.5,1.78) -- (2.5,2.12) node[midway,right] {$\varepsilon\eta$};
+\end{tikzpicture}
+\end{center}
+
+Because differentiation is linear,
+\[
+\dot q_\varepsilon=\dot q+\varepsilon\dot\eta.
+\]
+Changing the path therefore changes both the position argument and the velocity argument of $L$.
+
+\section{The first variation}
+
+Insert the varied path into the action:
+\[
+S[q_\varepsilon]
+=\int_{t_0}^{t_1}L(q+\varepsilon\eta,\dot q+\varepsilon\dot\eta,t)\,\dd t.
+\]
+Now $S[q_\varepsilon]$ is an ordinary function of the number $\varepsilon$. A stationary path satisfies
+\[
+\left.\td{}{\varepsilon}S[q_\varepsilon]\right|_{\varepsilon=0}=0.
+\]
+
+Using the chain rule,
+\begin{align*}
+\left.\td{}{\varepsilon}S[q_\varepsilon]\right|_{\varepsilon=0}
+&=\int_{t_0}^{t_1}
+\left(
+\pd{L}{q}\eta+\pd{L}{\dot q}\dot\eta
+\right)\dd t.
+\end{align*}
+This expression is called the \emph{first variation} and is written $\delta S$.
+
+\section{The decisive integration by parts}
+
+The second term contains $\dot\eta$, but we want the arbitrary function itself. Integrate by parts:
+\begin{align*}
+\int_{t_0}^{t_1}\pd{L}{\dot q}\dot\eta\,\dd t
+&=\left[\pd{L}{\dot q}\eta\right]_{t_0}^{t_1}
+-\int_{t_0}^{t_1}\td{}{t}\left(\pd{L}{\dot q}\right)\eta\,\dd t.
+\end{align*}
+The boundary term vanishes because $\eta(t_0)=\eta(t_1)=0$. Hence
+\[
+\delta S=\int_{t_0}^{t_1}
+\left[
+\pd{L}{q}-\td{}{t}\left(\pd{L}{\dot q}\right)
+\right]\eta(t)\,\dd t.
+\]
+
+The function $\eta$ may be chosen freely in the interior. The only way this integral can vanish for every such choice is for its coefficient to vanish point by point.
+
+\begin{resultbox}[Euler--Lagrange equation]
+\[
+\boxed{\td{}{t}\left(\pd{L}{\dot q}\right)-\pd{L}{q}=0.}
+\]
+One integration by parts converts a statement about every nearby path into a differential equation for the stationary path.
+\end{resultbox}
+
+\section{Example: the free particle}
+
+Let
+\[
+L=\frac12m\dot q^2.
+\]
+Then
+\[
+\pd{L}{\dot q}=m\dot q,
+\qquad
+\pd{L}{q}=0.
+\]
+The Euler--Lagrange equation gives
+\[
+m\ddot q=0.
+\]
+Thus the stationary path has constant velocity:
+\[
+q(t)=At+B.
+\]
+
+\begin{intuition}[Why a straight world-line?]
+With no potential, unnecessary changes of velocity only increase the kinetic contribution. Between fixed endpoints and fixed times, the stationary path is the line of uniform motion.
+\end{intuition}
+
+\section{Example: the harmonic oscillator}
+
+For a mass on a spring,
+\[
+L=\frac12m\dot q^2-\frac12kq^2.
+\]
+The two required derivatives are
+\[
+\pd{L}{\dot q}=m\dot q,
+\qquad
+\pd{L}{q}=-kq.
+\]
+Therefore
+\[
+\boxed{m\ddot q+kq=0.}
+\]
+The familiar restoring-force equation has emerged from stationarity of a whole-path quantity.
+
+\section{Many coordinates}
+
+If the configuration is described by $q_1,\ldots,q_n$, vary each independently:
+\[
+q_i\mapsto q_i+\varepsilon\eta_i.
+\]
+The result is one equation per coordinate:
+\[
+\boxed{\td{}{t}\left(\pd{L}{\dot q_i}\right)-\pd{L}{q_i}=0,
+\qquad i=1,\ldots,n.}
+\]
+This is why a single scalar function $L$ can encode the dynamics of a many-coordinate system.
+
+\section{What if the endpoint is free?}
+
+When an endpoint value is not fixed, the corresponding value of $\eta$ need not vanish. The boundary term
+\[
+\left[\pd{L}{\dot q}\eta\right]_{t_0}^{t_1}
+\]
+must then be handled explicitly. For example, if $q(t_1)$ is free while $t_1$ is fixed, stationarity requires
+\[
+\left.\pd{L}{\dot q}\right|_{t_1}=0.
+\]
+Such conditions are called \emph{natural boundary conditions}. They are not extra guesses; they are the part of the variational calculation that fixed endpoints previously hid.
+
+\section{Adding a total derivative}
+
+Suppose
+\[
+\widetilde L=L+\td{}{t}F(q,t).
+\]
+Then
+\[
+\widetilde S=S+F(q(t_1),t_1)-F(q(t_0),t_0).
+\]
+For fixed endpoints the added quantity is fixed, so it does not change the stationary paths. Different-looking Lagrangians can therefore encode the same equations of motion.
+
+\section{From particles to fields}
+
+For a field $\phi(x,t)$, the action becomes an integral over space and time:
+\[
+S[\phi]=\int \mathcal L(\phi,\partial_\mu\phi,x)\,\dd^{d+1}x.
+\]
+Varying the field and integrating by parts in every coordinate gives
+\[
+\boxed{
+\pd{\mathcal L}{\phi}
+-\partial_\mu\left(\pd{\mathcal L}{(\partial_\mu\phi)}\right)=0.
+}
+\]
+The logical structure is unchanged: vary the whole object, move derivatives off the arbitrary variation, and require the remaining coefficient to vanish.
+
+\section{First variation versus second variation}
+
+The condition $\delta S=0$ identifies a stationary path. To classify it, examine the quadratic term in
+\[
+S[q+\varepsilon\eta]
+=S[q]+\varepsilon\,\delta S
++\frac12\varepsilon^2\,\delta^2S+\cdots.
+\]
+A positive second variation for every nonzero admissible $\eta$ indicates a local minimum. An indefinite second variation indicates a saddle. Mechanics usually begins with the first variation because it already supplies the equations of motion.
+
+\section{A reliable derivation checklist}
+
+\begin{enumerate}
+\item State the functional and the allowed class of paths.
+\item Write $q_\varepsilon=q+\varepsilon\eta$.
+\item Translate endpoint restrictions into conditions on $\eta$.
+\item Differentiate with respect to $\varepsilon$ at $\varepsilon=0$.
+\item Integrate by parts until derivatives no longer act on $\eta$.
+\item Keep or justify every boundary term.
+\item Use the arbitrariness of the interior variation.
+\item Check the resulting equation against a familiar special case.
+\end{enumerate}
+
+\begin{checkBox}[One-sentence summary]
+The Euler--Lagrange equation is the pointwise condition forced on a path when the first-order change of an integral functional vanishes for every allowed infinitesimal deformation of that path.
+\end{checkBox}
+
+\end{document}

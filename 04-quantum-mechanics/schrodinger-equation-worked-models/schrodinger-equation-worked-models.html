@@ -1,0 +1,2550 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Solving the Schrödinger Equation</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.18.4/dist/katex.min.css">
+  <style>
+    @page { size: A5 portrait; margin: 14mm 13mm 16mm 13mm; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      color: #111111;
+      font-family: "Aptos", "Segoe UI", "Trebuchet MS", sans-serif;
+      font-size: 10.25pt;
+      line-height: 1.53;
+      letter-spacing: 0.003em;
+      background: white;
+    }
+    h1, h2, h3, h4 { color: #111111; margin: 0; font-weight: 650; }
+    h1 { font-size: 29pt; line-height: 1.08; letter-spacing: -0.03em; }
+    h2 { font-size: 20pt; line-height: 1.16; letter-spacing: -0.02em; }
+    h3 { font-size: 12.4pt; line-height: 1.25; margin-bottom: 2.5mm; }
+    h4 { font-size: 10.5pt; line-height: 1.3; margin-bottom: 1.7mm; }
+    p { margin: 0 0 3.4mm 0; }
+    .small { font-size: 8.6pt; line-height: 1.45; }
+    .muted { color: #444444; }
+    .section {
+      break-before: page;
+      page-break-before: always;
+    }
+    .cover {
+      height: 176mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      break-after: page;
+      page-break-after: always;
+    }
+    .cover-rule { height: 4px; width: 30mm; background: #111111; margin: 7mm 0 8mm; }
+    .cover-sub { font-size: 14pt; line-height: 1.4; color: #333333; max-width: 105mm; }
+    .cover-note {
+      border-top: 1px solid #aaaaaa;
+      padding-top: 5mm;
+      color: #555555;
+      font-size: 8.8pt;
+      line-height: 1.55;
+    }
+    .eyebrow {
+      color: #222222;
+      font-size: 8.2pt;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 2.6mm;
+    }
+    .section-head {
+      border-bottom: 1.2px solid #999999;
+      padding-bottom: 4mm;
+      margin-bottom: 6mm;
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+    .section-meta { margin-top: 2.5mm; display: flex; gap: 2mm; flex-wrap: wrap; }
+    .pill {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 0.7mm 2.4mm;
+      background: #f1f1f1;
+      color: #222222;
+      font-size: 7.8pt;
+      font-weight: 650;
+    }
+    .pill.level { background: #f3f3f3; color: #333333; }
+    .lead {
+      font-size: 11.2pt;
+      line-height: 1.55;
+      color: #333333;
+      margin-bottom: 5mm;
+    }
+    .step, .result, .idea, .warning {
+      margin: 0 0 4.5mm 0;
+      padding: 4mm 4.2mm;
+      border-radius: 2.2mm;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .step { background: #f5f5f5; border-left: 3px solid #777777; }
+    .idea { background: #f7f7f7; border-left: 3px solid #111111; }
+    .result { background: #f2f2f2; border: 1px solid #999999; }
+    .warning { background: #fafafa; border-left: 3px solid #666666; }
+    .step p:last-child, .idea p:last-child, .result p:last-child, .warning p:last-child { margin-bottom: 0; }
+    .step-no {
+      display: inline-block;
+      min-width: 6mm;
+      height: 6mm;
+      border-radius: 50%;
+      background: #111111;
+      color: white;
+      font-size: 7.7pt;
+      font-weight: 700;
+      text-align: center;
+      line-height: 6mm;
+      margin-right: 1.5mm;
+      vertical-align: 0.25mm;
+    }
+    .equation {
+      margin: 4.2mm 0;
+      padding: 2mm 1mm;
+      text-align: center;
+      break-inside: avoid;
+      page-break-inside: avoid;
+      overflow: visible;
+    }
+    .equation.compact { margin: 2.5mm 0; }
+    .katex-display { margin: 0 !important; }
+    .katex { font-size: 1.02em; }
+    .equation .katex { font-size: 1.08em; }
+    .tight-math .katex { font-size: 0.96em; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; align-items: start; }
+    .two-col > * { min-width: 0; }
+    ul, ol { margin: 0 0 4mm 0; padding-left: 5.7mm; }
+    li { margin-bottom: 2.1mm; }
+    .roadmap { list-style: none; padding-left: 0; }
+    .roadmap li { display: grid; grid-template-columns: 10mm 1fr; gap: 2.5mm; margin-bottom: 3.3mm; }
+    .roadmap .n { color: #111111; font-weight: 750; font-size: 11pt; }
+    .source {
+      margin-top: 6mm;
+      padding-top: 2.5mm;
+      border-top: 1px solid #dddddd;
+      color: #555555;
+      font-size: 7.7pt;
+      line-height: 1.45;
+      break-inside: avoid;
+    }
+    .svg-wrap {
+      margin: 4mm 0 5mm;
+      padding: 3mm;
+      background: #fcfcfc;
+      border: 1px solid #dddddd;
+      border-radius: 2mm;
+      break-inside: avoid;
+    }
+    svg { width: 100%; height: auto; display: block; }
+    .label { font: 10px "Segoe UI", sans-serif; fill: #222222; }
+    .axis { stroke: #666666; stroke-width: 1.1; }
+    .potential { stroke: #222222; stroke-width: 2.2; fill: none; }
+    .wave { stroke: #111111; stroke-width: 1.7; fill: none; }
+    .dash { stroke-dasharray: 4 3; }
+    .caption { color: #555555; font-size: 8pt; line-height: 1.4; margin-top: 2mm; }
+    .keep { break-inside: avoid; page-break-inside: avoid; }
+    .page-break { break-before: page; page-break-before: always; }
+    table { width: 100%; border-collapse: collapse; margin: 3mm 0 5mm; font-size: 8.8pt; break-inside: avoid; }
+    th, td { padding: 2.4mm 2.2mm; border-bottom: 1px solid #cccccc; vertical-align: top; text-align: left; }
+    th { color: #222222; background: #eeeeee; }
+    .footer-space { height: 3mm; }
+  </style>
+  <style>
+    /* Monochrome lecture-note edition */
+    body, h1, h2, h3, h4 { color: #111; }
+    .cover-rule { background: #111; }
+    .cover-sub, .lead, .muted, .caption, .source, .cover-note { color: #333; }
+    .eyebrow { color: #111; }
+    .section-head { border-color: #777; }
+    .pill, .pill.level {
+      color: #111;
+      background: #f1f1f1;
+      border: 1px solid #aaa;
+    }
+    .step { background: #f5f5f5; border-left-color: #666; }
+    .idea { background: #f7f7f7; border-left-color: #111; }
+    .result { background: #f2f2f2; border-color: #999; }
+    .warning { background: #fafafa; border-left-color: #333; }
+    .step-no { background: #111; }
+    .svg-wrap { background: #fff; border-color: #aaa; }
+    .label { fill: #111; }
+    .axis { stroke: #555; }
+    .potential { stroke: #111; }
+    .wave { stroke: #555; }
+    th { color: #111; background: #ededed; }
+    th, td { border-color: #aaa; }
+    .problem-spec {
+      margin: 0 0 5mm;
+      border: 1.2px solid #666;
+      padding: 4mm 4.2mm;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .problem-spec h3 { margin-bottom: 3mm; }
+    .spec-row {
+      display: grid;
+      grid-template-columns: 25mm 1fr;
+      gap: 3mm;
+      padding: 2.4mm 0;
+      border-top: 1px solid #ccc;
+      align-items: start;
+    }
+    .spec-row:first-of-type { border-top: 0; }
+    .spec-label {
+      font-size: 8pt;
+      font-weight: 750;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .spec-row p, .spec-row .equation { margin: 0; }
+    .method-reminder {
+      margin: 0 0 5mm;
+      padding: 3.5mm 4mm;
+      border-top: 2px solid #111;
+      border-bottom: 1px solid #aaa;
+      font-size: 9pt;
+      break-inside: avoid;
+    }
+    .lecture-note {
+      margin: 0 0 4.5mm;
+      padding: 3.5mm 4mm;
+      border: 1px solid #bbb;
+      background: #fff;
+      break-inside: avoid;
+    }
+    .lecture-note p:last-child { margin-bottom: 0; }
+    .series-explanation {
+      margin: 0 0 4.5mm;
+      padding: 3.5mm 4mm;
+      border: 1px solid #bbb;
+      background: #fff;
+    }
+    .series-explanation p:last-child { margin-bottom: 0; }
+    .toc {
+      width: 100%;
+      margin-top: 5mm;
+      font-size: 9.2pt;
+      break-inside: auto;
+      page-break-inside: auto;
+    }
+    .toc td { padding: 2.4mm 1mm; border-bottom: 1px dotted #999; }
+    .toc td:last-child { width: 12mm; text-align: right; font-variant-numeric: tabular-nums; }
+    .toc-part td { padding-top: 4mm; font-weight: 750; border-bottom: 1px solid #333; }
+    .worked-check {
+      display: grid;
+      grid-template-columns: 28mm 1fr;
+      gap: 2.5mm;
+      font-size: 8.8pt;
+    }
+    .worked-check div { padding: 1.5mm 0; border-bottom: 1px solid #d0d0d0; }
+    .worked-check div:nth-child(odd) { font-weight: 700; }
+  </style>
+  <style>
+    /* Conventional lecture-note edition: original colour palette, minimal boxes. */
+    body { color: #172233; }
+    h1, h2, h3, h4 { color: #15324b; }
+    .muted { color: #607080; }
+    .cover-rule { background: #2b8c87; }
+    .cover-sub { color: #406071; }
+    .cover-note { border-color: #b9c9cf; color: #5c6b75; }
+    .eyebrow { color: #23756f; }
+    .section-head { border-color: #9fb8bf; }
+    .pill {
+      color: #1d6863;
+      background: #e6f2f0;
+      border: 0;
+    }
+    .pill.level { color: #344d70; background: #edf0f7; }
+    .lead { color: #2e4658; }
+
+    .step {
+      margin: 0 0 7mm;
+      padding: 0 0 5mm;
+      border: 0;
+      border-bottom: 1px solid #d5dee2;
+      border-radius: 0;
+      background: transparent;
+      break-inside: auto;
+      page-break-inside: auto;
+    }
+    .step > h3 {
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+    .step-no {
+      display: inline;
+      min-width: 0;
+      height: auto;
+      margin-right: 1.2mm;
+      border-radius: 0;
+      background: transparent;
+      color: #23756f;
+      font-size: 10.7pt;
+      line-height: inherit;
+      vertical-align: baseline;
+    }
+    .step-no::after { content: "."; }
+
+    .idea, .result, .warning {
+      margin: 0 0 6mm;
+      padding: 1.5mm 0 1.5mm 4mm;
+      border: 0;
+      border-left: 2px solid #2b8c87;
+      border-radius: 0;
+      background: transparent;
+    }
+    .result { border-left-color: #344d70; }
+    .warning { border-left-color: #d09637; }
+
+    .lecture-note, .series-explanation {
+      margin: 0 0 6mm;
+      padding: 1.5mm 0 1.5mm 4mm;
+      border: 0;
+      border-left: 2px solid #9fb8bf;
+      background: transparent;
+    }
+
+    .problem-spec {
+      margin: 0 0 6mm;
+      padding: 3mm 0;
+      border: 0;
+      border-top: 1.2px solid #9fb8bf;
+      border-bottom: 1.2px solid #9fb8bf;
+    }
+    .problem-spec h3 { color: #25475b; }
+    .spec-row { border-color: #d6e0e2; }
+    .spec-label { color: #25475b; }
+
+    .method-reminder {
+      border-top-color: #2b8c87;
+      border-bottom-color: #9fb8bf;
+      color: #2e4658;
+    }
+    .svg-wrap { background: #fbfcfc; border-color: #d6e0e2; }
+    .label { fill: #2c4150; }
+    .axis { stroke: #607681; }
+    .potential { stroke: #243d56; }
+    .wave { stroke: #2b8c87; }
+    .caption, .source { color: #64727a; }
+    .source { border-color: #d5dee2; }
+    .roadmap .n { color: #2b8c87; }
+    th { color: #25475b; background: #eef4f5; }
+    th, td { border-color: #cfd9dd; }
+    .toc td { border-color: #9fb8bf; }
+    .toc-part td { border-color: #25475b; }
+    .worked-check div { border-color: #cfd9dd; }
+  </style>
+  <style>
+    /* Compact monochrome text edition. Colour is reserved for diagrams. */
+    body {
+      color: #171717;
+      font-size: 9.7pt;
+      line-height: 1.5;
+    }
+    h1, h2, h3, h4,
+    .problem-spec h3, .spec-label, th {
+      color: #171717;
+    }
+    h1 { font-size: 24pt; line-height: 1.08; }
+    h2 { font-size: 16.5pt; line-height: 1.18; }
+    h3 { font-size: 11.3pt; line-height: 1.3; }
+    h4 { font-size: 10.1pt; line-height: 1.32; }
+    .cover-sub { font-size: 12pt; color: #333; }
+    .cover-rule { height: 2px; background: #555; }
+    .cover-note, .lead, .muted, .caption, .source { color: #444; }
+    .lead { font-size: 10.5pt; }
+    .eyebrow { color: #3f3f3f; }
+    .section-head {
+      border: 0;
+      padding-bottom: 0;
+      margin-bottom: 5mm;
+    }
+    .pill, .pill.level {
+      color: #222;
+      background: #f1f1f1;
+      border: 1px solid #d1d1d1;
+    }
+    .step {
+      margin-bottom: 6.5mm;
+      padding-bottom: 0;
+      border: 0;
+    }
+    .step-no, .roadmap .n { color: #333; }
+    .idea, .result, .warning,
+    .lecture-note, .series-explanation {
+      border-left-color: #999;
+    }
+    .problem-spec {
+      border: 0;
+      padding: 0;
+      margin-bottom: 6mm;
+    }
+    .spec-row {
+      border: 0;
+      padding: 2mm 0;
+    }
+    .method-reminder {
+      border: 0;
+      border-left: 2px solid #999;
+      padding: 1.5mm 0 1.5mm 4mm;
+      color: #333;
+    }
+    .source { border: 0; padding-top: 0; }
+    .toc td, .toc-part td { border: 0; }
+    .toc-part td { color: #222; }
+    .worked-check div { border: 0; }
+    th { background: #f1f1f1; }
+    th, td { border-color: #dddddd; }
+
+    /* Colour is intentionally limited to diagrams. */
+    .svg-wrap { background: #fff; border-color: #d6e0e2; }
+    .label { fill: #2c4150; }
+    .axis { stroke: #607681; }
+    .potential { stroke: #243d56; }
+    .wave { stroke: #2b8c87; }
+
+    .concept-statement {
+      margin: 5mm 0 7mm;
+      padding: 1mm 0 1mm 4mm;
+      border-left: 2px solid #777;
+      break-inside: avoid;
+    }
+    .operator-chain {
+      margin: 5mm 0 7mm;
+      text-align: center;
+      break-inside: avoid;
+    }
+    .solution-table {
+      margin: 3mm 0 8mm;
+      font-size: 8.45pt;
+      line-height: 1.42;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .solution-table th {
+      width: 29mm;
+      padding: 2.2mm 2mm 2.2mm 0;
+      background: transparent;
+      color: #333;
+      font-size: 7.7pt;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+    .solution-table td {
+      padding: 2.2mm 0 2.2mm 2mm;
+    }
+    .solution-table th, .solution-table td {
+      border-bottom: 1px solid #dedede;
+    }
+    .solution-table tr:last-child th,
+    .solution-table tr:last-child td { border-bottom: 0; }
+    .solution-model {
+      margin-top: 7mm;
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+    .basis-key {
+      width: 100%;
+      margin: 4mm 0 7mm;
+      font-size: 8.8pt;
+      break-inside: avoid;
+    }
+    .basis-key th, .basis-key td { padding: 2mm; }
+  </style>
+</head>
+<body>
+
+<section class="cover">
+  <div>
+    <div class="eyebrow">Progressive worked examples · Mathematics and Physics</div>
+    <h1>Solving the<br>Schrödinger<br>Equation</h1>
+    <div class="cover-rule"></div>
+    <div class="cover-sub">Discussion-first worked notes: solutions from the one-dimensional infinite well to the hydrogen-like atom.</div>
+  </div>
+  <div class="cover-note">
+    Compact study edition.<br>
+    Each model begins with the equation, potential and boundary conditions.<br>
+    Intended to stimulate discussion rather than serve as a rigorous treatise.<br>
+    Prepared with assistance from a large language model.
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Contents</div>
+    <h2>Progressive route through the subject</h2>
+  </div>
+  <table class="toc">
+    <tbody>
+      <tr><td>Thirteen worked solution demonstrations</td><td>3</td></tr>
+      <tr><td>How every worked solution is organised</td><td>5</td></tr>
+      <tr><td>From the time-dependent to the time-independent equation</td><td>6</td></tr>
+      <tr class="toc-part"><td>Part I - One-dimensional piecewise potentials</td><td></td></tr>
+      <tr><td>1. One-dimensional infinite well</td><td>9</td></tr>
+      <tr><td>2. Potential step with $E&gt;V_0$</td><td>12</td></tr>
+      <tr><td>3. Potential step with $E&lt;V_0$</td><td>15</td></tr>
+      <tr><td>4. Finite barrier with $E&lt;V_0$: tunnelling</td><td>18</td></tr>
+      <tr><td>5. Finite barrier with $E&gt;V_0$: resonances</td><td>22</td></tr>
+      <tr><td>6. Semi-infinite finite well</td><td>25</td></tr>
+      <tr class="toc-part"><td>Part II - Smooth and separable potentials</td><td></td></tr>
+      <tr><td>7. One-dimensional harmonic oscillator</td><td>28</td></tr>
+      <tr><td>Alternative oscillator solution using ladder operators</td><td>35</td></tr>
+      <tr><td>8. Three-dimensional rectangular box</td><td>38</td></tr>
+      <tr><td>9. Three-dimensional harmonic oscillator</td><td>41</td></tr>
+      <tr class="toc-part"><td>Part III - Central potentials</td><td></td></tr>
+      <tr><td>Spherical-coordinate toolkit</td><td>44</td></tr>
+      <tr><td>Separating radial and angular equations</td><td>46</td></tr>
+      <tr><td>10. Spherical infinite well</td><td>50</td></tr>
+      <tr><td>11. Hydrogen-like atom</td><td>53</td></tr>
+      <tr><td>Revision map</td><td>61</td></tr>
+      <tr class="toc-part"><td>Appendix - Coordinate systems and Laplacians</td><td>62</td></tr>
+      <tr><td>A.1 General orthogonal-coordinate formula</td><td>63</td></tr>
+      <tr><td>A.2 Polar coordinates</td><td>66</td></tr>
+      <tr><td>A.3 Cylindrical coordinates</td><td>68</td></tr>
+      <tr><td>A.4 Spherical coordinates</td><td>70</td></tr>
+      <tr class="toc-part"><td>Appendices B-C - Eigenbases and solution tables</td><td></td></tr>
+      <tr><td>B. Why separation of variables reveals the eigenbasis</td><td>73</td></tr>
+      <tr><td>C. Master solution tables</td><td>77</td></tr>
+    </tbody>
+  </table>
+</section>
+
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Worked-model index</div>
+    <h2>The thirteen solution demonstrations</h2>
+  </div>
+  <p class="lead">There is no single universal list, but these are thirteen solution patterns commonly encountered by the middle of an undergraduate quantum-mechanics sequence.</p>
+  <ol class="roadmap">
+    <li><span class="n">1</span><span><strong>One-dimensional infinite well.</strong><br>Boundary quantisation and normalisation.</span></li>
+    <li><span class="n">2</span><span><strong>Potential step with $E&gt;V_0$.</strong><br>Matching and flux transmission.</span></li>
+    <li><span class="n">3</span><span><strong>Potential step with $E&lt;V_0$.</strong><br>Evanescent penetration and total reflection.</span></li>
+    <li><span class="n">4</span><span><strong>Finite barrier with $E&lt;V_0$.</strong><br>Quantum tunnelling.</span></li>
+    <li><span class="n">5</span><span><strong>Finite barrier with $E&gt;V_0$.</strong><br>Resonant transmission.</span></li>
+    <li><span class="n">6</span><span><strong>Semi-infinite finite well.</strong><br>Transcendental energy conditions.</span></li>
+    <li><span class="n">7</span><span><strong>One-dimensional harmonic oscillator.</strong><br>Asymptotics and power-series termination.</span></li>
+    <li><span class="n">8</span><span><strong>Harmonic oscillator by ladder operators.</strong><br>Factorisation and algebraic spectrum.</span></li>
+    <li><span class="n">9</span><span><strong>Three-dimensional rectangular box.</strong><br>Cartesian separation and product states.</span></li>
+    <li><span class="n">10</span><span><strong>Three-dimensional harmonic oscillator.</strong><br>Separable Hamiltonians and degeneracy.</span></li>
+    <li><span class="n">11</span><span><strong>General central potential.</strong><br>Radial-angular separation and spherical harmonics.</span></li>
+    <li><span class="n">12</span><span><strong>Spherical infinite well.</strong><br>Spherical Bessel functions and radial boundary conditions.</span></li>
+    <li><span class="n">13</span><span><strong>Hydrogen-like atom.</strong><br>Endpoint behaviour, series termination, and the bound spectrum.</span></li>
+  </ol>
+  <div class="lecture-note">
+    <h3>What this list is for</h3>
+    <p>The point is not to memorise thirteen answers. It is to recognise a small number of recurring moves: separation, admissible asymptotics, boundary matching, normalisation, flux ratios, series termination, and operator factorisation.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">How to use these notes</div>
+    <h2>One method, repeated</h2>
+  </div>
+  <p class="lead">Every exact solution in this guide follows the same six moves.</p>
+  <div class="lecture-note">
+    <h3>What “solving the Schrödinger equation” means</h3>
+    <p>It does not mean finding just any function that satisfies a differential equation.</p>
+    <p>We must find functions that satisfy the differential equation <em>and</em> the physical conditions of the problem.</p>
+    <p>Those physical conditions are usually what select the allowed energies.</p>
+  </div>
+  <ol class="roadmap">
+    <li><span class="n">1</span><span><strong>Write the potential.</strong><br>Divide space into regions if the potential changes abruptly.</span></li>
+    <li><span class="n">2</span><span><strong>Write the TISE.</strong><br>Use the correct equation in each region.</span></li>
+    <li><span class="n">3</span><span><strong>Choose the admissible form.</strong><br>Reject any piece that diverges or violates the physical direction of travel.</span></li>
+    <li><span class="n">4</span><span><strong>Apply boundary conditions.</strong><br>These are what quantise bound-state energies.</span></li>
+    <li><span class="n">5</span><span><strong>Normalise or compare fluxes.</strong><br>Bound states are normalised; scattering states use amplitude and current ratios.</span></li>
+    <li><span class="n">6</span><span><strong>Read the physics.</strong><br>Identify allowed energies, reflection, transmission, degeneracy and limiting behaviour.</span></li>
+  </ol>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Foundation</div>
+    <h2>From the TDSE to the TISE</h2>
+    <div class="section-meta"><span class="pill level">Level 0</span><span class="pill">separation of variables</span></div>
+  </div>
+  <p class="lead">When the potential has no explicit time dependence, the time dependence separates completely.</p>
+
+  <div class="problem-spec">
+    <h3>What is assumed here?</h3>
+    <div class="spec-row"><div class="spec-label">Starting equation</div><div class="equation compact">$$i\hbar\frac{\partial\psi}{\partial t}=\left[-\frac{\hbar^2}{2m}\frac{\partial^2}{\partial x^2}+V(x)\right]\psi.$$</div></div>
+    <div class="spec-row"><div class="spec-label">Assumption</div><div>The potential $V$ depends on position but not explicitly on time.</div></div>
+    <div class="spec-row"><div class="spec-label">Aim</div><div>Separate the time dependence and obtain an ordinary differential equation for the spatial part.</div></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">1</span>Start from the time-dependent equation</h3>
+    <div class="equation">$$ i\hbar\frac{\partial\psi}{\partial t}=\left[-\frac{\hbar^2}{2m}\frac{\partial^2}{\partial x^2}+V(x)\right]\psi. $$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">2</span>Assume a separated solution</h3>
+    <div class="equation">$$ \psi(x,t)=T(t)\,\phi(x). $$</div>
+    <p>This is an ansatz: we first look for states whose time and position dependence can be written as a product.</p>
+    <p>Later, linear combinations of these separated states describe more general wavefunctions.</p>
+    <p>Substitute and divide by $T\phi$:</p>
+    <div class="equation">$$ i\hbar\frac{1}{T}\frac{dT}{dt}
+      =-\frac{\hbar^2}{2m}\frac{1}{\phi}\frac{d^2\phi}{dx^2}+V(x). $$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">3</span>Separate the independent variables</h3>
+    <p>The left side depends only on $t$.</p>
+    <p>The right side depends only on $x$.</p>
+    <p>Therefore both sides must equal the same constant, called $E$.</p>
+    <p>Hold $x$ fixed and vary $t$. The right side cannot change, so the left side cannot change either.</p>
+    <p>Now hold $t$ fixed and vary $x$. The same argument shows the right side is constant.</p>
+    <p>The constant has dimensions of energy, so we name it $E$.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="result">
+      <h3>Time equation</h3>
+      <div class="equation compact">$$ i\hbar\frac{dT}{dt}=ET $$</div>
+      <div class="equation compact">$$ T(t)=e^{-iEt/\hbar}. $$</div>
+    </div>
+    <div class="result">
+      <h3>Spatial equation</h3>
+      <div class="equation compact">$$ -\frac{\hbar^2}{2m}\frac{d^2\phi}{dx^2}+V\phi=E\phi. $$</div>
+      <p class="small">This is the time-independent Schrödinger equation.</p>
+    </div>
+  </div>
+
+  <div class="idea">
+    <h3>Stationary state</h3>
+    <div class="equation compact">$$ \psi(x,t)=\phi(x)e^{-iEt/\hbar},\qquad |\psi(x,t)|^2=|\phi(x)|^2. $$</div>
+    <p>The phase changes with time, but the probability density does not.</p>
+  </div>
+  <div class="lecture-note">
+    <h3>How a general state is built</h3>
+    <p>If the spatial eigenfunctions form an orthonormal basis, an initial wavefunction can be expanded as</p>
+    <div class="equation compact">$$\psi(x,0)=\sum_n c_n\phi_n(x),\qquad c_n=\int\phi_n^*(x)\psi(x,0)\,dx.$$</div>
+    <p>Each basis component then acquires its own phase:</p>
+    <div class="equation compact">$$\psi(x,t)=\sum_n c_n\phi_n(x)e^{-iE_nt/\hbar}.$$</div>
+  </div>
+  <div class="source">Discussion prompt: compare the derivation with your lectures and preferred textbook.</div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Model 1</div>
+    <h2>Particle in a one-dimensional infinite well</h2>
+    <div class="section-meta"><span class="pill level">Level 1</span><span class="pill">boundary quantisation</span><span class="pill">normalisation</span></div>
+  </div>
+  <p class="lead">This is the cleanest example of boundary conditions turning a continuous parameter into discrete energies.</p>
+
+  <div class="problem-spec">
+    <h3>Problem specification</h3>
+    <div class="spec-row"><div class="spec-label">Equation</div><div class="equation compact">$$-\frac{\hbar^2}{2m}\frac{d^2\phi}{dx^2}+V(x)\phi=E\phi.$$</div></div>
+    <div class="spec-row"><div class="spec-label">Potential</div><div class="equation compact">$$V(x)=0\ \text{for }0\le x\le L,\qquad V(x)=\infty\ \text{otherwise}.$$</div></div>
+    <div class="spec-row"><div class="spec-label">Boundary conditions</div><div>$\phi(0)=0$, $\phi(L)=0$, and $\int_0^L|\phi|^2\,dx=1$.</div></div>
+    <div class="spec-row"><div class="spec-label">Find</div><div>The allowed wavefunctions $\phi_n(x)$ and energies $E_n$.</div></div>
+  </div>
+  <div class="method-reminder"><strong>Repeated method:</strong> solve inside the allowed region → impose both walls → discard the zero solution → normalise → restore the time factor if required.</div>
+
+  <div class="svg-wrap">
+    <svg viewBox="0 0 360 120" aria-label="Infinite square well">
+      <line class="axis" x1="20" y1="96" x2="342" y2="96"/><line class="axis" x1="35" y1="108" x2="35" y2="10"/>
+      <path class="potential" d="M35 18 L78 18 L78 84 L292 84 L292 18 L334 18"/>
+      <path class="wave" d="M78 84 C105 35 132 35 159 84 C186 133 213 133 240 84 C257 53 275 53 292 84"/>
+      <text class="label" x="74" y="110">0</text><text class="label" x="288" y="110">L</text><text class="label" x="13" y="15">V</text><text class="label" x="338" y="110">x</text>
+    </svg>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">1</span>Define the potential</h3>
+    <div class="equation">$$ V(x)=\begin{cases}0,&amp;0\le x\le L,\\[2pt]\infty,&amp;\text{otherwise.}\end{cases} $$</div>
+    <p>Finite energy requires $\phi=0$ outside the well.</p>
+    <p>Continuity therefore gives $\phi(0)=\phi(L)=0$.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">2</span>Solve inside the well</h3>
+    <div class="equation">$$ -\frac{\hbar^2}{2m}\phi''=E\phi
+      \quad\Longrightarrow\quad
+      \phi''+k^2\phi=0,\qquad k^2=\frac{2mE}{\hbar^2}. $$</div>
+    <div class="equation">$$ \phi(x)=A\sin kx+B\cos kx. $$</div>
+    <p>This is the complete two-parameter solution of a second-order linear differential equation.</p>
+    <p>We need two constants because two independent boundary conditions will be imposed.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">3</span>Apply both walls</h3>
+    <div class="equation tight-math">$$
+      \phi(0)=0\Rightarrow B=0,
+      \qquad
+      \phi(L)=0\Rightarrow A\sin(kL)=0.
+    $$</div>
+    <p>A non-zero state needs $\sin(kL)=0$.</p>
+    <div class="equation">$$ kL=n\pi,\qquad k_n=\frac{n\pi}{L},\qquad n=1,2,3,\ldots $$</div>
+    <p>The choice $n=0$ gives $\phi=0$ everywhere, which cannot be normalised.</p>
+    <p>Negative $n$ changes only the overall sign of the sine function, so it does not produce a new physical state.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">4</span>Normalise</h3>
+    <div class="equation">$$ 1=\int_0^L |A|^2\sin^2\!\left(\frac{n\pi x}{L}\right)dx=|A|^2\frac{L}{2}. $$</div>
+    <div class="equation">$$ A=\sqrt{\frac{2}{L}}. $$</div>
+    <p>An overall complex phase would not change any probability. We choose $A$ real and positive.</p>
+  </div>
+
+  <div class="result">
+    <h3>Allowed stationary states</h3>
+    <div class="equation">$$
+      \phi_n(x)=\sqrt{\frac{2}{L}}\sin\!\left(\frac{n\pi x}{L}\right),
+      \qquad
+      E_n=\frac{\hbar^2\pi^2 n^2}{2mL^2}.
+    $$</div>
+    <p>The walls allow only an integer number of half-wavelengths inside the well.</p>
+    <p>The full stationary state is $\psi_n(x,t)=\phi_n(x)e^{-iE_nt/\hbar}$.</p>
+  </div>
+  <div class="lecture-note">
+    <h3>Checks before moving on</h3>
+    <div class="worked-check">
+      <div>Dimensions</div><div>$E_n$ has units $\hbar^2/(mL^2)$, which are energy units.</div>
+      <div>Boundary values</div><div>The sine vanishes at $x=0$ and $x=L$.</div>
+      <div>Orthogonality</div><div>$\int_0^L\phi_m^*\phi_n\,dx=\delta_{mn}$.</div>
+      <div>Large box</div><div>As $L$ grows, adjacent energy levels become closer together.</div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Model 2</div>
+    <h2>Potential step with $E&gt;V_0$</h2>
+    <div class="section-meta"><span class="pill level">Level 1</span><span class="pill">matching</span><span class="pill">probability flux</span></div>
+  </div>
+  <p class="lead">A classically allowed step still reflects part of a quantum wave.</p>
+
+  <div class="problem-spec">
+    <h3>Problem specification</h3>
+    <div class="spec-row"><div class="spec-label">Equation</div><div class="equation compact">$$-\frac{\hbar^2}{2m}\phi''+V(x)\phi=E\phi.$$</div></div>
+    <div class="spec-row"><div class="spec-label">Potential</div><div class="equation compact">$$V(x)=\begin{cases}0,&amp;x&lt;0,\\V_0,&amp;x&gt;0,\end{cases}\qquad E&gt;V_0.$$</div></div>
+    <div class="spec-row"><div class="spec-label">Physical conditions</div><div>A wave is incident from the left. There is no wave incident from $+\infty$. Both $\phi$ and $\phi'$ are continuous at $x=0$.</div></div>
+    <div class="spec-row"><div class="spec-label">Find</div><div>The reflection probability $R$ and transmission probability $T$.</div></div>
+  </div>
+  <div class="method-reminder"><strong>Repeated method:</strong> solve in each constant-potential region → assign directions of travel → match $\phi,\phi'$ → form probability-current ratios → check $R+T=1$.</div>
+
+  <div class="svg-wrap">
+    <svg viewBox="0 0 360 125" aria-label="Potential step above barrier">
+      <line class="axis" x1="25" y1="104" x2="340" y2="104"/><line class="axis" x1="38" y1="114" x2="38" y2="10"/>
+      <path class="potential" d="M38 92 L184 92 L184 53 L334 53"/>
+      <line x1="38" y1="28" x2="334" y2="28" stroke="#d09637" stroke-width="1.5" stroke-dasharray="5 4"/>
+      <text class="label" x="188" y="49">V₀</text><text class="label" x="307" y="24">E</text><text class="label" x="330" y="116">x</text>
+      <path class="wave" d="M42 72 C51 58 60 58 69 72 S87 86 96 72 S114 58 123 72 S141 86 150 72 S168 58 177 72"/>
+      <path class="wave" d="M190 72 C204 60 218 60 232 72 S260 84 274 72 S302 60 316 72"/>
+    </svg>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">1</span>Write one solution in each region</h3>
+    <div class="equation">$$
+      V(x)=\begin{cases}0,&amp;x&lt;0,\\V_0,&amp;x&gt;0,\end{cases}
+      \qquad
+      k_1=\frac{\sqrt{2mE}}{\hbar},
+      \quad k_2=\frac{\sqrt{2m(E-V_0)}}{\hbar}.
+    $$</div>
+    <div class="equation">$$
+      \phi_1=Ae^{ik_1x}+Be^{-ik_1x},
+      \qquad
+      \phi_2=Ce^{ik_2x}.
+    $$</div>
+    <p>$A$ is incident, $B$ reflected, and $C$ transmitted.</p>
+    <p>There is no incoming wave from $+\infty$.</p>
+  </div>
+
+  <div class="lecture-note">
+    <h3>Why do we match both $\phi$ and $\phi'$?</h3>
+    <p>Integrate the TISE across a very small interval from $-\epsilon$ to $+\epsilon$ around the finite step:</p>
+    <div class="equation compact">$$-\frac{\hbar^2}{2m}\left[\phi'(+\epsilon)-\phi'(-\epsilon)\right]+\int_{-\epsilon}^{+\epsilon}(V-E)\phi\,dx=0.$$</div>
+    <p>For a finite jump in $V$, the integral tends to zero as $\epsilon\to0$.</p>
+    <p>Therefore $\phi'$ is continuous. The wavefunction itself must also be continuous; otherwise its derivatives would contain singular delta-function terms not present in this potential.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">2</span>Match the wave and its derivative at $x=0$</h3>
+    <div class="equation">$$ A+B=C,\qquad k_1(A-B)=k_2C. $$</div>
+    <p>Insert $C=A+B$ into the second equation:</p>
+    <div class="equation">$$ (k_1-k_2)A=(k_1+k_2)B. $$</div>
+    <div class="equation">$$ \frac{B}{A}=\frac{k_1-k_2}{k_1+k_2},\qquad
+      \frac{C}{A}=\frac{2k_1}{k_1+k_2}. $$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">3</span>Convert amplitudes into flux probabilities</h3>
+    <p>Probability current for a plane wave is proportional to $k\,|\text{amplitude}|^2$.</p>
+    <div class="equation">$$
+      R=\frac{|B|^2}{|A|^2},
+      \qquad
+      T=\frac{k_2|C|^2}{k_1|A|^2}.
+    $$</div>
+    <p>More explicitly, the one-dimensional probability current is</p>
+    <div class="equation compact">$$j=\frac{\hbar}{2mi}\left(\psi^*\frac{\partial\psi}{\partial x}-\psi\frac{\partial\psi^*}{\partial x}\right).$$</div>
+    <p>For $\psi=Ae^{i(kx-Et/\hbar)}$, this becomes $j=(\hbar k/m)|A|^2$.</p>
+    <p>That extra factor of $k$ is why the transmission probability is not simply $|C/A|^2$ when the wavenumbers differ.</p>
+  </div>
+
+  <div class="result">
+    <h3>Reflection and transmission</h3>
+    <div class="equation">$$
+      R=\left(\frac{k_1-k_2}{k_1+k_2}\right)^2,
+      \qquad
+      T=\frac{4k_1k_2}{(k_1+k_2)^2},
+      \qquad R+T=1.
+    $$</div>
+    <p>Even though the step is classically allowed, $R\ne0$ whenever $k_1\ne k_2$.</p>
+  </div>
+  <div class="lecture-note">
+    <h3>Checks</h3>
+    <p>If $V_0\to0$, then $k_2\to k_1$, so $R\to0$ and $T\to1$.</p>
+    <p>The identity $R+T=1$ confirms conservation of probability.</p>
+  </div>
+  <div class="source">Discussion prompt: compare the derivation with your lectures and preferred textbook.</div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Model 3</div>
+    <h2>Potential step with $E&lt;V_0$</h2>
+    <div class="section-meta"><span class="pill level">Level 2</span><span class="pill">evanescent wave</span><span class="pill">total reflection</span></div>
+  </div>
+  <p class="lead">The wave enters the forbidden region, but no probability flux travels to infinity.</p>
+
+  <div class="problem-spec">
+    <h3>Problem specification</h3>
+    <div class="spec-row"><div class="spec-label">Equation</div><div class="equation compact">$$-\frac{\hbar^2}{2m}\phi''+V(x)\phi=E\phi.$$</div></div>
+    <div class="spec-row"><div class="spec-label">Potential</div><div class="equation compact">$$V(x)=\begin{cases}0,&amp;x&lt;0,\\V_0,&amp;x&gt;0,\end{cases}\qquad 0&lt;E&lt;V_0.$$</div></div>
+    <div class="spec-row"><div class="spec-label">Physical conditions</div><div>A wave is incident from the left. The wavefunction must remain bounded as $x\to+\infty$. Match $\phi$ and $\phi'$ at $x=0$.</div></div>
+    <div class="spec-row"><div class="spec-label">Find</div><div>The reflected amplitude, the evanescent tail, and the penetration length.</div></div>
+  </div>
+  <div class="method-reminder"><strong>Repeated method:</strong> solve each region → recognise an imaginary wavenumber → reject the divergent exponential → match at the boundary → calculate the current.</div>
+
+  <div class="step">
+    <h3><span class="step-no">1</span>The right-hand wavenumber becomes imaginary</h3>
+    <div class="equation">$$
+      \kappa=\frac{\sqrt{2m(V_0-E)}}{\hbar},
+      \qquad
+      \phi_1=Ae^{ikx}+Be^{-ikx}.
+    $$</div>
+    <div class="equation">$$ \phi_2=Ce^{-\kappa x}+De^{+\kappa x}. $$</div>
+    <p>The term $De^{+\kappa x}$ diverges as $x\to+\infty$.</p>
+    <p>Physical boundedness forces $D=0$.</p>
+    <p>This is not an arbitrary change of solution type. In Region 2,</p>
+    <div class="equation compact">$$q^2=\frac{2m(E-V_0)}{\hbar^2}=-\kappa^2,$$</div>
+    <p>so $e^{\pm iqx}=e^{\mp\kappa x}$.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">2</span>Match at the step</h3>
+    <div class="equation">$$ A+B=C,\qquad ik(A-B)=-\kappa C. $$</div>
+    <p>Eliminate $C$:</p>
+    <div class="equation">$$ ik(A-B)=-\kappa(A+B). $$</div>
+    <div class="equation">$$
+      \frac{B}{A}=\frac{k-i\kappa}{k+i\kappa},
+      \qquad
+      \frac{C}{A}=\frac{2k}{k+i\kappa}.
+    $$</div>
+  </div>
+
+  <div class="result">
+    <h3>What the result means</h3>
+    <div class="equation">$$
+      R=\left|\frac{k-i\kappa}{k+i\kappa}\right|^2=1,
+      \qquad
+      \phi_2(x)=Ce^{-\kappa x}.
+    $$</div>
+    <p>The particle is totally reflected.</p>
+    <p>Nevertheless, $|\phi_2|^2\ne0$ close to the boundary.</p>
+    <p>The penetration depth is of order $1/\kappa$.</p>
+  </div>
+  <div class="lecture-note">
+    <h3>Why the tail carries no transmitted current</h3>
+    <p>For a single real exponential $\phi=Ce^{-\kappa x}$, the two terms in the current cancel:</p>
+    <div class="equation compact">$$j=\frac{\hbar}{2mi}(\phi^*\phi'-\phi\phi'^*)=0.$$</div>
+    <p>There is probability density inside the classically forbidden region, but there is no steady flux travelling to $+infty$.</p>
+  </div>
+  <div class="source">Discussion prompt: compare the derivation with your lectures and preferred textbook.</div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Model 4</div>
+    <h2>Finite barrier with $E&lt;V_0$: tunnelling</h2>
+    <div class="section-meta"><span class="pill level">Level 2</span><span class="pill">three regions</span><span class="pill">exact transmission</span></div>
+  </div>
+  <p class="lead">A forbidden region of finite width can be crossed because the evanescent wave reaches the far boundary.</p>
+
+  <div class="problem-spec">
+    <h3>Problem specification</h3>
+    <div class="spec-row"><div class="spec-label">Equation</div><div class="equation compact">$$-\frac{\hbar^2}{2m}\phi''+V(x)\phi=E\phi.$$</div></div>
+    <div class="spec-row"><div class="spec-label">Potential</div><div class="equation compact">$$V(x)=\begin{cases}V_0,&amp;0\le x\le L,\\0,&amp;x&lt;0\ \text{or}\ x&gt;L,\end{cases}\qquad 0&lt;E&lt;V_0.$$</div></div>
+    <div class="spec-row"><div class="spec-label">Physical conditions</div><div>Incident wave from the left; no incoming wave from the right; $\phi$ and $\phi'$ continuous at both $x=0$ and $x=L$.</div></div>
+    <div class="spec-row"><div class="spec-label">Find</div><div>The exact transmission probability and its wide-barrier approximation.</div></div>
+  </div>
+  <div class="method-reminder"><strong>Repeated method:</strong> write three regional solutions → keep both exponentials inside a finite barrier → match at both faces → eliminate internal amplitudes → take a flux ratio → test limiting cases.</div>
+
+  <div class="svg-wrap">
+    <svg viewBox="0 0 360 135" aria-label="Finite potential barrier and tunnelling wave">
+      <line class="axis" x1="22" y1="110" x2="341" y2="110"/><line class="axis" x1="35" y1="121" x2="35" y2="10"/>
+      <path class="potential" d="M35 96 L138 96 L138 35 L250 35 L250 96 L334 96"/>
+      <line x1="35" y1="62" x2="334" y2="62" stroke="#d09637" stroke-width="1.5" stroke-dasharray="5 4"/>
+      <text class="label" x="190" y="30">V₀</text><text class="label" x="308" y="58">E</text><text class="label" x="131" y="125">0</text><text class="label" x="246" y="125">L</text>
+      <path class="wave" d="M38 84 C48 68 58 68 68 84 S88 100 98 84 S118 68 128 84"/>
+      <path class="wave" d="M140 76 C168 78 194 81 218 84 C230 86 240 88 248 89"/>
+      <path class="wave" d="M253 88 C263 81 273 81 283 88 S303 95 313 88 S329 81 336 87"/>
+    </svg>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">1</span>Write all admissible pieces</h3>
+    <div class="equation">$$
+      k=\frac{\sqrt{2mE}}{\hbar},
+      \qquad
+      \kappa=\frac{\sqrt{2m(V_0-E)}}{\hbar}.
+    $$</div>
+    <div class="equation tight-math">$$
+      \phi_I=Ae^{ikx}+Be^{-ikx},\quad
+      \phi_{II}=Ce^{\kappa x}+De^{-\kappa x},\quad
+      \phi_{III}=Fe^{ikx}.
+    $$</div>
+    <p>Do not discard $Ce^{\kappa x}$ inside the barrier.</p>
+    <p>The barrier occupies only $0\le x\le L$, so this term never reaches $x=+\infty$ and does not diverge on its finite domain.</p>
+    <p>Both internal exponentials are needed to satisfy conditions at two separate faces.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">2</span>Match at both faces</h3>
+    <div class="equation tight-math">$$
+      \begin{aligned}
+      A+B &amp;= C+D,\\
+      ik(A-B) &amp;= \kappa(C-D),\\
+      Ce^{\kappa L}+De^{-\kappa L} &amp;= Fe^{ikL},\\
+      \kappa\!\left(Ce^{\kappa L}-De^{-\kappa L}\right) &amp;= ikFe^{ikL}.
+      \end{aligned}
+    $$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">3</span>Eliminate the internal amplitudes</h3>
+    <p>The two equations at $x=L$ first express $C$ and $D$ in terms of $F$.</p>
+    <div class="equation tight-math">$$
+      C=\frac{F}{2}\left(1+\frac{ik}{\kappa}\right)e^{(ik-\kappa)L},
+      \qquad
+      D=\frac{F}{2}\left(1-\frac{ik}{\kappa}\right)e^{(ik+\kappa)L}.
+    $$</div>
+    <p>Insert these into the two equations at $x=0$, then eliminate $B$.</p>
+    <div class="equation tight-math">$$
+      \frac{A}{F}=e^{ikL}\left[
+      \cosh(\kappa L)+i\frac{\kappa^2-k^2}{2k\kappa}\sinh(\kappa L)
+      \right].
+    $$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">4</span>Take the modulus squared</h3>
+    <p>The wavenumber is the same on both sides, so $T=|F/A|^2$.</p>
+    <div class="equation tight-math">$$
+      T=\left[1+\frac{(k^2+\kappa^2)^2}{4k^2\kappa^2}\sinh^2(\kappa L)\right]^{-1}.
+    $$</div>
+    <div class="equation tight-math">$$
+      \boxed{T=\left[1+\frac{V_0^2}{4E(V_0-E)}\sinh^2(\kappa L)\right]^{-1}}.
+    $$</div>
+  </div>
+
+  <div class="result">
+    <h3>Wide or high barrier</h3>
+    <p>When $\kappa L\gg1$, $\sinh(\kappa L)\simeq \tfrac12e^{\kappa L}$.</p>
+    <div class="equation">$$
+      T\simeq \frac{16E(V_0-E)}{V_0^2}e^{-2\kappa L}.
+    $$</div>
+    <p>The exponential is the dominant dependence on width, mass and barrier height.</p>
+  </div>
+  <div class="lecture-note">
+    <h3>Read the exponent before the prefactor</h3>
+    <p>The factor $e^{-2\kappa L}$ explains most of the physics.</p>
+    <div class="equation compact">$$2\kappa L=\frac{2L}{\hbar}\sqrt{2m(V_0-E)}.$$</div>
+    <p>A wider barrier, a heavier particle, or a larger energy deficit all suppress tunnelling exponentially.</p>
+    <p>As $L\to\infty$, the result approaches the semi-infinite step: $T\to0$.</p>
+  </div>
+  <div class="source">Discussion prompt: compare the derivation with your lectures and preferred textbook.</div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Model 5</div>
+    <h2>Finite barrier with $E&gt;V_0$</h2>
+    <div class="section-meta"><span class="pill level">Level 2</span><span class="pill">interference</span><span class="pill">resonance</span></div>
+  </div>
+  <p class="lead">Inside the barrier the solution oscillates. Multiple internal reflections can interfere constructively.</p>
+
+  <div class="problem-spec">
+    <h3>Problem specification</h3>
+    <div class="spec-row"><div class="spec-label">Equation</div><div class="equation compact">$$-\frac{\hbar^2}{2m}\phi''+V(x)\phi=E\phi.$$</div></div>
+    <div class="spec-row"><div class="spec-label">Potential</div><div class="equation compact">$$V(x)=\begin{cases}V_0,&amp;0\le x\le L,\\0,&amp;x&lt;0\ \text{or}\ x&gt;L,\end{cases}\qquad E&gt;V_0.$$</div></div>
+    <div class="spec-row"><div class="spec-label">Physical conditions</div><div>Incident wave from the left; no incoming wave from the right; match $\phi$ and $\phi'$ at both faces.</div></div>
+    <div class="spec-row"><div class="spec-label">Find</div><div>The transmission probability and the condition for perfect transmission.</div></div>
+  </div>
+  <div class="method-reminder"><strong>Repeated method:</strong> use oscillatory solutions in all regions → match twice → calculate $T$ → identify the values of $qL$ that cancel reflection.</div>
+
+  <div class="step">
+    <h3><span class="step-no">1</span>Replace decay by oscillation</h3>
+    <div class="equation">$$
+      k=\frac{\sqrt{2mE}}{\hbar},
+      \qquad q=\frac{\sqrt{2m(E-V_0)}}{\hbar}.
+    $$</div>
+    <div class="equation tight-math">$$
+      \phi_I=Ae^{ikx}+Be^{-ikx},\quad
+      \phi_{II}=Ce^{iqx}+De^{-iqx},\quad
+      \phi_{III}=Fe^{ikx}.
+    $$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">2</span>Use the same four matching equations</h3>
+    <p>The algebra is the tunnelling calculation with $\kappa\mapsto iq$.</p>
+    <div class="equation tight-math">$$
+      \frac{A}{F}=e^{ikL}\left[
+      \cos(qL)-i\frac{k^2+q^2}{2kq}\sin(qL)
+      \right].
+    $$</div>
+    <p>This replacement turns $\cosh(\kappa L)$ into $\cos(qL)$ and $\sinh(\kappa L)$ into $i\sin(qL)$.</p>
+    <p>The result therefore oscillates with the barrier width instead of decaying monotonically.</p>
+  </div>
+
+  <div class="result">
+    <h3>Transmission probability</h3>
+    <div class="equation tight-math">$$
+      T=\left[
+      \cos^2(qL)+\frac14\left(\frac{k}{q}+\frac{q}{k}\right)^2\sin^2(qL)
+      \right]^{-1}.
+    $$</div>
+    <div class="equation tight-math">$$
+      T=\left[1+\frac{V_0^2}{4E(E-V_0)}\sin^2(qL)\right]^{-1}.
+    $$</div>
+  </div>
+
+  <div class="idea">
+    <h3>Perfect-transmission resonances</h3>
+    <div class="equation">$$ qL=n\pi\quad\Longrightarrow\quad T=1. $$</div>
+    <p>An integer number of half-wavelengths fits inside the barrier.</p>
+    <p>The reflected contributions cancel.</p>
+  </div>
+  <div class="lecture-note">
+    <h3>Wave interpretation</h3>
+    <p>At $qL=n\pi$, the barrier contains an integer number of half-wavelengths.</p>
+    <p>Successive reflected waves return with phases that make the net reflected amplitude zero.</p>
+    <p>This is the same interference mechanism that produces resonances in optical cavities.</p>
+  </div>
+  <div class="source">Discussion prompt: compare the derivation with your lectures and preferred textbook.</div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Model 6</div>
+    <h2>Semi-infinite finite well</h2>
+    <div class="section-meta"><span class="pill level">Level 3</span><span class="pill">transcendental equation</span><span class="pill">graphical roots</span></div>
+  </div>
+  <p class="lead">One hard wall and one finite wall produce bound states whose energies must be found graphically or numerically.</p>
+
+  <div class="problem-spec">
+    <h3>Problem specification</h3>
+    <div class="spec-row"><div class="spec-label">Equation</div><div class="equation compact">$$-\frac{\hbar^2}{2m}\phi''+V(x)\phi=E\phi.$$</div></div>
+    <div class="spec-row"><div class="spec-label">Potential</div><div class="equation compact">$$V(x)=\begin{cases}\infty,&amp;x&lt;0,\\0,&amp;0\le x\le L,\\V_0,&amp;x&gt;L,\end{cases}\qquad E&lt;V_0.$$</div></div>
+    <div class="spec-row"><div class="spec-label">Boundary conditions</div><div>$\phi(0)=0$; $\phi$ remains bounded as $x\to\infty$; $\phi,\phi'$ are continuous at $x=L$.</div></div>
+    <div class="spec-row"><div class="spec-label">Find</div><div>The transcendental equation that selects the bound-state energies.</div></div>
+  </div>
+  <div class="method-reminder"><strong>Repeated method:</strong> solve in each allowed region → use the hard wall and boundedness immediately → match at the finite wall → reduce the result to one equation for $E$.</div>
+
+  <div class="svg-wrap">
+    <svg viewBox="0 0 360 130" aria-label="Semi-infinite potential well">
+      <line class="axis" x1="25" y1="108" x2="341" y2="108"/><line class="axis" x1="40" y1="119" x2="40" y2="10"/>
+      <path class="potential" d="M40 18 L105 18 L105 92 L250 92 L250 48 L335 48"/>
+      <path class="wave" d="M105 92 C125 43 145 43 165 92 C185 141 205 141 225 92 C234 70 242 62 250 66"/>
+      <path class="wave" d="M250 66 C271 75 293 82 334 88"/>
+      <text class="label" x="98" y="122">0</text><text class="label" x="245" y="122">L</text><text class="label" x="292" y="43">V₀</text>
+    </svg>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">1</span>Define the potential and bound-state parameters</h3>
+    <div class="equation">$$
+      V(x)=\begin{cases}
+      \infty,&amp;x&lt;0,\\0,&amp;0\le x\le L,\\V_0,&amp;x&gt;L,
+      \end{cases}
+      \qquad E&lt;V_0.
+    $$</div>
+    <div class="equation">$$ k^2=\frac{2mE}{\hbar^2},\qquad \kappa^2=\frac{2m(V_0-E)}{\hbar^2}. $$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">2</span>Choose admissible forms</h3>
+    <p>The hard wall gives $\phi(0)=0$.</p>
+    <p>The far-right solution must decay.</p>
+    <div class="equation">$$
+      \phi(x)=\begin{cases}
+      A\sin(kx),&amp;0\le x\le L,\\[2pt]
+      \alpha e^{-\kappa(x-L)},&amp;x&gt;L.
+      \end{cases}
+    $$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">3</span>Match at the finite wall</h3>
+    <div class="equation">$$ A\sin(kL)=\alpha,\qquad Ak\cos(kL)=-\kappa\alpha. $$</div>
+    <p>Divide the derivative equation by the wavefunction equation:</p>
+    <div class="equation">$$ k\cot(kL)=-\kappa
+      \qquad\Longleftrightarrow\qquad
+      \tan(kL)=-\frac{k}{\kappa}. $$</div>
+  </div>
+
+  <div class="result">
+    <h3>Energy condition</h3>
+    <div class="equation">$$
+      k^2+\kappa^2=\frac{2mV_0}{\hbar^2},
+      \qquad
+      \tan(kL)=-\frac{k}{\sqrt{2mV_0/\hbar^2-k^2}}.
+    $$</div>
+    <p>The intersections of the two sides give the allowed $k$, hence $E=\hbar^2k^2/(2m)$.</p>
+    <p>The wave leaks into the finite wall, so each energy lies below the corresponding infinite-well energy.</p>
+  </div>
+  <div class="lecture-note">
+    <h3>How to obtain the energies in practice</h3>
+    <p>Define $z=kL$ and $z_0=L\sqrt{2mV_0}/\hbar$.</p>
+    <p>Because $k^2+\kappa^2=2mV_0/\hbar^2$, we have $\kappa L=\sqrt{z_0^2-z^2}$.</p>
+    <p>The energy condition becomes</p>
+    <div class="equation compact">$$\tan z=-\frac{z}{\sqrt{z_0^2-z^2}},\qquad 0&lt;z&lt;z_0.$$</div>
+    <p>Plot both sides against $z$. Each intersection gives an allowed $z$, then $E=\hbar^2z^2/(2mL^2)$.</p>
+    <p>A finite well supports only finitely many intersections and therefore finitely many bound states.</p>
+  </div>
+  <div class="source">Discussion prompt: compare the derivation with your lectures and preferred textbook.</div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Model 7</div>
+    <h2>One-dimensional harmonic oscillator</h2>
+    <div class="section-meta"><span class="pill level">Level 3</span><span class="pill">asymptotic form</span><span class="pill">power series</span></div>
+  </div>
+  <p class="lead">Here the potential varies everywhere. Normalisability replaces a hard-wall boundary condition.</p>
+
+  <div class="problem-spec">
+    <h3>Problem specification</h3>
+    <div class="spec-row"><div class="spec-label">Equation</div><div class="equation compact">$$-\frac{\hbar^2}{2m}\frac{d^2\phi}{dx^2}+\frac12m\omega^2x^2\phi=E\phi.$$</div></div>
+    <div class="spec-row"><div class="spec-label">Potential</div><div class="equation compact">$$V(x)=\frac12m\omega^2x^2,\qquad -\infty&lt;x&lt;\infty.$$</div></div>
+    <div class="spec-row"><div class="spec-label">Boundary conditions</div><div>$\phi$ and $\phi'$ are continuous; $\phi(x)$ remains finite; $\phi(x)\to0$ as $|x|\to\infty$; $\int_{-\infty}^{\infty}|\phi|^2\,dx=1$.</div></div>
+    <div class="spec-row"><div class="spec-label">Find</div><div>The discrete energies, the normalised eigenfunctions, and the basis expansion of a general state.</div></div>
+  </div>
+  <div class="method-reminder"><strong>Repeated method:</strong> scale the equation → determine endpoint behaviour → factor it out → solve the remaining analytic equation by a series → impose normalisability → normalise and interpret the eigenbasis.</div>
+
+  <div class="svg-wrap">
+    <svg viewBox="0 0 360 135" aria-label="Harmonic oscillator potential and low wavefunctions">
+      <line class="axis" x1="25" y1="112" x2="340" y2="112"/><line class="axis" x1="180" y1="122" x2="180" y2="10"/>
+      <path class="potential" d="M48 20 Q180 196 312 20"/>
+      <line x1="104" y1="78" x2="256" y2="78" stroke="#b7c6cb" stroke-width="1"/>
+      <path class="wave" d="M110 78 C138 67 158 60 180 60 C202 60 222 67 250 78"/>
+      <line x1="84" y1="51" x2="276" y2="51" stroke="#b7c6cb" stroke-width="1"/>
+      <path class="wave" d="M94 51 C121 51 144 35 161 36 C177 37 183 65 199 66 C217 67 239 51 266 51"/>
+      <text class="label" x="316" y="19">V(x)</text><text class="label" x="336" y="124">x</text>
+    </svg>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">1</span>Make the equation dimensionless</h3>
+    <div class="equation">$$
+      -\frac{\hbar^2}{2m}\frac{d^2\phi}{dx^2}+\frac12m\omega^2x^2\phi=E\phi.
+    $$</div>
+    <p>Define</p>
+    <div class="equation">$$ y=\sqrt{\frac{m\omega}{\hbar}}x,
+      \qquad \alpha=\frac{2E}{\hbar\omega}. $$</div>
+    <p>The chain rule gives</p>
+    <div class="equation compact">$$\frac{d}{dx}=\sqrt{\frac{m\omega}{\hbar}}\frac{d}{dy},\qquad
+      \frac{d^2}{dx^2}=\frac{m\omega}{\hbar}\frac{d^2}{dy^2}.$$</div>
+    <p>Substituting these expressions and multiplying through by $2/(\hbar\omega)$ removes all physical constants from the differential equation.</p>
+    <p>Then</p>
+    <div class="equation">$$ \frac{d^2\phi}{dy^2}+(\alpha-y^2)\phi=0. $$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">2</span>Find the large-$|y|$ behaviour</h3>
+    <p>For $|y|$ large, $y^2\gg\alpha$.</p>
+    <div class="equation">$$ \phi''-y^2\phi\simeq0. $$</div>
+    <p>Try a Gaussian form $\phi\sim e^{sy^2/2}$.</p>
+    <div class="equation compact">$$\phi''=(s+s^2y^2)\phi.$$</div>
+    <p>At large $|y|$, the $y^2$ terms dominate, so $s^2=1$.</p>
+    <p>The choice $s=+1$ gives $e^{+y^2/2}$ and cannot be normalised.</p>
+    <p>The admissible behaviour is therefore the decaying Gaussian $e^{-y^2/2}$.</p>
+    <div class="equation">$$ \phi(y)=H(y)e^{-y^2/2}. $$</div>
+    <p>The growing alternative is rejected because it cannot be normalised.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">3</span>Derive the equation for $H$</h3>
+    <div class="equation tight-math">$$
+      \phi'=e^{-y^2/2}(H'-yH),
+      \qquad
+      \phi''=e^{-y^2/2}\!\left[H''-2yH'+(y^2-1)H\right].
+    $$</div>
+    <p>Substitute into the dimensionless equation and cancel the Gaussian:</p>
+    <div class="equation">$$ H''-2yH'+(\alpha-1)H=0. $$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">4</span>Use a power series</h3>
+    <div class="lecture-note">
+      <h4>Why a power series?</h4>
+      <p>The equation for $H$ has coefficients that are polynomials in $y$ and are analytic everywhere.</p>
+      <p>There is no remaining singular point and no elementary function is obvious.</p>
+      <p>For an analytic linear differential equation, a power series is the systematic way to construct the solution: substitute a general series and let the equation determine every coefficient.</p>
+      <p>The calculation will also reveal, rather than assume, why only special energies are allowed.</p>
+    </div>
+    <div class="equation">$$ H(y)=\sum_{p=0}^{\infty}a_p y^p. $$</div>
+    <div class="equation tight-math">$$
+      H'=\sum_{p=0}^{\infty}p a_p y^{p-1},
+      \qquad
+      H''=\sum_{p=0}^{\infty}(p+2)(p+1)a_{p+2}y^p.
+    $$</div>
+    <p>The second derivative has been re-indexed so that every sum contains the same power $y^p$.</p>
+    <p>Substitution gives</p>
+    <div class="equation compact">$$\sum_{p=0}^{\infty}\left[(p+2)(p+1)a_{p+2}+(\alpha-1-2p)a_p\right]y^p=0.$$</div>
+    <p>A power series can vanish for every $y$ only if the coefficient of each power vanishes separately.</p>
+    <p>Matching the coefficient of every $y^p$ gives</p>
+    <div class="equation">$$
+      a_{p+2}=\frac{2p+1-\alpha}{(p+1)(p+2)}a_p.
+    $$</div>
+    <p>The recurrence links $a_0$ only to $a_2,a_4,\ldots$ and $a_1$ only to $a_3,a_5,\ldots$.</p>
+    <p>Thus there are two independent series: one even and one odd. This is exactly what we expect from the symmetry $V(-x)=V(x)$.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">5</span>Force the series to terminate</h3>
+    <p>For large $p$, the recurrence behaves like</p>
+    <div class="equation compact">$$\frac{a_{p+2}}{a_p}\simeq\frac{2}{p}.$$</div>
+    <p>These are the coefficient ratios of a series that grows like $e^{y^2}$.</p>
+    <p>Therefore, if the series continues forever, $H(y)$ grows like $e^{y^2}$.</p>
+    <p>Then $\phi\sim e^{+y^2/2}$, which is not normalisable.</p>
+    <p>Therefore the numerator must vanish at some non-negative integer $p=n$:</p>
+    <div class="equation">$$ 2n+1-\alpha=0. $$</div>
+    <div class="equation">$$ \alpha=2n+1
+      \quad\Longrightarrow\quad
+      \boxed{E_n=\left(n+\frac12\right)\hbar\omega}. $$</div>
+  </div>
+
+  <div class="result">
+    <h3>Normalised eigenfunctions</h3>
+    <div class="equation tight-math">$$
+      \phi_n(x)=\left(\frac{m\omega}{\pi\hbar}\right)^{1/4}
+      \frac{1}{\sqrt{2^n n!}}\,
+      H_n\!\left(\sqrt{\frac{m\omega}{\hbar}}x\right)
+      e^{-m\omega x^2/(2\hbar)}.
+    $$</div>
+    <div class="equation tight-math">$$
+      H_0=1,\qquad H_1=2y,\qquad H_2=4y^2-2,\qquad H_3=8y^3-12y.
+    $$</div>
+    <p>Writing $a=\sqrt{\hbar/(m\omega)}$ for the oscillator length, the first three functions are</p>
+    <div class="equation tight-math">$$
+      \phi_0(x)=\frac{1}{\pi^{1/4}\sqrt a}e^{-x^2/(2a^2)},
+    $$</div>
+    <div class="equation tight-math">$$
+      \phi_1(x)=\frac{\sqrt2}{\pi^{1/4}\sqrt a}\frac{x}{a}e^{-x^2/(2a^2)},
+    $$</div>
+    <div class="equation tight-math">$$
+      \phi_2(x)=\frac{1}{\sqrt2\,\pi^{1/4}\sqrt a}\left(2\frac{x^2}{a^2}-1\right)e^{-x^2/(2a^2)}.
+    $$</div>
+    <p>The ground state has non-zero energy $E_0=\tfrac12\hbar\omega$.</p>
+  </div>
+  <div class="lecture-note">
+    <h3>The eigenfunctions as an orthonormal basis</h3>
+    <p>The Hermite-Gaussian functions satisfy</p>
+    <div class="equation compact">$$\int_{-\infty}^{\infty}\phi_m^*(x)\phi_n(x)\,dx=\delta_{mn}.$$</div>
+    <p>They are also complete in $L^2(\mathbb R)$. Therefore any square-integrable oscillator wavefunction can be expanded as</p>
+    <div class="equation compact">$$\psi(x,0)=\sum_{n=0}^{\infty}c_n\phi_n(x),\qquad
+      c_n=\langle\phi_n,\psi(0)\rangle=\int_{-\infty}^{\infty}\phi_n^*(x)\psi(x,0)\,dx.$$</div>
+    <p>The coefficient $c_n$ is the component of the state along the $n$-th orthonormal basis vector.</p>
+    <p>If the energy is measured, the probability of obtaining $E_n$ is $|c_n|^2$.</p>
+    <p>Time evolution changes only the phase of each basis component:</p>
+    <div class="equation compact">$$\psi(x,t)=\sum_{n=0}^{\infty}c_n\phi_n(x)e^{-iE_nt/\hbar}.$$</div>
+  </div>
+  <div class="lecture-note">
+    <h3>How to recognise the basis functions</h3>
+    <p>$\phi_n$ has parity $(-1)^n$: even $n$ gives an even function and odd $n$ gives an odd function.</p>
+    <p>$\phi_n$ has exactly $n$ nodes on the real line.</p>
+    <p>The Gaussian makes every state decay, while the Hermite polynomial supplies the oscillations and nodes.</p>
+    <p>Increasing $n$ therefore adds one node and raises the energy by exactly $\hbar\omega$.</p>
+  </div>
+  <div class="source">Discussion prompt: compare the derivation with your lectures and preferred textbook.</div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Alternative method</div>
+    <h2>Harmonic oscillator by ladder operators</h2>
+    <div class="section-meta"><span class="pill level">Level 3</span><span class="pill">operator factorisation</span></div>
+  </div>
+  <p class="lead">The energy spectrum can be found without solving a second-order differential equation.</p>
+
+  <div class="problem-spec">
+    <h3>Problem specification</h3>
+    <div class="spec-row"><div class="spec-label">Hamiltonian</div><div class="equation compact">$$H=\frac{P^2}{2m}+\frac12m\omega^2X^2.$$</div></div>
+    <div class="spec-row"><div class="spec-label">Algebraic condition</div><div>$[X,P]=i\hbar$ and the ground state must have the smallest allowed energy.</div></div>
+    <div class="spec-row"><div class="spec-label">Find</div><div>The same energy spectrum and eigenstate ladder obtained by the differential-equation method.</div></div>
+  </div>
+  <div class="method-reminder"><strong>Repeated method:</strong> factorise the Hamiltonian → identify a non-negative number operator → define the lowest state → generate all higher states → compare with the Hermite-function basis.</div>
+
+  <div class="step">
+    <h3><span class="step-no">1</span>Define lowering and raising operators</h3>
+    <div class="equation tight-math">$$
+      a=\sqrt{\frac{m\omega}{2\hbar}}\,X+\frac{i}{\sqrt{2m\hbar\omega}}\,P,
+      \qquad
+      a^\dagger=\sqrt{\frac{m\omega}{2\hbar}}\,X-\frac{i}{\sqrt{2m\hbar\omega}}\,P.
+    $$</div>
+    <div class="equation">$$ [a,a^\dagger]=1. $$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">2</span>Factorise the Hamiltonian</h3>
+    <div class="equation">$$
+      H=\frac{P^2}{2m}+\frac12m\omega^2X^2
+      =\hbar\omega\left(a^\dagger a+\frac12\right).
+    $$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">3</span>Identify the ground state</h3>
+    <p>The operator $a^\dagger a$ has non-negative expectation value.</p>
+    <p>The lowest possible state therefore satisfies</p>
+    <div class="equation">$$ a|0\rangle=0. $$</div>
+    <div class="equation">$$ H|0\rangle=\frac12\hbar\omega|0\rangle. $$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">4</span>Climb the spectrum</h3>
+    <div class="equation">$$ [H,a^\dagger]=\hbar\omega a^\dagger. $$</div>
+    <p>If $H|n\rangle=E_n|n\rangle$, then</p>
+    <div class="equation">$$ H(a^\dagger|n\rangle)=(E_n+\hbar\omega)(a^\dagger|n\rangle). $$</div>
+  </div>
+
+  <div class="result">
+    <h3>Spectrum and states</h3>
+    <div class="equation">$$
+      E_n=\left(n+\frac12\right)\hbar\omega,
+      \qquad
+      |n\rangle=\frac{(a^\dagger)^n}{\sqrt{n!}}|0\rangle.
+    $$</div>
+    <div class="equation compact">$$a|n\rangle=\sqrt n\,|n-1\rangle,
+      \qquad a^\dagger|n\rangle=\sqrt{n+1}\,|n+1\rangle.$$</div>
+    <p>This agrees with the power-series solution and explains the equal energy spacing directly.</p>
+    <p>The vectors $|0\rangle,|1\rangle,|2\rangle,\ldots$ are the same orthonormal basis as the Hermite-Gaussian functions $\phi_0(x),\phi_1(x),\phi_2(x),\ldots$.</p>
+    <p>The operator method changes the basis label $n$ without requiring the differential equation to be solved again.</p>
+  </div>
+  <div class="source">Discussion prompt: compare the derivation with your lectures and preferred textbook.</div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Model 8</div>
+    <h2>Particle in a three-dimensional rectangular box</h2>
+    <div class="section-meta"><span class="pill level">Level 3</span><span class="pill">Cartesian separation</span><span class="pill">degeneracy</span></div>
+  </div>
+  <p class="lead">A three-dimensional problem becomes three copies of the one-dimensional infinite well.</p>
+
+  <div class="problem-spec">
+    <h3>Problem specification</h3>
+    <div class="spec-row"><div class="spec-label">Equation</div><div class="equation compact">$$-\frac{\hbar^2}{2M}\nabla^2\phi+V(x,y,z)\phi=E\phi.$$</div></div>
+    <div class="spec-row"><div class="spec-label">Potential</div><div>$V=0$ inside $-a\le x\le a$, $-b\le y\le b$, $-c\le z\le c$; $V=\infty$ outside.</div></div>
+    <div class="spec-row"><div class="spec-label">Boundary conditions</div><div>$\phi=0$ on all six faces and outside the box; $\iiint|\phi|^2\,dV=1$.</div></div>
+    <div class="spec-row"><div class="spec-label">Find</div><div>The product eigenfunctions, energy levels, and degeneracies.</div></div>
+  </div>
+  <div class="method-reminder"><strong>Repeated method:</strong> separate the coordinates → obtain three one-dimensional equations → apply two walls in each direction → multiply the normalised factors → add the separated energies.</div>
+
+  <div class="step">
+    <h3><span class="step-no">1</span>Write the TISE inside the box</h3>
+    <p>The box is $-a\le x\le a$, $-b\le y\le b$, $-c\le z\le c$.</p>
+    <div class="equation tight-math">$$
+      -\frac{\hbar^2}{2M}\left(
+      \frac{\partial^2}{\partial x^2}+
+      \frac{\partial^2}{\partial y^2}+
+      \frac{\partial^2}{\partial z^2}\right)u=Eu.
+    $$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">2</span>Separate the coordinates</h3>
+    <div class="equation">$$ u(x,y,z)=X(x)Y(y)Z(z). $$</div>
+    <p>Divide by $XYZ$:</p>
+    <div class="equation tight-math">$$
+      -\frac{\hbar^2}{2M}\frac{X''}{X}
+      -\frac{\hbar^2}{2M}\frac{Y''}{Y}
+      -\frac{\hbar^2}{2M}\frac{Z''}{Z}=E.
+    $$</div>
+    <p>Each term depends on a different coordinate.</p>
+    <p>Set them equal to $E_x,E_y,E_z$, with $E=E_x+E_y+E_z$.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">3</span>Reuse the one-dimensional solution</h3>
+    <div class="equation tight-math">$$
+      X_{n_x}(x)=\frac{1}{\sqrt a}
+      \begin{cases}
+      \cos\!\left(\dfrac{n_x\pi x}{2a}\right),&amp;n_x\ \text{odd},\\[4pt]
+      \sin\!\left(\dfrac{n_x\pi x}{2a}\right),&amp;n_x\ \text{even},
+      \end{cases}
+    $$</div>
+    <p>The functions $Y_{n_y}$ and $Z_{n_z}$ have the same form with $a\to b,c$.</p>
+  </div>
+
+  <div class="result">
+    <h3>Product states and energies</h3>
+    <div class="equation">$$
+      \phi_{n_xn_yn_z}=X_{n_x}Y_{n_y}Z_{n_z},
+    $$</div>
+    <div class="equation tight-math">$$
+      E_{n_xn_yn_z}=\frac{\hbar^2\pi^2}{8M}
+      \left(\frac{n_x^2}{a^2}+\frac{n_y^2}{b^2}+\frac{n_z^2}{c^2}\right).
+    $$</div>
+    <p>If two side lengths are equal, exchanging the corresponding quantum numbers leaves the energy unchanged.</p>
+    <p>That produces degeneracy.</p>
+  </div>
+  <div class="lecture-note">
+    <h3>Why the product construction is complete</h3>
+    <p>The sets $\{X_{n_x}\}$, $\{Y_{n_y}\}$ and $\{Z_{n_z}\}$ are orthonormal bases in their separate one-dimensional intervals.</p>
+    <p>The products $X_{n_x}Y_{n_y}Z_{n_z}$ therefore form an orthonormal basis for square-integrable functions in the box.</p>
+    <div class="equation compact">$$\iiint \phi_{n_xn_yn_z}^*\phi_{m_xm_ym_z}\,dV=
+      \delta_{n_xm_x}\delta_{n_ym_y}\delta_{n_zm_z}.$$</div>
+    <p>A general state is a triple basis expansion with coefficients obtained from three-dimensional inner products.</p>
+  </div>
+  <div class="source">Discussion prompt: compare the derivation with your lectures and preferred textbook.</div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Model 9</div>
+    <h2>Three-dimensional harmonic oscillator</h2>
+    <div class="section-meta"><span class="pill level">Level 3</span><span class="pill">separable potential</span></div>
+  </div>
+  <p class="lead">A sum of three independent quadratic potentials gives a product of three one-dimensional oscillator states.</p>
+
+  <div class="problem-spec">
+    <h3>Problem specification</h3>
+    <div class="spec-row"><div class="spec-label">Equation</div><div class="equation compact">$$\left[-\frac{\hbar^2}{2M}\nabla^2+\frac12k_xx^2+\frac12k_yy^2+\frac12k_zz^2\right]\phi=E\phi.$$</div></div>
+    <div class="spec-row"><div class="spec-label">Domain</div><div>All of $\mathbb R^3$.</div></div>
+    <div class="spec-row"><div class="spec-label">Boundary conditions</div><div>$\phi\to0$ when any coordinate tends to $\pm\infty$; $\iiint|\phi|^2\,dV=1$.</div></div>
+    <div class="spec-row"><div class="spec-label">Find</div><div>The product eigenfunctions and additive energy spectrum.</div></div>
+  </div>
+  <div class="method-reminder"><strong>Repeated method:</strong> inspect whether the potential is a sum → separate $X,Y,Z$ → reuse the one-dimensional oscillator basis in each coordinate → add energies → inspect degeneracy.</div>
+
+  <div class="step">
+    <h3><span class="step-no">1</span>Recognise the separable Hamiltonian</h3>
+    <div class="equation tight-math">$$
+      V(x,y,z)=\frac12k_xx^2+\frac12k_yy^2+\frac12k_zz^2.
+    $$</div>
+    <div class="equation">$$ \phi(x,y,z)=X(x)Y(y)Z(z). $$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">2</span>Divide by the product</h3>
+    <div class="equation tight-math">$$
+      \left[-\frac{\hbar^2}{2M}\frac{X''}{X}+\frac12k_xx^2\right]
+      +\left[-\frac{\hbar^2}{2M}\frac{Y''}{Y}+\frac12k_yy^2\right]
+      +\left[-\frac{\hbar^2}{2M}\frac{Z''}{Z}+\frac12k_zz^2\right]=E.
+    $$</div>
+    <p>Each bracket is a one-dimensional oscillator equation.</p>
+  </div>
+
+  <div class="result">
+    <h3>Separated solution</h3>
+    <div class="equation tight-math">$$
+      E_{n_xn_yn_z}=\left(n_x+\frac12\right)\hbar\omega_x
+      +\left(n_y+\frac12\right)\hbar\omega_y
+      +\left(n_z+\frac12\right)\hbar\omega_z,
+    $$</div>
+    <div class="equation">$$ \omega_i=\sqrt{\frac{k_i}{M}}. $$</div>
+    <div class="equation tight-math">$$
+      \phi_{n_xn_yn_z}\propto
+      H_{n_x}(x')H_{n_y}(y')H_{n_z}(z')
+      e^{-(x'^2+y'^2+z'^2)/2},
+    $$</div>
+    <div class="equation tight-math">$$
+      x'=\sqrt{\frac{M\omega_x}{\hbar}}x,
+      \quad y'=\sqrt{\frac{M\omega_y}{\hbar}}y,
+      \quad z'=\sqrt{\frac{M\omega_z}{\hbar}}z.
+    $$</div>
+    <p>Equal frequencies create degeneracies because different triples can have the same total excitation.</p>
+  </div>
+  <div class="lecture-note">
+    <h3>Basis interpretation</h3>
+    <p>Each factor is one of the one-dimensional Hermite-Gaussian basis functions.</p>
+    <p>The three-dimensional eigenfunctions are tensor-product basis vectors:</p>
+    <div class="equation compact">$$|n_x,n_y,n_z\rangle=|n_x\rangle\otimes|n_y\rangle\otimes|n_z\rangle.$$</div>
+    <p>If $\omega_x=\omega_y=\omega_z=\omega$, the energy depends only on $N=n_x+n_y+n_z$:</p>
+    <div class="equation compact">$$E_N=\left(N+\frac32\right)\hbar\omega.$$</div>
+    <p>Many different triples can have the same $N$, which is the origin of the degeneracy.</p>
+  </div>
+  <div class="source">Discussion prompt: compare the derivation with your lectures and preferred textbook.</div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Spherical-coordinate toolkit</div>
+    <h2>The spherical Laplacian used below</h2>
+    <div class="section-meta"><span class="pill level">Level 4</span><span class="pill">geometry</span><span class="pill">orthogonal coordinates</span></div>
+  </div>
+  <p class="lead">Central potentials depend only on distance from one point. This section collects the operator needed immediately; Appendix A.4 gives the full line-by-line derivation.</p>
+
+  <div class="step">
+    <h3><span class="step-no">1</span>Write the coordinate map</h3>
+    <div class="equation tight-math">$$
+      x=r\sin\theta\cos\varphi,
+      \qquad y=r\sin\theta\sin\varphi,
+      \qquad z=r\cos\theta.
+    $$</div>
+    <p>Here $r\ge0$, $0\le\theta\le\pi$, and $0\le\varphi&lt;2\pi$.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">2</span>Find the scale factors from a small displacement</h3>
+    <p>Differentiate the position vector $\mathbf r(r,\theta,\varphi)$.</p>
+    <div class="equation">$$ d\mathbf r=\mathbf e_r\,dr+\mathbf e_\theta\,r\,d\theta+\mathbf e_\varphi\,r\sin\theta\,d\varphi. $$</div>
+    <p>Because the three unit vectors are mutually perpendicular,</p>
+    <div class="equation">$$ ds^2=dr^2+r^2d\theta^2+r^2\sin^2\theta\,d\varphi^2. $$</div>
+    <p>Therefore the orthogonal-coordinate scale factors are</p>
+    <div class="equation">$$ h_r=1,\qquad h_\theta=r,\qquad h_\varphi=r\sin\theta. $$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">3</span>Use the gradient formula</h3>
+    <p>For orthogonal coordinates $q_1,q_2,q_3$,</p>
+    <div class="equation tight-math">$$
+      \nabla f=\sum_i\mathbf e_i\frac{1}{h_i}\frac{\partial f}{\partial q_i}.
+    $$</div>
+    <p>Hence</p>
+    <div class="equation tight-math">$$
+      \nabla f=
+      \mathbf e_r\frac{\partial f}{\partial r}
+      +\mathbf e_\theta\frac1r\frac{\partial f}{\partial\theta}
+      +\mathbf e_\varphi\frac{1}{r\sin\theta}\frac{\partial f}{\partial\varphi}.
+    $$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">4</span>Use the divergence formula</h3>
+    <p>For $\mathbf A=A_1\mathbf e_1+A_2\mathbf e_2+A_3\mathbf e_3$,</p>
+    <div class="equation tight-math">$$
+      \nabla\!\cdot\!\mathbf A=
+      \frac{1}{h_1h_2h_3}
+      \left[
+      \frac{\partial}{\partial q_1}(h_2h_3A_1)+
+      \frac{\partial}{\partial q_2}(h_3h_1A_2)+
+      \frac{\partial}{\partial q_3}(h_1h_2A_3)
+      \right].
+    $$</div>
+    <p>Set $\mathbf A=\nabla f$.</p>
+    <p>Then $A_r=f_r$, $A_\theta=f_\theta/r$, and $A_\varphi=f_\varphi/(r\sin\theta)$.</p>
+  </div>
+
+  <div class="result">
+    <h3>The spherical-coordinate Laplacian</h3>
+    <div class="equation tight-math">$$
+      \boxed{
+      \nabla^2f=
+      \frac1{r^2}\frac{\partial}{\partial r}\!\left(r^2\frac{\partial f}{\partial r}\right)
+      +\frac1{r^2\sin\theta}\frac{\partial}{\partial\theta}\!\left(\sin\theta\frac{\partial f}{\partial\theta}\right)
+      +\frac1{r^2\sin^2\theta}\frac{\partial^2f}{\partial\varphi^2}}
+    $$</div>
+  </div>
+
+  <div class="source">Discussion prompt: compare the derivation with your lectures and preferred textbook.</div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Central-potential method</div>
+    <h2>Separate the radial and angular equations</h2>
+    <div class="section-meta"><span class="pill level">Level 4</span><span class="pill">spherical harmonics</span><span class="pill">effective potential</span></div>
+  </div>
+  <p class="lead">The same angular solution works for every spherically symmetric potential $V(r)$.</p>
+
+  <div class="problem-spec">
+    <h3>Problem specification</h3>
+    <div class="spec-row"><div class="spec-label">Equation</div><div class="equation compact">$$\left[-\frac{\hbar^2}{2M}\nabla^2+V(r)\right]\phi=E\phi.$$</div></div>
+    <div class="spec-row"><div class="spec-label">Symmetry</div><div>The potential depends on $r$ only, so spherical coordinates match the geometry.</div></div>
+    <div class="spec-row"><div class="spec-label">Boundary conditions</div><div>The wavefunction is single-valued in $\varphi$, regular on the polar axis, finite at $r=0$, and normalisable as $r\to\infty$.</div></div>
+    <div class="spec-row"><div class="spec-label">Find</div><div>A universal angular equation and a radial equation containing the particular $V(r)$.</div></div>
+  </div>
+  <div class="method-reminder"><strong>Repeated method:</strong> choose coordinates from the symmetry → write the correct Laplacian → separate radial and angular variables → solve the periodic angle → enforce regularity → reduce the radial part to a one-dimensional equation.</div>
+
+  <div class="step">
+    <h3><span class="step-no">1</span>Start with a central potential</h3>
+    <div class="equation">$$
+      \left[-\frac{\hbar^2}{2M}\nabla^2+V(r)\right]\phi=E\phi.
+    $$</div>
+    <div class="equation">$$ \phi(r,\theta,\varphi)=R(r)Y(\theta,\varphi). $$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">2</span>Separate radial and angular terms</h3>
+    <p>Insert the spherical Laplacian, divide by $RY$, and multiply by $r^2$.</p>
+    <div class="equation tight-math">$$
+      \left[-\frac{\hbar^2}{2M}\frac1R\frac{d}{dr}\left(r^2\frac{dR}{dr}\right)+r^2(V-E)\right]
+      -\frac{\hbar^2}{2M}\frac1Y\left[
+      \frac1{\sin\theta}\frac{\partial}{\partial\theta}\left(\sin\theta\frac{\partial Y}{\partial\theta}\right)
+      +\frac1{\sin^2\theta}\frac{\partial^2Y}{\partial\varphi^2}
+      \right]=0.
+    $$</div>
+    <p>The first bracket depends only on $r$.</p>
+    <p>The second depends only on the angles.</p>
+    <p>Each must equal a constant.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">3</span>Solve the azimuthal angle</h3>
+    <p>Separate again: $Y(\theta,\varphi)=\Theta(\theta)\Phi(\varphi)$.</p>
+    <div class="equation">$$ \frac{d^2\Phi}{d\varphi^2}+m^2\Phi=0. $$</div>
+    <div class="equation">$$ \Phi_m(\varphi)=\frac1{\sqrt{2\pi}}e^{im\varphi}. $$</div>
+    <p>Single-valuedness, $\Phi(\varphi+2\pi)=\Phi(\varphi)$, forces $m\in\mathbb Z$.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">4</span>Solve the polar angle</h3>
+    <p>With $u=\cos\theta$, the remaining equation is</p>
+    <div class="equation tight-math">$$
+      \frac{d}{du}\left[(1-u^2)\frac{d\Theta}{du}\right]
+      +\left[l(l+1)-\frac{m^2}{1-u^2}\right]\Theta=0.
+    $$</div>
+    <p>Regularity at $u=\pm1$ requires</p>
+    <div class="equation">$$ l=0,1,2,\ldots,\qquad m=-l,-l+1,\ldots,l. $$</div>
+    <p>The regular solutions are associated Legendre functions.</p>
+  </div>
+
+  <div class="result">
+    <h3>Angular solution</h3>
+    <div class="equation tight-math">$$
+      Y_{lm}(\theta,\varphi)=(-1)^m
+      \sqrt{\frac{2l+1}{4\pi}\frac{(l-|m|)!}{(l+|m|)!}}
+      P_l^{|m|}(\cos\theta)e^{im\varphi}.
+    $$</div>
+    <div class="equation">$$ L^2Y_{lm}=\hbar^2l(l+1)Y_{lm},\qquad L_zY_{lm}=\hbar mY_{lm}. $$</div>
+  </div>
+  <div class="lecture-note">
+    <h3>The angular functions are themselves a basis</h3>
+    <p>The spherical harmonics are orthonormal on the unit sphere:</p>
+    <div class="equation compact">$$\int_0^{2\pi}\int_0^{\pi}Y_{lm}^*(\theta,\varphi)Y_{l'm'}(\theta,\varphi)\sin\theta\,d\theta\,d\varphi
+      =\delta_{ll'}\delta_{mm'}.$$</div>
+    <p>They form a complete basis for square-integrable angular functions.</p>
+    <p>Thus the separation is a basis expansion adapted to rotational symmetry: radial functions multiply angular basis vectors $Y_{lm}$.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">5</span>Obtain the radial equation</h3>
+    <div class="equation tight-math">$$
+      -\frac{\hbar^2}{2M}\frac1{r^2}\frac{d}{dr}\left(r^2\frac{dR}{dr}\right)
+      +\left[V(r)+\frac{\hbar^2l(l+1)}{2Mr^2}\right]R=ER.
+    $$</div>
+    <p>Set $u(r)=rR(r)$.</p>
+    <p>This substitution removes the first derivative. Indeed, if $R=u/r$, then</p>
+    <div class="equation compact">$$r^2\frac{dR}{dr}=ru'-u,\qquad
+      \frac{d}{dr}\left(r^2\frac{dR}{dr}\right)=ru''.$$</div>
+    <p>Substitute this into the radial equation and multiply through by $r$.</p>
+    <div class="equation tight-math">$$
+      \boxed{-\frac{\hbar^2}{2M}\frac{d^2u}{dr^2}
+      +\left[V(r)+\frac{\hbar^2l(l+1)}{2Mr^2}\right]u=Eu}
+    $$</div>
+    <p>The boundary condition is $u(0)=0$.</p>
+    <p>The additional $l(l+1)/r^2$ term is the centrifugal effective potential.</p>
+  </div>
+  <div class="source">Discussion prompt: compare the derivation with your lectures and preferred textbook.</div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Model 10</div>
+    <h2>Particle in a spherical infinite well</h2>
+    <div class="section-meta"><span class="pill level">Level 4</span><span class="pill">spherical Bessel equation</span></div>
+  </div>
+  <p class="lead">The spherical analogue of the infinite box quantises the zeros of spherical Bessel functions.</p>
+
+  <div class="problem-spec">
+    <h3>Problem specification</h3>
+    <div class="spec-row"><div class="spec-label">Equation</div><div class="equation compact">$$\left[-\frac{\hbar^2}{2M}\nabla^2+V(r)\right]\phi=E\phi.$$</div></div>
+    <div class="spec-row"><div class="spec-label">Potential</div><div class="equation compact">$$V(r)=0\ \text{for }0\le r\le a,\qquad V(r)=\infty\ \text{for }r&gt;a.$$</div></div>
+    <div class="spec-row"><div class="spec-label">Boundary conditions</div><div>Regularity at $r=0$; $R(a)=0$; angular single-valuedness; full three-dimensional normalisation.</div></div>
+    <div class="spec-row"><div class="spec-label">Find</div><div>The allowed radial wavenumbers, energies and quantum-number labels.</div></div>
+  </div>
+  <div class="method-reminder"><strong>Repeated method:</strong> use the already-separated central-potential equations → identify the radial special-function equation → reject the singular family → impose the spherical wall → combine with spherical harmonics.</div>
+
+  <div class="step">
+    <h3><span class="step-no">1</span>State the potential and boundary</h3>
+    <div class="equation">$$
+      V(r)=\begin{cases}0,&amp;r\le a,\\\infty,&amp;r&gt;a,\end{cases}
+      \qquad R(a)=0.
+    $$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">2</span>Scale the radial equation</h3>
+    <div class="equation">$$ E=\frac{\hbar^2k^2}{2M},\qquad x=kr. $$</div>
+    <div class="equation tight-math">$$
+      \frac{d^2R}{dx^2}+\frac2x\frac{dR}{dx}
+      +\left[1-\frac{l(l+1)}{x^2}\right]R=0.
+    $$</div>
+    <p>This is the spherical Bessel equation.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">3</span>Reject the singular family</h3>
+    <div class="equation">$$ R(x)=A j_l(x)+B n_l(x). $$</div>
+    <p>The spherical Neumann functions $n_l$ diverge at $x=0$.</p>
+    <p>Normalisability and regularity force $B=0$.</p>
+    <div class="equation tight-math">$$
+      j_0(x)=\frac{\sin x}{x},
+      \qquad
+      j_1(x)=\frac{\sin x}{x^2}-\frac{\cos x}{x},
+    $$</div>
+    <div class="equation tight-math">$$
+      j_2(x)=\left(\frac{3}{x^3}-\frac1x\right)\sin x-\frac{3}{x^2}\cos x.
+    $$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">4</span>Apply the wall</h3>
+    <div class="equation">$$ j_l(ka)=0. $$</div>
+    <p>Let $\alpha_{nl}$ be the $n$-th positive zero of $j_l$.</p>
+    <div class="equation">$$ k_{nl}=\frac{\alpha_{nl}}{a}. $$</div>
+  </div>
+
+  <div class="result">
+    <h3>Eigenvalues and eigenfunctions</h3>
+    <div class="equation">$$ E_{nl}=\frac{\hbar^2\alpha_{nl}^2}{2Ma^2}. $$</div>
+    <div class="equation tight-math">$$
+      \phi_{nlm}(r,\theta,\varphi)=N_{nl}\,
+      j_l\!\left(\alpha_{nl}\frac{r}{a}\right)Y_{lm}(\theta,\varphi).
+    $$</div>
+    <p>The energy depends on $n$ and $l$, but not on $m$.</p>
+    <p>Each $(n,l)$ energy is therefore $2l+1$ times degenerate.</p>
+  </div>
+  <div class="lecture-note">
+    <h3>Check the simplest angular sector: $l=0$</h3>
+    <p>For $l=0$, $j_0(kr)=\sin(kr)/(kr)$.</p>
+    <p>The wall condition becomes</p>
+    <div class="equation compact">$$j_0(ka)=0\quad\Longrightarrow\quad\sin(ka)=0\quad\Longrightarrow\quad ka=n\pi.$$</div>
+    <p>Hence $E_{n0}=\hbar^2n^2\pi^2/(2Ma^2)$.</p>
+    <p>This resembles the one-dimensional infinite well, but the radial wavefunction carries the extra factor $1/r$ required by three-dimensional geometry.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Model 11</div>
+    <h2>Hydrogen-like atom</h2>
+    <div class="section-meta"><span class="pill level">Level 5</span><span class="pill">Coulomb potential</span><span class="pill">Laguerre polynomials</span></div>
+  </div>
+  <p class="lead">This is the most involved exact solution in the sequence. It combines spherical separation, asymptotic analysis and a terminating power series.</p>
+
+  <div class="problem-spec">
+    <h3>Problem specification</h3>
+    <div class="spec-row"><div class="spec-label">Equation</div><div class="equation compact">$$\left[-\frac{\hbar^2}{2\mu}\nabla^2-\frac{Ze^2}{4\pi\varepsilon_0r}\right]\phi=E\phi.$$</div></div>
+    <div class="spec-row"><div class="spec-label">Potential</div><div>$V(r)=-Ze^2/(4\pi\varepsilon_0r)$ for $r&gt;0$.</div></div>
+    <div class="spec-row"><div class="spec-label">Boundary conditions</div><div>For bound states $E&lt;0$; $u(0)=0$; $u(r)\to0$ as $r\to\infty$; angular part single-valued and regular; $\iiint|\phi|^2\,dV=1$.</div></div>
+    <div class="spec-row"><div class="spec-label">Find</div><div>The energy spectrum, radial functions and allowed values of $n,l,m$.</div></div>
+  </div>
+  <div class="method-reminder"><strong>Repeated method:</strong> separate angles once → reduce to the radial equation → scale the radius → determine both endpoint factors → use a power series for the remaining analytic function → terminate it → reconstruct and normalise.</div>
+
+  <div class="step">
+    <h3><span class="step-no">1</span>Write the radial Coulomb equation</h3>
+    <div class="equation">$$ V(r)=-\frac{Ze^2}{4\pi\varepsilon_0r}. $$</div>
+    <p>Use the reduced mass $\mu$ and set $u=rR$:</p>
+    <p>The reduced mass allows the electron and nucleus to move while reducing their relative motion to a one-particle equation.</p>
+    <div class="equation tight-math">$$
+      -\frac{\hbar^2}{2\mu}\frac{d^2u}{dr^2}
+      +\left[-\frac{Ze^2}{4\pi\varepsilon_0r}
+      +\frac{\hbar^2l(l+1)}{2\mu r^2}\right]u=Eu.
+    $$</div>
+    <p>Bound states have $E&lt;0$, $u(0)=0$, and $u(\infty)=0$.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">2</span>Make the equation dimensionless</h3>
+    <div class="equation">$$
+      \kappa=\frac{\sqrt{-2\mu E}}{\hbar},
+      \qquad \rho=2\kappa r,
+      \qquad
+      \eta=\frac{\mu Ze^2}{4\pi\varepsilon_0\hbar^2\kappa}.
+    $$</div>
+    <p>Because $\rho=2\kappa r$, differentiation changes according to</p>
+    <div class="equation compact">$$\frac{d}{dr}=2\kappa\frac{d}{d\rho},\qquad
+      \frac{d^2}{dr^2}=4\kappa^2\frac{d^2}{d\rho^2}.$$</div>
+    <p>The parameter $\eta$ contains the energy through $\kappa$. Quantising $\eta$ will therefore quantise $E$.</p>
+    <p>The radial equation becomes</p>
+    <div class="equation">$$
+      \frac{d^2u}{d\rho^2}+\left[-\frac14+\frac{\eta}{\rho}-\frac{l(l+1)}{\rho^2}\right]u=0.
+    $$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">3</span>Find both endpoint behaviours</h3>
+    <h4>As $\rho\to\infty$</h4>
+    <div class="equation compact">$$ u''-\frac14u\simeq0
+      \quad\Longrightarrow\quad u\propto e^{-\rho/2}. $$</div>
+    <p>The growing exponential is rejected.</p>
+    <h4>As $\rho\to0$</h4>
+    <div class="equation compact">$$ u''-\frac{l(l+1)}{\rho^2}u\simeq0. $$</div>
+    <p>Trying $u\sim\rho^s$ gives $s(s-1)=l(l+1)$.</p>
+    <p>The two roots are $s=l+1$ and $s=-l$.</p>
+    <p>The second root diverges at the origin for $l&gt;0$ and fails the physical boundary condition.</p>
+    <p>The regular root is therefore $s=l+1$.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">4</span>Factor out the known behaviour</h3>
+    <div class="equation">$$ u(\rho)=\rho^{l+1}e^{-\rho/2}v(\rho). $$</div>
+    <p>Substitution gives</p>
+    <div class="equation tight-math">$$
+      \rho v''+(2l+2-\rho)v'+(\eta-l-1)v=0.
+    $$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">5</span>Use a power series</h3>
+    <div class="series-explanation">
+      <h4>Why use a series again?</h4>
+      <p>We have already removed the only two difficult endpoint behaviours: $\rho^{l+1}$ at the origin and $e^{-\rho/2}$ at infinity.</p>
+      <p>The remaining function $v(\rho)$ is regular and satisfies an equation with analytic coefficients after multiplication by $\rho$.</p>
+      <p>A power series is therefore the natural systematic representation. As with the oscillator, its recurrence relation will expose the allowed energies.</p>
+    </div>
+    <div class="equation">$$ v(\rho)=\sum_{p=0}^{\infty}a_p\rho^p. $$</div>
+    <div class="equation compact">$$v'=\sum_{p=0}^{\infty}(p+1)a_{p+1}\rho^p,\qquad
+      \rho v''=\sum_{p=0}^{\infty}p(p+1)a_{p+1}\rho^p.$$</div>
+    <p>Substituting these into the equation for $v$ and matching the coefficient of each $\rho^p$ gives</p>
+    <p>Matching powers gives the recurrence</p>
+    <div class="equation tight-math">$$
+      a_{p+1}=\frac{p+l+1-\eta}{(p+1)(p+2l+2)}a_p.
+    $$</div>
+    <p>An infinite series grows fast enough to destroy normalisability.</p>
+    <p>More precisely, the non-terminating solution contains an $e^{+\rho}$ contribution. Combined with the factor $e^{-\rho/2}$, it would behave as $e^{+\rho/2}$.</p>
+    <p>The series must terminate at $p=p_{\max}$.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">6</span>Quantise the energy</h3>
+    <p>Termination requires the numerator to vanish:</p>
+    <div class="equation">$$ p_{\max}+l+1-\eta=0. $$</div>
+    <p>Define the principal quantum number</p>
+    <div class="equation">$$ n=p_{\max}+l+1,\qquad n=1,2,3,\ldots $$</div>
+    <p>Therefore $\eta=n$, with $l=0,1,\ldots,n-1$.</p>
+    <p>The relation $n=p_{\max}+l+1$ automatically gives $l&lt;n$ because $p_{\max}\ge0$.</p>
+    <p>Insert the definitions of $\eta$ and $\kappa$:</p>
+    <div class="equation tight-math">$$
+      \boxed{E_n=-\frac{\mu Z^2e^4}{2(4\pi\varepsilon_0)^2\hbar^2}\frac1{n^2}}.
+    $$</div>
+  </div>
+
+  <div class="result">
+    <h3>Complete bound-state wavefunctions</h3>
+    <p>Define the Bohr radius using the reduced mass:</p>
+    <div class="equation">$$ a_0=\frac{4\pi\varepsilon_0\hbar^2}{\mu e^2},
+      \qquad \rho=\frac{2Zr}{na_0}. $$</div>
+    <div class="equation tight-math">$$
+      R_{nl}(r)=N_{nl}\,e^{-\rho/2}\rho^lL_{n-l-1}^{\,2l+1}(\rho),
+      \qquad
+      \phi_{nlm}=R_{nl}(r)Y_{lm}(\theta,\varphi).
+    $$</div>
+    <p>The three quantum numbers obey</p>
+    <div class="equation">$$ n=1,2,\ldots,\qquad l=0,\ldots,n-1,\qquad m=-l,\ldots,l. $$</div>
+  </div>
+  <div class="lecture-note">
+    <h3>Basis interpretation of the hydrogen states</h3>
+    <p>The angular factors $Y_{lm}$ form an orthonormal basis on the sphere.</p>
+    <p>For each allowed $l$, the radial functions form an orthonormal family with the radial measure $r^2dr$.</p>
+    <div class="equation compact">$$\int_0^{\infty}R_{nl}^*(r)R_{n'l}(r)r^2\,dr=\delta_{nn'}.$$</div>
+    <p>The products $R_{nl}Y_{lm}$ form the bound-state basis. A general bound state is</p>
+    <div class="equation compact">$$\psi(\mathbf r,0)=\sum_{n=1}^{\infty}\sum_{l=0}^{n-1}\sum_{m=-l}^{l}c_{nlm}\phi_{nlm}(\mathbf r).$$</div>
+    <p>Each coefficient is found by the three-dimensional inner product, and each energy measurement yields $E_n$ with probability obtained by summing $|c_{nlm}|^2$ over the degenerate $l,m$ states.</p>
+  </div>
+
+  <div class="page-break"></div>
+  <div class="section-head">
+    <div class="eyebrow">Hydrogen-like atom · first states</div>
+    <h2>Recognise the solutions</h2>
+  </div>
+
+  <div class="result">
+    <h3>$1s$ state</h3>
+    <div class="equation tight-math">$$
+      \phi_{100}=\left(\frac{Z^3}{\pi a_0^3}\right)^{1/2}e^{-Zr/a_0}.
+    $$</div>
+  </div>
+
+  <div class="result">
+    <h3>$2s$ state</h3>
+    <div class="equation tight-math">$$
+      \phi_{200}=\left(\frac{Z^3}{32\pi a_0^3}\right)^{1/2}
+      \left(2-\frac{Zr}{a_0}\right)e^{-Zr/(2a_0)}.
+    $$</div>
+  </div>
+
+  <div class="result">
+    <h3>$2p,\ m=0$ state</h3>
+    <div class="equation tight-math">$$
+      \phi_{210}=\left(\frac{Z^3}{32\pi a_0^3}\right)^{1/2}
+      \frac{Zr}{a_0}\cos\theta\,e^{-Zr/(2a_0)}.
+    $$</div>
+  </div>
+
+  <div class="result">
+    <h3>$2p,\ m=\pm1$ states</h3>
+    <div class="equation tight-math">$$
+      \phi_{21\pm1}=\mp\left(\frac{Z^3}{64\pi a_0^3}\right)^{1/2}
+      \frac{Zr}{a_0}\sin\theta\,e^{\pm i\varphi}e^{-Zr/(2a_0)}.
+    $$</div>
+  </div>
+
+  <div class="idea">
+    <h3>Why the energy depends only on $n$</h3>
+    <p>For the pure Coulomb potential, states with different $l$ and $m$ but the same $n$ share the same energy.</p>
+    <p>The degeneracy of a fixed-$n$ shell, excluding spin, is $n^2$.</p>
+  </div>
+  <div class="source">Discussion prompt: compare the derivation with your lectures and preferred textbook.</div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Revision map</div>
+    <h2>What changes from problem to problem?</h2>
+  </div>
+  <table>
+    <thead><tr><th>Problem</th><th>New move</th><th>What selects the answer?</th></tr></thead>
+    <tbody>
+      <tr><td>Infinite well</td><td>Sinusoidal solution</td><td>Zeros at both walls</td></tr>
+      <tr><td>Potential step</td><td>Match two regions</td><td>Continuity of $\phi,\phi'$</td></tr>
+      <tr><td>Tunnelling barrier</td><td>Match three regions</td><td>Two interfaces</td></tr>
+      <tr><td>Semi-infinite well</td><td>Transcendental condition</td><td>Graphical/numerical root</td></tr>
+      <tr><td>Harmonic oscillator</td><td>Asymptotic factor + series</td><td>Series termination</td></tr>
+      <tr><td>3D box/oscillator</td><td>Cartesian separation</td><td>Three 1D solutions</td></tr>
+      <tr><td>Central potentials</td><td>Spherical separation</td><td>Angular regularity</td></tr>
+      <tr><td>Spherical well</td><td>Bessel functions</td><td>Zeros of $j_l$</td></tr>
+      <tr><td>Hydrogen-like atom</td><td>Two endpoint factors + series</td><td>Series termination</td></tr>
+    </tbody>
+  </table>
+  <div class="idea">
+    <h3>The shortest useful checklist</h3>
+    <p><strong>Region → equation → admissible form → boundary conditions → normalisation or flux → interpretation.</strong></p>
+  </div>
+  <div class="source">Discussion prompt: compare the derivation with your lectures and preferred textbook.</div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Appendix</div>
+    <h2>Deriving Laplacians in common coordinate systems</h2>
+  </div>
+  <p class="lead">The Laplacian changes appearance because the coordinate grid stretches and bends. The operator itself has not changed.</p>
+  <div class="lecture-note">
+    <h3>Why this matters in quantum mechanics</h3>
+    <p>The kinetic-energy operator is $-\hbar^2\nabla^2/(2m)$.</p>
+    <p>Choosing coordinates that match the symmetry of the potential can turn one difficult partial differential equation into several ordinary differential equations.</p>
+  </div>
+  <table>
+    <thead><tr><th>Coordinates</th><th>Best suited to</th><th>Typical potential</th></tr></thead>
+    <tbody>
+      <tr><td>Cartesian $(x,y,z)$</td><td>Rectangular boundaries</td><td>$V_x(x)+V_y(y)+V_z(z)$</td></tr>
+      <tr><td>Polar $(r,\varphi)$</td><td>Two-dimensional circular symmetry</td><td>$V(r)$ in a plane</td></tr>
+      <tr><td>Cylindrical $(\rho,\varphi,z)$</td><td>Axial symmetry</td><td>Wires, cylinders, uniform axes</td></tr>
+      <tr><td>Spherical $(r,\theta,\varphi)$</td><td>Central symmetry</td><td>Atoms and spherical wells</td></tr>
+    </tbody>
+  </table>
+  <div class="idea">
+    <h3>The route used in every derivation</h3>
+    <p>Coordinate map → tangent vectors → scale factors → gradient → divergence → Laplacian.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Appendix A.1</div>
+    <h2>General orthogonal-coordinate formula</h2>
+  </div>
+  <p class="lead">Derive the formula once, then substitute the scale factors for each coordinate system.</p>
+
+  <div class="step">
+    <h3><span class="step-no">1</span>Describe the coordinate grid</h3>
+    <p>Let a position in space be written as a vector-valued function</p>
+    <div class="equation compact">$$\mathbf r=\mathbf r(q_1,q_2,q_3).$$</div>
+    <p>Changing only $q_i$ moves along the coordinate curve whose tangent vector is</p>
+    <div class="equation compact">$$\mathbf a_i=\frac{\partial\mathbf r}{\partial q_i}.$$</div>
+    <p>For orthogonal coordinates, the three tangent vectors are mutually perpendicular.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">2</span>Define scale factors</h3>
+    <div class="equation compact">$$h_i=|\mathbf a_i|,\qquad \mathbf e_i=\frac{\mathbf a_i}{h_i}.$$</div>
+    <p>A small displacement is therefore</p>
+    <div class="equation compact">$$d\mathbf r=h_1\mathbf e_1dq_1+h_2\mathbf e_2dq_2+h_3\mathbf e_3dq_3.$$</div>
+    <p>The physical edge lengths of a small coordinate cell are $h_1dq_1$, $h_2dq_2$ and $h_3dq_3$.</p>
+    <div class="equation compact">$$dV=h_1h_2h_3\,dq_1dq_2dq_3.$$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">3</span>Derive the gradient</h3>
+    <p>By definition, the first-order change in a scalar function is</p>
+    <div class="equation compact">$$df=\nabla f\cdot d\mathbf r.$$</div>
+    <p>It is also</p>
+    <div class="equation compact">$$df=\frac{\partial f}{\partial q_1}dq_1+\frac{\partial f}{\partial q_2}dq_2+\frac{\partial f}{\partial q_3}dq_3.$$</div>
+    <p>Compare the coefficient of each independent $dq_i$:</p>
+    <div class="equation">$$\boxed{\nabla f=\sum_{i=1}^{3}\mathbf e_i\frac1{h_i}\frac{\partial f}{\partial q_i}}.$$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">4</span>Derive the divergence from flux</h3>
+    <p>Write $\mathbf A=A_1\mathbf e_1+A_2\mathbf e_2+A_3\mathbf e_3$.</p>
+    <p>The face perpendicular to $\mathbf e_1$ has area $h_2h_3dq_2dq_3$.</p>
+    <p>The net outward flux through the pair of $q_1$ faces is</p>
+    <div class="equation compact">$$\frac{\partial}{\partial q_1}(h_2h_3A_1)dq_1dq_2dq_3.$$</div>
+    <p>Add the analogous contributions from the other two pairs of faces and divide by the cell volume.</p>
+    <div class="equation tight-math">$$\boxed{\nabla\cdot\mathbf A=
+      \frac1{h_1h_2h_3}\left[
+      \frac{\partial}{\partial q_1}(h_2h_3A_1)+
+      \frac{\partial}{\partial q_2}(h_3h_1A_2)+
+      \frac{\partial}{\partial q_3}(h_1h_2A_3)
+      \right]}.$$</div>
+  </div>
+
+  <div class="result">
+    <h3>Apply divergence to the gradient</h3>
+    <p>Set $\mathbf A=\nabla f$, so $A_i=(1/h_i)\partial f/\partial q_i$.</p>
+    <div class="equation tight-math">$$\boxed{
+      \nabla^2f=\frac1{h_1h_2h_3}\left[
+      \frac{\partial}{\partial q_1}\left(\frac{h_2h_3}{h_1}\frac{\partial f}{\partial q_1}\right)+
+      \frac{\partial}{\partial q_2}\left(\frac{h_3h_1}{h_2}\frac{\partial f}{\partial q_2}\right)+
+      \frac{\partial}{\partial q_3}\left(\frac{h_1h_2}{h_3}\frac{\partial f}{\partial q_3}\right)
+      \right]}.$$</div>
+    <p>Every formula below follows by inserting the appropriate scale factors.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Appendix A.2</div>
+    <h2>Polar coordinates in two dimensions</h2>
+  </div>
+  <div class="problem-spec">
+    <h3>Coordinate map</h3>
+    <div class="equation compact">$$x=r\cos\varphi,\qquad y=r\sin\varphi.$$</div>
+    <p>Here $r\ge0$ and $0\le\varphi&lt;2\pi$.</p>
+  </div>
+
+  <div class="svg-wrap">
+    <svg viewBox="0 0 360 170" aria-label="Polar coordinates">
+      <line class="axis" x1="35" y1="135" x2="330" y2="135"/><line class="axis" x1="75" y1="155" x2="75" y2="18"/>
+      <line x1="75" y1="135" x2="260" y2="52" stroke="#111" stroke-width="2"/>
+      <circle cx="260" cy="52" r="4" fill="#111"/>
+      <path d="M120 135 A45 45 0 0 0 116 116" fill="none" stroke="#555" stroke-width="1.4"/>
+      <text class="label" x="165" y="86">r</text><text class="label" x="122" y="122">φ</text><text class="label" x="333" y="145">x</text><text class="label" x="63" y="18">y</text>
+    </svg>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">1</span>Differentiate the position vector</h3>
+    <div class="equation compact">$$\mathbf r(r,\varphi)=r\cos\varphi\,\mathbf e_x+r\sin\varphi\,\mathbf e_y.$$</div>
+    <div class="equation tight-math">$$
+      \frac{\partial\mathbf r}{\partial r}=(\cos\varphi,\sin\varphi)=\mathbf e_r,
+      \qquad
+      \frac{\partial\mathbf r}{\partial\varphi}=(-r\sin\varphi,r\cos\varphi)=r\mathbf e_\varphi.
+    $$</div>
+    <p>The vectors are perpendicular and have lengths $1$ and $r$.</p>
+    <div class="equation compact">$$h_r=1,\qquad h_\varphi=r.$$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">2</span>Read the geometry</h3>
+    <div class="equation compact">$$d\mathbf r=\mathbf e_rdr+\mathbf e_\varphi r\,d\varphi,$$</div>
+    <div class="equation compact">$$ds^2=dr^2+r^2d\varphi^2,\qquad dA=r\,dr\,d\varphi.$$</div>
+    <p>A small angular change covers a physical arc length $r\,d\varphi$, not merely $d\varphi$.</p>
+  </div>
+
+  <div class="result">
+    <h3>Gradient, divergence and Laplacian</h3>
+    <div class="equation compact">$$\nabla f=\mathbf e_r\frac{\partial f}{\partial r}+\mathbf e_\varphi\frac1r\frac{\partial f}{\partial\varphi},$$</div>
+    <div class="equation compact">$$\nabla\cdot\mathbf A=\frac1r\frac{\partial}{\partial r}(rA_r)+\frac1r\frac{\partial A_\varphi}{\partial\varphi},$$</div>
+    <div class="equation">$$\boxed{\nabla^2f=\frac1r\frac{\partial}{\partial r}\left(r\frac{\partial f}{\partial r}\right)+\frac1{r^2}\frac{\partial^2f}{\partial\varphi^2}}.$$</div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Appendix A.3</div>
+    <h2>Cylindrical coordinates</h2>
+  </div>
+  <div class="problem-spec">
+    <h3>Coordinate map</h3>
+    <div class="equation compact">$$x=\rho\cos\varphi,\qquad y=\rho\sin\varphi,\qquad z=z.$$</div>
+    <p>The symbol $\rho$ is the perpendicular distance from the $z$-axis.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">1</span>Find the coordinate tangent vectors</h3>
+    <div class="equation tight-math">$$
+      \frac{\partial\mathbf r}{\partial\rho}=(\cos\varphi,\sin\varphi,0)=\mathbf e_\rho,
+    $$</div>
+    <div class="equation tight-math">$$
+      \frac{\partial\mathbf r}{\partial\varphi}=(-\rho\sin\varphi,\rho\cos\varphi,0)=\rho\mathbf e_\varphi,
+      \qquad
+      \frac{\partial\mathbf r}{\partial z}=\mathbf e_z.
+    $$</div>
+    <div class="equation compact">$$h_\rho=1,\qquad h_\varphi=\rho,\qquad h_z=1.$$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">2</span>Read the line and volume elements</h3>
+    <div class="equation compact">$$ds^2=d\rho^2+\rho^2d\varphi^2+dz^2,$$</div>
+    <div class="equation compact">$$dV=\rho\,d\rho\,d\varphi\,dz.$$</div>
+    <p>The factor $\rho$ is the Jacobian. It records the increasing arc length as we move away from the axis.</p>
+  </div>
+
+  <div class="result">
+    <h3>Cylindrical Laplacian</h3>
+    <div class="equation tight-math">$$\boxed{
+      \nabla^2f=
+      \frac1\rho\frac{\partial}{\partial\rho}\left(\rho\frac{\partial f}{\partial\rho}\right)
+      +\frac1{\rho^2}\frac{\partial^2f}{\partial\varphi^2}
+      +\frac{\partial^2f}{\partial z^2}}
+    $$</div>
+    <p>If $f$ is independent of $z$, this reduces exactly to the two-dimensional polar Laplacian after replacing $\rho$ by $r$.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Appendix A.4</div>
+    <h2>Spherical coordinates</h2>
+  </div>
+  <div class="problem-spec">
+    <h3>Coordinate map</h3>
+    <div class="equation tight-math">$$x=r\sin\theta\cos\varphi,\qquad
+      y=r\sin\theta\sin\varphi,\qquad z=r\cos\theta.$$</div>
+    <p>Here $r\ge0$, $0\le\theta\le\pi$, and $0\le\varphi&lt;2\pi$.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">1</span>Differentiate with respect to $r$</h3>
+    <div class="equation tight-math">$$
+      \frac{\partial\mathbf r}{\partial r}=
+      (\sin\theta\cos\varphi,\sin\theta\sin\varphi,\cos\theta)=\mathbf e_r.
+    $$</div>
+    <div class="equation compact">$$h_r=\left|\frac{\partial\mathbf r}{\partial r}\right|=1.$$</div>
+    <p>A change $dr$ is already a physical radial distance.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">2</span>Differentiate with respect to $\theta$</h3>
+    <div class="equation tight-math">$$
+      \frac{\partial\mathbf r}{\partial\theta}=
+      (r\cos\theta\cos\varphi,r\cos\theta\sin\varphi,-r\sin\theta)=r\mathbf e_\theta.
+    $$</div>
+    <div class="equation compact">$$h_\theta=\left|\frac{\partial\mathbf r}{\partial\theta}\right|=r.$$</div>
+    <p>At radius $r$, a small polar angle $d\theta$ corresponds to an arc length $r\,d\theta$.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">3</span>Differentiate with respect to $\varphi$</h3>
+    <div class="equation tight-math">$$
+      \frac{\partial\mathbf r}{\partial\varphi}=
+      (-r\sin\theta\sin\varphi,r\sin\theta\cos\varphi,0)=r\sin\theta\,\mathbf e_\varphi.
+    $$</div>
+    <div class="equation compact">$$h_\varphi=\left|\frac{\partial\mathbf r}{\partial\varphi}\right|=r\sin\theta.$$</div>
+    <p>The circle swept out by changing $\varphi$ has radius $r\sin\theta$, not $r$.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">4</span>Build the geometric elements</h3>
+    <div class="equation compact">$$d\mathbf r=\mathbf e_rdr+\mathbf e_\theta r\,d\theta+\mathbf e_\varphi r\sin\theta\,d\varphi,$$</div>
+    <div class="equation compact">$$ds^2=dr^2+r^2d\theta^2+r^2\sin^2\theta\,d\varphi^2,$$</div>
+    <div class="equation compact">$$dV=r^2\sin\theta\,dr\,d\theta\,d\varphi.$$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">5</span>Substitute the scale factors into the gradient</h3>
+    <div class="equation tight-math">$$
+      \nabla f=\mathbf e_r\frac{\partial f}{\partial r}
+      +\mathbf e_\theta\frac1r\frac{\partial f}{\partial\theta}
+      +\mathbf e_\varphi\frac1{r\sin\theta}\frac{\partial f}{\partial\varphi}.
+    $$</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="step-no">6</span>Substitute them into the divergence</h3>
+    <div class="equation tight-math">$$
+      \nabla\cdot\mathbf A=
+      \frac1{r^2}\frac{\partial}{\partial r}(r^2A_r)
+      +\frac1{r\sin\theta}\frac{\partial}{\partial\theta}(\sin\theta A_\theta)
+      +\frac1{r\sin\theta}\frac{\partial A_\varphi}{\partial\varphi}.
+    $$</div>
+  </div>
+
+  <div class="result">
+    <h3>Spherical-coordinate Laplacian</h3>
+    <p>Set $\mathbf A=\nabla f$ and substitute its three components into the divergence formula:</p>
+    <div class="equation tight-math">$$\boxed{
+      \nabla^2f=
+      \frac1{r^2}\frac{\partial}{\partial r}\left(r^2\frac{\partial f}{\partial r}\right)
+      +\frac1{r^2\sin\theta}\frac{\partial}{\partial\theta}\left(\sin\theta\frac{\partial f}{\partial\theta}\right)
+      +\frac1{r^2\sin^2\theta}\frac{\partial^2f}{\partial\varphi^2}}
+    $$</div>
+  </div>
+
+  <div class="lecture-note">
+    <h3>Two important reductions</h3>
+    <h4>Radial function only</h4>
+    <p>If $f=f(r)$, both angular derivatives vanish:</p>
+    <div class="equation compact">$$\nabla^2f=\frac1{r^2}\frac{d}{dr}\left(r^2\frac{df}{dr}\right).$$</div>
+    <h4>Radial times angular</h4>
+    <p>For $f=R(r)Y(\theta,\varphi)$, the angular part is related to orbital angular momentum:</p>
+    <div class="equation compact">$$\nabla^2=\frac1{r^2}\frac{\partial}{\partial r}\left(r^2\frac{\partial}{\partial r}\right)-\frac{L^2}{\hbar^2r^2}.$$</div>
+    <p>This identity is the reason central-potential Schrödinger equations separate into radial functions and spherical harmonics.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Appendix B</div>
+    <h2>Why separation of variables reveals the eigenbasis</h2>
+  </div>
+  <p class="lead">For a time-independent Hamiltonian, separation of variables is the route from the evolution equation to the eigenfunctions of the spatial operator.</p>
+
+  <div class="concept-statement">
+    <h3>The precise statement</h3>
+    <p><strong>The Hamiltonian is the self-adjoint operator.</strong></p>
+    <p><strong>Its eigenfunctions form the orthonormal basis.</strong></p>
+    <p>We separate variables because those eigenfunctions are not known in advance.</p>
+  </div>
+
+  <h3>1. Isolate the spatial operator</h3>
+  <p>Start with a Hamiltonian that has no explicit time dependence:</p>
+  <div class="equation compact">$$i\hbar\frac{\partial\Psi}{\partial t}=\hat H\Psi,
+    \qquad
+    \hat H=-\frac{\hbar^2}{2m}\nabla^2+V.$$</div>
+  <p>Write one separated mode as $\Psi(\mathbf r,t)=\phi(\mathbf r)T(t)$.</p>
+  <p>Substitution isolates two eigenvalue equations with the same separation constant $E$:</p>
+  <div class="operator-chain">
+    <div class="equation compact">$$\boxed{\hat H\phi=E\phi}
+      \qquad\text{and}\qquad
+      i\hbar\frac{dT}{dt}=ET.$$</div>
+  </div>
+  <p>The spatial equation is therefore not merely an ordinary differential equation to be solved.</p>
+  <p>It is the eigenvalue problem for the spatial Hamiltonian on the domain fixed by the boundary conditions.</p>
+
+  <h3>2. Boundary conditions determine the operator domain</h3>
+  <p>Hard walls, decay at infinity, regularity at the origin and matching conditions are part of the definition of the operator.</p>
+  <p>With the correct domain, the Hamiltonian is self-adjoint.</p>
+  <p>Consequently its eigenvalues are real, eigenfunctions belonging to distinct eigenvalues are orthogonal, and its eigenfunctions give a complete discrete or generalised basis.</p>
+
+  <h3>3. Further separation finds a joint eigenbasis</h3>
+  <p>In more than one coordinate, we separate again only when the Hamiltonian exposes commuting self-adjoint pieces.</p>
+  <p>For a rectangular box these are the one-dimensional Cartesian operators.</p>
+  <p>For a central potential the commuting set is $\hat H$, $\hat L^2$ and $\hat L_z$.</p>
+  <div class="equation compact">$$
+    \hat H\phi_{nlm}=E_n\phi_{nlm},\qquad
+    \hat L^2\phi_{nlm}=\hbar^2l(l+1)\phi_{nlm},\qquad
+    \hat L_z\phi_{nlm}=\hbar m\phi_{nlm}.
+  $$</div>
+  <p>The product functions obtained by separation are therefore joint eigenvectors that label the orthonormal basis.</p>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Appendix B · continued</div>
+    <h2>Where the time dependence lives</h2>
+  </div>
+  <p class="lead">Once the spatial eigenbasis is known, the full solution is its expansion with time-dependent coefficients.</p>
+
+  <h3>Discrete spectrum</h3>
+  <div class="equation">$$
+    \Psi(\mathbf r,t)=\sum_n c_n(t)\phi_n(\mathbf r),
+    \qquad
+    c_n(t)=c_n(0)e^{-iE_nt/\hbar}.
+  $$</div>
+  <div class="equation compact">$$
+    c_n(0)=\langle\phi_n,\Psi(0)\rangle
+    =\int\phi_n^*(\mathbf r)\Psi(\mathbf r,0)\,d\tau.
+  $$</div>
+  <p>The basis functions $\phi_n(\mathbf r)$ are fixed in space.</p>
+  <p>In this stationary eigenbasis, all time dependence appears in the coefficient phases $e^{-iE_nt/\hbar}$.</p>
+
+  <h3>Continuous spectrum</h3>
+  <div class="equation">$$
+    \Psi(\mathbf r,t)=\sum_\alpha\int
+    c_\alpha(E)\,e^{-iEt/\hbar}\phi_{E,\alpha}(\mathbf r)\,dE.
+  $$</div>
+  <p>The label $\alpha$ distinguishes independent scattering channels such as incidence from the left or from the right.</p>
+  <p>The continuum eigenfunctions are delta-normalised rather than square-normalised.</p>
+
+  <h3>Mixed spectrum</h3>
+  <p>If bound and scattering states both occur, completeness requires both parts:</p>
+  <div class="equation">$$
+    \Psi(t)=
+    \sum_{\text{bound }n}c_n(0)e^{-iE_nt/\hbar}\phi_n
+    +\sum_\alpha\int_{\text{continuum}}
+    c_\alpha(E)e^{-iEt/\hbar}\phi_{E,\alpha}\,dE.
+  $$</div>
+
+  <table class="basis-key">
+    <thead><tr><th>Spectrum</th><th>Normalisation</th><th>Expansion</th></tr></thead>
+    <tbody>
+      <tr><td>Discrete</td><td>$\langle\phi_m,\phi_n\rangle=\delta_{mn}$</td><td>Sum over $n$</td></tr>
+      <tr><td>Continuous</td><td>$\langle\phi_{E,\alpha},\phi_{E',\beta}\rangle=\delta_{\alpha\beta}\delta(E-E')$</td><td>Integral over $E$</td></tr>
+      <tr><td>Mixed</td><td>Discrete and delta normalisation</td><td>Sum plus integral</td></tr>
+    </tbody>
+  </table>
+
+  <div class="concept-statement">
+    <p><strong>Separation isolates the self-adjoint eigenvalue problem.</strong></p>
+    <p><strong>Solving that problem finds the basis.</strong></p>
+    <p><strong>Expanding in that basis solves the time evolution.</strong></p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Appendix C · Master solution tables</div>
+    <h2>1. One-dimensional infinite well</h2>
+  </div>
+  <table class="solution-table">
+    <tbody>
+      <tr><th>Potential and domain</th><td>$V=0$ for $0\le x\le L$ and $V=\infty$ otherwise; $\phi(0)=\phi(L)=0$.</td></tr>
+      <tr><th>Spatial eigenproblem</th><td>$-\frac{\hbar^2}{2m}\phi''=E\phi$, hence $\phi''+k^2\phi=0$ with $k^2=2mE/\hbar^2$.</td></tr>
+      <tr><th>General form</th><td>$\phi=A\sin kx+B\cos kx$.</td></tr>
+      <tr><th>Selection steps</th><td>$\phi(0)=0\Rightarrow B=0$; $\phi(L)=0\Rightarrow \sin(kL)=0$; therefore $k_n=n\pi/L$ with $n=1,2,\ldots$.</td></tr>
+      <tr><th>Orthonormal basis</th><td>$\displaystyle \phi_n(x)=\sqrt{\frac2L}\sin\!\left(\frac{n\pi x}{L}\right)$ and $\int_0^L\phi_m^*\phi_n\,dx=\delta_{mn}$.</td></tr>
+      <tr><th>Spectrum</th><td>$\displaystyle E_n=\frac{\hbar^2\pi^2n^2}{2mL^2}$.</td></tr>
+      <tr><th>Full solution</th><td>$\displaystyle \Psi(x,t)=\sum_{n=1}^{\infty}c_n(0)e^{-iE_nt/\hbar}\phi_n(x)$, where $c_n(0)=\int_0^L\phi_n^*(x)\Psi(x,0)\,dx$.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Appendix C · Master solution tables</div>
+    <h2>2. Potential step with $E&gt;V_0$</h2>
+  </div>
+  <table class="solution-table">
+    <tbody>
+      <tr><th>Potential</th><td>$V=0$ for $x&lt;0$ and $V=V_0$ for $x&gt;0$.</td></tr>
+      <tr><th>Regional wavenumbers</th><td>$\displaystyle k_1=\frac{\sqrt{2mE}}{\hbar}$ and $\displaystyle k_2=\frac{\sqrt{2m(E-V_0)}}{\hbar}$.</td></tr>
+      <tr><th>Admissible form</th><td>For incidence from the left, $\phi_1=Ae^{ik_1x}+Be^{-ik_1x}$ and $\phi_2=Ce^{ik_2x}$.</td></tr>
+      <tr><th>Matching</th><td>$A+B=C$ and $k_1(A-B)=k_2C$.</td></tr>
+      <tr><th>Amplitudes</th><td>$\displaystyle r=\frac BA=\frac{k_1-k_2}{k_1+k_2}$ and $\displaystyle t=\frac CA=\frac{2k_1}{k_1+k_2}$.</td></tr>
+      <tr><th>Flux result</th><td>$\displaystyle R=|r|^2$, $\displaystyle T=\frac{k_2}{k_1}|t|^2$, and $R+T=1$.</td></tr>
+      <tr><th>Generalised basis</th><td>The self-adjoint Hamiltonian has continuum eigenfunctions $\phi_{E,\alpha}$, with channel label $\alpha$ for incidence from the left or right. They are unit-flux or delta normalised.</td></tr>
+      <tr><th>Wave packet</th><td>$\displaystyle \Psi(x,t)=\sum_\alpha\int c_\alpha(E)e^{-iEt/\hbar}\phi_{E,\alpha}(x)\,dE$.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Appendix C · Master solution tables</div>
+    <h2>3. Potential step with $0&lt;E&lt;V_0$</h2>
+  </div>
+  <table class="solution-table">
+    <tbody>
+      <tr><th>Parameters</th><td>$\displaystyle k=\frac{\sqrt{2mE}}{\hbar}$ and $\displaystyle \kappa=\frac{\sqrt{2m(V_0-E)}}{\hbar}$.</td></tr>
+      <tr><th>Admissible form</th><td>$\phi_1=Ae^{ikx}+Be^{-ikx}$ for $x&lt;0$; boundedness gives $\phi_2=Ce^{-\kappa x}$ for $x&gt;0$.</td></tr>
+      <tr><th>Matching</th><td>$A+B=C$ and $ik(A-B)=-\kappa C$.</td></tr>
+      <tr><th>Amplitudes</th><td>$\displaystyle \frac BA=\frac{k-i\kappa}{k+i\kappa}$ and $\displaystyle \frac CA=\frac{2k}{k+i\kappa}$.</td></tr>
+      <tr><th>Physical result</th><td>$R=1$. The right-hand tail has penetration length of order $1/\kappa$ and carries no steady transmitted current.</td></tr>
+      <tr><th>Generalised basis</th><td>These are continuum scattering eigenfunctions with an evanescent component. They are delta normalised, not square normalised.</td></tr>
+      <tr><th>Wave packet</th><td>$\displaystyle \Psi(x,t)=\int c(E)e^{-iEt/\hbar}\phi_E(x)\,dE$ over the relevant continuum energies.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Appendix C · Master solution tables</div>
+    <h2>4. Finite barrier with $0&lt;E&lt;V_0$</h2>
+  </div>
+  <table class="solution-table">
+    <tbody>
+      <tr><th>Potential</th><td>$V=V_0$ for $0\le x\le L$ and $V=0$ outside.</td></tr>
+      <tr><th>Parameters</th><td>$\displaystyle k=\frac{\sqrt{2mE}}{\hbar}$ and $\displaystyle \kappa=\frac{\sqrt{2m(V_0-E)}}{\hbar}$.</td></tr>
+      <tr><th>Three regional forms</th><td>$\phi_I=Ae^{ikx}+Be^{-ikx}$, $\phi_{II}=Ce^{\kappa x}+De^{-\kappa x}$, and $\phi_{III}=Fe^{ikx}$.</td></tr>
+      <tr><th>Intermediary step</th><td>Match $\phi$ and $\phi'$ at both $x=0$ and $x=L$, then eliminate $B,C,D$ in favour of $A,F$.</td></tr>
+      <tr><th>Transmission</th><td>$\displaystyle T=\left[1+\frac{V_0^2}{4E(V_0-E)}\sinh^2(\kappa L)\right]^{-1}$.</td></tr>
+      <tr><th>Wide barrier</th><td>$\displaystyle T\simeq\frac{16E(V_0-E)}{V_0^2}e^{-2\kappa L}$ when $\kappa L\gg1$.</td></tr>
+      <tr><th>Generalised basis</th><td>The barrier has a continuous, two-channel scattering basis $\phi_{E,\alpha}$ for $E&gt;0$.</td></tr>
+      <tr><th>Wave packet</th><td>$\displaystyle \Psi(x,t)=\sum_\alpha\int_0^\infty c_\alpha(E)e^{-iEt/\hbar}\phi_{E,\alpha}(x)\,dE$.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Appendix C · Master solution tables</div>
+    <h2>5. Finite barrier with $E&gt;V_0$</h2>
+  </div>
+  <table class="solution-table">
+    <tbody>
+      <tr><th>Parameters</th><td>$\displaystyle k=\frac{\sqrt{2mE}}{\hbar}$ and $\displaystyle q=\frac{\sqrt{2m(E-V_0)}}{\hbar}$.</td></tr>
+      <tr><th>Regional forms</th><td>$\phi_I=Ae^{ikx}+Be^{-ikx}$, $\phi_{II}=Ce^{iqx}+De^{-iqx}$, and $\phi_{III}=Fe^{ikx}$.</td></tr>
+      <tr><th>Intermediary step</th><td>Use the same four matching equations as for tunnelling, with $\kappa\mapsto iq$.</td></tr>
+      <tr><th>Transmission</th><td>$\displaystyle T=\left[1+\frac{V_0^2}{4E(E-V_0)}\sin^2(qL)\right]^{-1}$.</td></tr>
+      <tr><th>Resonance condition</th><td>$qL=n\pi$ gives $T=1$ because the reflected contributions cancel.</td></tr>
+      <tr><th>Generalised basis</th><td>The continuum eigenfunctions form two delta-normalised scattering channels.</td></tr>
+      <tr><th>Wave packet</th><td>$\displaystyle \Psi(x,t)=\sum_\alpha\int c_\alpha(E)e^{-iEt/\hbar}\phi_{E,\alpha}(x)\,dE$.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Appendix C · Master solution tables</div>
+    <h2>6. Semi-infinite finite well</h2>
+  </div>
+  <table class="solution-table">
+    <tbody>
+      <tr><th>Potential</th><td>$V=\infty$ for $x&lt;0$, $V=0$ for $0\le x\le L$, and $V=V_0$ for $x&gt;L$.</td></tr>
+      <tr><th>Bound-state parameters</th><td>$k^2=2mE/\hbar^2$, $\kappa^2=2m(V_0-E)/\hbar^2$, and $k^2+\kappa^2=2mV_0/\hbar^2$.</td></tr>
+      <tr><th>Admissible form</th><td>$\displaystyle \phi_n(x)=N_n\begin{cases}\sin(k_nx),&amp;0\le x\le L,\\ \sin(k_nL)e^{-\kappa_n(x-L)},&amp;x\ge L.\end{cases}$</td></tr>
+      <tr><th>Quantisation</th><td>Matching the logarithmic derivative at $L$ gives $\displaystyle k\cot(kL)=-\kappa$.</td></tr>
+      <tr><th>Normalisation</th><td>$\displaystyle N_n^{-2}=\frac L2-\frac{\sin(2k_nL)}{4k_n}+\frac{\sin^2(k_nL)}{2\kappa_n}$.</td></tr>
+      <tr><th>Basis status</th><td>The discrete bound states are orthonormal, but the complete basis also includes continuum states with $E\ge V_0$.</td></tr>
+      <tr><th>Full solution</th><td>A sum over bound states plus an integral over continuum states, each coefficient acquiring $e^{-iEt/\hbar}$.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Appendix C · Master solution tables</div>
+    <h2>7. One-dimensional harmonic oscillator</h2>
+  </div>
+  <table class="solution-table">
+    <tbody>
+      <tr><th>Potential</th><td>$V(x)=\frac12m\omega^2x^2$ on $\mathbb R$.</td></tr>
+      <tr><th>Scaled equation</th><td>With $y=\sqrt{m\omega/\hbar}\,x$ and $\alpha=2E/(\hbar\omega)$, $\displaystyle \phi_{yy}+(\alpha-y^2)\phi=0$.</td></tr>
+      <tr><th>Endpoint factor</th><td>Normalisability selects $\phi=e^{-y^2/2}H(y)$.</td></tr>
+      <tr><th>Series step</th><td>$H''-2yH'+(\alpha-1)H=0$; the recurrence terminates only when $\alpha=2n+1$.</td></tr>
+      <tr><th>Operator step</th><td>$a|0\rangle=0$ and $\displaystyle |n\rangle=(a^\dagger)^n|0\rangle/\sqrt{n!}$ give the same states.</td></tr>
+      <tr><th>Orthonormal basis</th><td>$\displaystyle \phi_n(x)=\frac{(m\omega/\pi\hbar)^{1/4}}{\sqrt{2^nn!}}H_n\!\left(\sqrt{\frac{m\omega}{\hbar}}x\right)e^{-m\omega x^2/(2\hbar)}$.</td></tr>
+      <tr><th>Spectrum</th><td>$\displaystyle E_n=\left(n+\frac12\right)\hbar\omega$, $n=0,1,2,\ldots$.</td></tr>
+      <tr><th>Full solution</th><td>$\displaystyle \Psi(x,t)=\sum_{n=0}^{\infty}c_n(0)e^{-iE_nt/\hbar}\phi_n(x)$.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Appendix C · Master solution tables</div>
+    <h2>8. Three-dimensional rectangular box</h2>
+  </div>
+  <table class="solution-table">
+    <tbody>
+      <tr><th>Domain</th><td>$-a\le x\le a$, $-b\le y\le b$, $-c\le z\le c$, with the wavefunction zero on all six faces.</td></tr>
+      <tr><th>Separated form</th><td>$\phi(x,y,z)=X(x)Y(y)Z(z)$ isolates three one-dimensional self-adjoint box operators.</td></tr>
+      <tr><th>One-dimensional basis</th><td>$\displaystyle X_n(x)=\frac1{\sqrt a}\begin{cases}\cos(n\pi x/2a),&amp;n\ \text{odd},\\ \sin(n\pi x/2a),&amp;n\ \text{even},\end{cases}$ with analogous $Y_n,Z_n$.</td></tr>
+      <tr><th>Product basis</th><td>$\phi_{n_xn_yn_z}=X_{n_x}Y_{n_y}Z_{n_z}$ and $\iiint\phi_{\mathbf n}^*\phi_{\mathbf m}\,dV=\delta_{\mathbf n\mathbf m}$.</td></tr>
+      <tr><th>Spectrum</th><td>$\displaystyle E_{\mathbf n}=\frac{\hbar^2\pi^2}{8M}\left(\frac{n_x^2}{a^2}+\frac{n_y^2}{b^2}+\frac{n_z^2}{c^2}\right)$.</td></tr>
+      <tr><th>Full solution</th><td>$\displaystyle \Psi(\mathbf r,t)=\sum_{n_x,n_y,n_z}c_{n_xn_yn_z}(0)e^{-iE_{\mathbf n}t/\hbar}\phi_{n_xn_yn_z}(\mathbf r)$.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Appendix C · Master solution tables</div>
+    <h2>9. Three-dimensional harmonic oscillator</h2>
+  </div>
+  <table class="solution-table">
+    <tbody>
+      <tr><th>Potential</th><td>$\displaystyle V=\frac12k_xx^2+\frac12k_yy^2+\frac12k_zz^2$, with $\omega_i=\sqrt{k_i/M}$.</td></tr>
+      <tr><th>Separated form</th><td>$\phi(x,y,z)=X(x)Y(y)Z(z)$ gives three one-dimensional oscillator eigenproblems.</td></tr>
+      <tr><th>Orthonormal basis</th><td>$\displaystyle \phi_{n_xn_yn_z}=X_{n_x}^{(\omega_x)}Y_{n_y}^{(\omega_y)}Z_{n_z}^{(\omega_z)}$, the tensor product of three Hermite-Gaussian bases.</td></tr>
+      <tr><th>Spectrum</th><td>$\displaystyle E_{\mathbf n}=\left(n_x+\frac12\right)\hbar\omega_x+\left(n_y+\frac12\right)\hbar\omega_y+\left(n_z+\frac12\right)\hbar\omega_z$.</td></tr>
+      <tr><th>Isotropic case</th><td>If $\omega_x=\omega_y=\omega_z=\omega$, then $E_N=(N+\frac32)\hbar\omega$ with $N=n_x+n_y+n_z$.</td></tr>
+      <tr><th>Full solution</th><td>$\displaystyle \Psi(\mathbf r,t)=\sum_{n_x,n_y,n_z}c_{\mathbf n}(0)e^{-iE_{\mathbf n}t/\hbar}\phi_{\mathbf n}(\mathbf r)$.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Appendix C · Master solution tables</div>
+    <h2>Central-potential template</h2>
+  </div>
+  <table class="solution-table">
+    <tbody>
+      <tr><th>Commuting operators</th><td>$\hat H$, $\hat L^2$ and $\hat L_z$ share a joint eigenbasis.</td></tr>
+      <tr><th>Separated form</th><td>$\phi(r,\theta,\varphi)=R_{El}(r)Y_{lm}(\theta,\varphi)$.</td></tr>
+      <tr><th>Angular basis</th><td>$\int Y_{lm}^*Y_{l'm'}\,d\Omega=\delta_{ll'}\delta_{mm'}$; $L^2Y_{lm}=\hbar^2l(l+1)Y_{lm}$ and $L_zY_{lm}=\hbar mY_{lm}$.</td></tr>
+      <tr><th>Radial reduction</th><td>With $u=rR$, $\displaystyle -\frac{\hbar^2}{2M}u''+\left[V(r)+\frac{\hbar^2l(l+1)}{2Mr^2}\right]u=Eu$ and $u(0)=0$.</td></tr>
+      <tr><th>Radial inner product</th><td>$\int_0^\infty R_{El}^*R_{E'l}\,r^2dr=\int_0^\infty u_{El}^*u_{E'l}\,dr$.</td></tr>
+      <tr><th>Complete expansion</th><td>Sum over discrete radial labels and $l,m$, plus an energy integral when the radial spectrum has a continuum.</td></tr>
+      <tr><th>Time dependence</th><td>Every joint eigenfunction is multiplied by $e^{-iEt/\hbar}$ in the final expansion.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Appendix C · Master solution tables</div>
+    <h2>10. Spherical infinite well</h2>
+  </div>
+  <table class="solution-table">
+    <tbody>
+      <tr><th>Potential and domain</th><td>$V=0$ for $0\le r\le a$ and $V=\infty$ for $r&gt;a$.</td></tr>
+      <tr><th>Radial equation</th><td>$\displaystyle R''+\frac2rR'+\left[k^2-\frac{l(l+1)}{r^2}\right]R=0$.</td></tr>
+      <tr><th>Admissible form</th><td>$R=A j_l(kr)+B n_l(kr)$; regularity at $r=0$ forces $B=0$.</td></tr>
+      <tr><th>Quantisation</th><td>$R(a)=0$ gives $j_l(ka)=0$; if $\alpha_{nl}$ is the $n$-th positive zero, $k_{nl}=\alpha_{nl}/a$.</td></tr>
+      <tr><th>Orthonormal basis</th><td>$\displaystyle \phi_{nlm}=\frac{\sqrt2}{a^{3/2}|j_{l+1}(\alpha_{nl})|}j_l\!\left(\alpha_{nl}\frac ra\right)Y_{lm}(\theta,\varphi)$.</td></tr>
+      <tr><th>Spectrum</th><td>$\displaystyle E_{nl}=\frac{\hbar^2\alpha_{nl}^2}{2Ma^2}$, independent of $m$.</td></tr>
+      <tr><th>Full solution</th><td>$\displaystyle \Psi(\mathbf r,t)=\sum_{n,l,m}c_{nlm}(0)e^{-iE_{nl}t/\hbar}\phi_{nlm}(\mathbf r)$.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Appendix C · Master solution tables</div>
+    <h2>11. Hydrogen-like atom</h2>
+  </div>
+  <table class="solution-table">
+    <tbody>
+      <tr><th>Potential</th><td>$\displaystyle V(r)=-\frac{Ze^2}{4\pi\varepsilon_0r}$, with reduced mass $\mu$.</td></tr>
+      <tr><th>Scaled radial equation</th><td>$\rho=2\kappa r$, $\kappa=\sqrt{-2\mu E}/\hbar$ and $\eta=\mu Ze^2/(4\pi\varepsilon_0\hbar^2\kappa)$.</td></tr>
+      <tr><th>Endpoint factors</th><td>Regularity and decay select $u(\rho)=\rho^{l+1}e^{-\rho/2}v(\rho)$.</td></tr>
+      <tr><th>Series step</th><td>$\rho v''+(2l+2-\rho)v'+(\eta-l-1)v=0$; termination requires $\eta=n=p_{\max}+l+1$.</td></tr>
+      <tr><th>Orthonormal basis</th><td>With $\rho=2Zr/(na_0)$,
+        $\displaystyle R_{nl}=\left(\frac{2Z}{na_0}\right)^{3/2}
+        \sqrt{\frac{(n-l-1)!}{2n(n+l)!}}\,
+        e^{-\rho/2}\rho^lL_{n-l-1}^{2l+1}(\rho)$,
+        and $\phi_{nlm}=R_{nl}Y_{lm}$.</td></tr>
+      <tr><th>Spectrum</th><td>$\displaystyle E_n=-\frac{\mu Z^2e^4}{2(4\pi\varepsilon_0)^2\hbar^2n^2}$, with $n\ge1$, $0\le l\le n-1$, $-l\le m\le l$.</td></tr>
+      <tr><th>Full solution</th><td>$\displaystyle \Psi(\mathbf r,t)=\sum_{n,l,m}c_{nlm}(0)e^{-iE_nt/\hbar}\phi_{nlm}(\mathbf r)$ for the bound-state subspace; continuum states must be added for a completely general state.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.18.4/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.18.4/dist/contrib/auto-render.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    renderMathInElement(document.body, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false}
+      ],
+      throwOnError: false,
+      strict: false
+    });
+    document.documentElement.setAttribute('data-math-ready', 'true');
+  });
+</script>
+</body>
+</html>
