@@ -34,11 +34,11 @@ A separate derivation of the scalar Laplacian in spherical coordinates, includin
 
 ### [Lagrangian mechanics](03-variational-and-classical-mechanics/lagrangian-mechanics/README.md)
 
-Shows how constraints and coordinates lead naturally to (L=T-V), then develops cyclic coordinates, energy, polar motion, and small oscillations through worked examples.
+Motivates \(L=T-V\) from uniform free motion, work, potential energy and the first-order response of a possible path. It explains what stationary action balances before checking that the principle reproduces Newton's second law.
 
 ### [Action and the calculus of variations](03-variational-and-classical-mechanics/action-and-calculus-of-variations/README.md)
 
-Builds from ordinary derivatives to variations of an entire path, derives the Euler–Lagrange equation used in the preceding mechanics notes, and explains endpoint conditions, total derivatives, and the second variation.
+The intended companion to the preceding notes. It moves from functions to functionals and perturbations, defines the first variation, and derives the Euler–Lagrange equation using integration by parts and arbitrary fixed-endpoint variations.
 
 ### [Hamiltonian mechanics](03-variational-and-classical-mechanics/hamiltonian-mechanics/README.md)
 

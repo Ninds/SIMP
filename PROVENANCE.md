@@ -13,14 +13,19 @@ These items were present locally as complete LaTeX and PDF files and were copied
 
 Their mathematical content and diagrams were preserved. Markdown editions were created for repository browsing.
 
+The two-document mechanics sequence was recovered as PDF-only originals:
+
+1. `lagrangian-mechanics` - the nine-page *Why T-V?* conceptual introduction.
+2. `action-and-calculus-of-variations` - the ten-page *From Calculus to the Calculus of Variations* companion.
+
+They are preserved in that order. No matching LaTeX sources were found, so the earlier reconstructed `.tex` files have been removed and are not represented as originals. The Markdown files are transparent reading editions prepared from the recovered PDFs.
+
 `schrodinger-equation-worked-models` was also recovered locally, but in a different form: its editable source was a complete illustrated HTML publication with an accompanying PDF, not LaTeX. The repository edition removes institution-specific identifiers, adds an explicit index of thirteen demonstrations, updates navigation and metadata, and supplies a Markdown reading edition. The HTML remains the editable source; no unavailable LaTeX original is claimed.
 
 ## Reconstructed editions
 
 The following earlier files were referred to in chat history but their original sandbox files were not available in the local workspace:
 
-- action/calculus-of-variations tutorial
-- Lagrangian-mechanics tutorial
 - Hamiltonian-mechanics tutorial
 - illustrated Euler-Lagrange workbook
 

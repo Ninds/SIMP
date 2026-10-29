@@ -1,13 +1,14 @@
-# Lagrangian mechanics
+# Why \(T-V\)? An intuitive path to Lagrangian mechanics
 
-These notes show how suitable coordinates absorb constraints and how the scalar function (L=T-V) generates equations of motion.
+These recovered notes motivate the action and the Lagrangian from two elementary pictures: uniform free motion minimizes accumulated kinetic energy, while a conservative force contributes a position-dependent work function \(W=-V\).
 
-Topics include generalised coordinates, cyclic coordinates, conserved quantities, energy, polar-coordinate motion, and small oscillations.
+They explain why a path perturbation changes both kinetic and work contributions, why the familiar minus sign appears in \(L=T-V\), what stationary action means, and how the balance reproduces \(m\ddot x=F\).
 
 ## Available editions
 
 - [Readable Markdown](lagrangian-mechanics.md)
 - [Typeset PDF](lagrangian-mechanics.pdf)
-- [LaTeX source](lagrangian-mechanics.tex)
 
-Continue with [action and the calculus of variations](../action-and-calculus-of-variations/README.md) to derive the Euler–Lagrange equation from stationary action. Use the [problem workbook](../../05-workbooks/euler-lagrange-workbook/README.md) for practice, then continue to [Hamiltonian mechanics](../hamiltonian-mechanics/README.md).
+The PDF is the recovered original. No matching LaTeX source was found, so the repository does not claim one; the Markdown edition is a carefully prepared reading version.
+
+Continue with [action and the calculus of variations](../action-and-calculus-of-variations/README.md), the intended companion that derives the Euler–Lagrange equation. Then use the [problem workbook](../../05-workbooks/euler-lagrange-workbook/README.md) for practice and continue to [Hamiltonian mechanics](../hamiltonian-mechanics/README.md).

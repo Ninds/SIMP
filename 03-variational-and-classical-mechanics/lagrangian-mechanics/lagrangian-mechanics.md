@@ -1,405 +1,261 @@
-# Lagrangian Mechanics
+# Why \(T-V\)?
 
-> Markdown reading edition. TikZ diagrams and print-layout elements are preserved in the PDF and LaTeX editions.
+*A gentle route to the action and Lagrangian mechanics*
 
-*Coordinates, constraints, and motion*
+> Markdown reading edition prepared from the recovered nine-page PDF. The diagrams and exact typesetting are preserved in the PDF. No original LaTeX source was recovered.
 
-Why one scalar function can replace a collection of force components
+This is a conceptual explanation, not a problem-solving manual. It distinguishes what the intuition suggests from what the principle of stationary action actually states.
 
-## Why change the language of mechanics?
+## 1. Begin with a free particle
 
-Newton's law
+Imagine a particle travelling from \(A\) to \(B\) in a fixed time \(\tau\), with no force acting. Many possible journeys share those endpoints and that duration, but the steady journey has a special property.
 
-$$
+Suppose a particle travels 10 m in 2 s:
 
-\mathbf{F}=m\mathbf{a}
+| Journey | First second | Second second | Average \(v^2\) |
+| --- | ---: | ---: | ---: |
+| Steady | 5 | 5 | 25 |
+| Uneven | 3 | 7 | 29 |
 
-$$
+Both journeys cover the same distance, but the uneven one has the larger average of \(v^2\). Since
 
-is direct when Cartesian force components are easy to write. It becomes awkward when a particle is tied to a curve, several rods impose constraints, or the natural coordinates rotate with the system.
+\[
+T=\frac12mv^2,
+\]
 
-Lagrangian mechanics begins with a different question:
+velocity fluctuations increase the accumulated kinetic energy.
 
-**The organising question**
+Write any velocity profile as
 
-What are the smallest number of coordinates needed to describe every allowed configuration? Once those coordinates are chosen, can the dynamics be written without solving explicitly for every constraint force?
-
-The answer is yes. Choose generalised coordinates $q_1,\ldots,q_n$, write the kinetic and potential energies in those coordinates, and form
-
-$$
-
-\boxed{L(q_i,\dot q_i,t)=T-V.}
-
-$$
-
-The equations of motion are
-
-$$
-
-\boxed{\frac{\mathrm d }{\mathrm d t}\left(\frac{\partial L}{\partial \dot q_i}\right)-\frac{\partial L}{\partial q_i}=0.}
-
-$$
-
-## Generalised coordinates are labels, not directions
-
-A coordinate $q_i$ may be a distance, angle, extension, or any other parameter that labels a configuration. It does not need to be a Cartesian component.
-
-If a bead is constrained to a circular hoop of radius $a$, the Cartesian coordinates satisfy
-
-$$
-
-x^2+y^2=a^2.
-
-$$
-
-Using $x$ and $y$ introduces two coordinates plus a constraint. Using one angle,
-
-$$
-
-x=a\sin\theta,
+\[
+v(t)=\bar v+u(t),
 \qquad
-y=-a\cos\theta,
-
-$$
-
-builds the constraint into the description. The angle $\theta$ is the single degree of freedom.
-
-> Diagram: see the PDF or LaTeX edition.
-
-## Why $L=T-V$?
-
-For a Cartesian particle in a potential $V(q)$,
-
-$$
-
-T=\frac12m\dot q^2,
-\qquad
-L=\frac12m\dot q^2-V(q).
-
-$$
+\int_0^\tau u(t)\,dt=0.
+\]
 
 Then
 
-$$
+\[
+\int_0^\tau T\,dt
+=\frac{m\tau}{2}\bar v^2
++\frac m2\int_0^\tau u(t)^2\,dt.
+\]
 
-\frac{\partial L}{\partial \dot q}=m\dot q,
+The second term cannot be negative and vanishes only when \(u(t)=0\). Thus the constant-velocity path minimizes accumulated kinetic energy among paths with the same endpoints and duration.
+
+This does not mean that the particle is trying to save fuel. It identifies a mathematical property of inertial motion.
+
+## 2. What does unnecessary variation mean?
+
+The fixed-displacement condition makes the average velocity fixed. Any departure \(u(t)\) from that average has zero time integral, while its square contributes positively. The square is why a period of extra speed is not cancelled by an equally long period of reduced speed.
+
+## 3. Change the question: where can a particle rest?
+
+Now place the particle in a force field and ask where it could remain at rest.
+
+At an equilibrium point \(x_0\),
+
+\[
+F(x_0)=0.
+\]
+
+For a small displacement \(\delta x\), the work done by the force is approximately
+
+\[
+\delta W=F(x_0)\,\delta x.
+\]
+
+At equilibrium there is no first-order work. This condition alone identifies equilibrium, not stability: both the bottom of a bowl and the top of a hill can be equilibrium points.
+
+## 4. Exactly what is \(W\)?
+
+For a conservative force, choose a reference position \(x_r\) and define
+
+\[
+W(x)=\int_{x_r}^{x}F(s)\,ds.
+\]
+
+This is the work done by the force in moving from the reference position to \(x\). It is a function of position, not extra work performed during every later second of the motion.
+
+For a constant force \(F\), with \(x_r=0\),
+
+\[
+W(x)=Fx,
 \qquad
-\frac{\mathrm d }{\mathrm d t}\left(\frac{\partial L}{\partial \dot q}\right)=m\ddot q,
+\delta W\simeq F\,\delta x.
+\]
+
+## 5. Work done by the force versus potential energy
+
+Potential energy uses the opposite sign:
+
+\[
+F(x)=-\frac{dV}{dx},
 \qquad
-\frac{\partial L}{\partial q}=-\frac{\mathrm d V}{\mathrm d q}.
-
-$$
-
-The Euler--Lagrange equation becomes
-
-$$
-
-m\ddot q=-\frac{\mathrm d V}{\mathrm d q}=F.
-
-$$
-
-Thus $L=T-V$ reproduces Newton's equation for conservative forces. Its real advantage is that the same construction continues to work in non-Cartesian coordinates and constrained systems.
-
-## A dependable construction recipe
-
-1. Draw the system and declare the positive directions.
-1. Choose independent coordinates $q_i$.
-1. Write the position of every mass in terms of $q_i$.
-1. Differentiate those positions to obtain velocities.
-1. Form $T=\sum_a \tfrac12m_a v_a^2$.
-1. Choose a zero of potential and form $V$.
-1. Compute $L=T-V$.
-1. Apply one Euler--Lagrange equation for each coordinate.
-1. Simplify only after all derivatives are visible.
-1. Check units, signs, and a limiting case.
-
-## Worked example: a simple pendulum
-
-Take $\theta=0$ at the downward vertical. The bob position is
-
-$$
-
-x=\ell\sin\theta,
-\qquad
-y=-\ell\cos\theta.
-
-$$
-
-Differentiate:
-
-$$
-
-\dot x=\ell\cos\theta\,\dot\theta,
-\qquad
-\dot y=\ell\sin\theta\,\dot\theta.
-
-$$
+F(x)=\frac{dW}{dx}.
+\]
 
 Therefore
 
-$$
+\[
+W(x)=-V(x)+C.
+\]
 
-v^2=\dot x^2+\dot y^2
-=\ell^2\dot\theta^2(\cos^2\theta+\sin^2\theta)
-=\ell^2\dot\theta^2.
+With matching reference constants, \(W=-V\).
 
-$$
+| | \(W(x)\) | \(V(x)\) |
+| --- | --- | --- |
+| Meaning | Work done by the force from a reference point | Potential energy at the position |
+| Moving with the force | Increases | Decreases |
+| Moving against the force | Decreases | Increases |
+| Stable equilibrium | Local maximum | Local minimum |
 
-Choose $V=0$ at the lowest point:
+Near Earth's surface, with upward coordinate \(y\),
 
-$$
-
-T=\frac12m\ell^2\dot\theta^2,
+\[
+V(y)=mgy,
 \qquad
-V=mg\ell(1-\cos\theta).
+W(y)=-mgy.
+\]
 
-$$
+Raising the particle requires positive work against gravity. Gravity itself does negative work, so \(W\) decreases as \(V\) increases.
 
-Dropping the irrelevant additive constant $-mg\ell$ gives the convenient Lagrangian
+## 6. Now let the particle move
 
-$$
+Return to a journey from \(A\) to \(B\) in time \(\tau\), now in the presence of a force. A small alteration of the proposed position-time curve changes both the positions visited and the velocities around the altered section.
 
-L=\frac12m\ell^2\dot\theta^2+mg\ell\cos\theta.
+The free-particle observation still matters: making the velocity profile more uneven tends to increase \(\int T\,dt\). But the force contribution must also enter.
 
-$$
+## 7. Two effects of one small perturbation
 
-Now
+A small path perturbation has two consequences:
 
-$$
+1. It changes the velocities, and hence the accumulated kinetic energy \(\int T\,dt\).
+2. It changes the positions visited in the force field. Since \(\delta W=F(x)\delta x\), it changes \(\int W(x(t))\,dt\).
 
-\frac{\partial L}{\partial \dot\theta}=m\ell^2\dot\theta,
-\qquad
-\frac{\partial L}{\partial \theta}=-mg\ell\sin\theta.
+These first-order changes can have opposite signs. This motivates assigning the whole journey the quantity
 
-$$
+\[
+S[x]=\int_0^\tau \bigl(T+W(x)\bigr)\,dt,
+\]
 
-Hence
+called the action.
 
-$$
+The intuitive proposal is that, for the physical journey, the first-order changes of the kinetic and work contributions balance when the path is altered slightly.
 
-\boxed{\ddot\theta+\frac g\ell\sin\theta=0.}
+## 8. What exactly is being balanced?
 
-$$
+It is not the values of \(T\) and \(W\) themselves. They need not be equal or individually small. What balances is their response to a small alteration of the path:
 
-**Small-angle check**
+\[
+\delta\int_0^\tau T\,dt
++\delta\int_0^\tau W\,dt=0.
+\]
 
-If $|\theta|\ll1$, then $\sin\theta\approx\theta$, so
+The endpoints and elapsed time remain fixed, and the condition must hold for every sufficiently small permitted perturbation.
 
-$$
+## 9. From small time steps to the full action
 
-\ddot\theta+\frac g\ell\theta=0,
+Divide the journey into short intervals \(\Delta t\). The contribution from one interval is approximately
 
-$$
+\[
+\Delta S\approx (T+W)\Delta t.
+\]
 
-with angular frequency $\omega=\sqrt{g/\ell}$. The dimensions are correct because $g/\ell$ has units of time$^{-2}$.
+Adding the contributions and refining the partition gives
 
-## Polar coordinates and the hidden geometry in $T$
+\[
+S=\lim_{\Delta t\to0}\sum_i(T_i+W_i)\Delta t
+=\int_0^\tau(T+W)\,dt.
+\]
 
-For planar motion,
+Action has units of energy multiplied by time. It is neither the particle's total energy nor the total work done along the actual path.
 
-$$
+A local subtlety matters: displacing the path at one time changes velocities just before and after that time. We therefore require the integrated first-order change to vanish, not \(\delta T+\delta W=0\) separately at each isolated instant.
 
-\mathbf{r}=r\mathbf{e_r},
-\qquad
-\mathbf{v}=\dot r\mathbf{e_r}+r\dot\theta\mathbf{e}_\theta.
+## 10. Why the familiar minus sign appears
 
-$$
+For a conservative force, \(W=-V\). Hence
 
-Because the unit vectors are orthonormal,
+\[
+S[x]=\int_0^\tau(T-V)\,dt.
+\]
 
-$$
+The integrand is the Lagrangian:
 
-v^2=\dot r^2+r^2\dot\theta^2.
+\[
+\boxed{L=T-V.}
+\]
 
-$$
+The minus sign does not mean that nature prefers high potential energy. It appears because potential energy is the negative of the work done by a conservative force.
 
-Thus for a central potential $V(r)$,
+The physical path is stationary:
 
-$$
+\[
+\boxed{\delta S=0.}
+\]
 
-\boxed{L=\frac12m\left(\dot r^2+r^2\dot\theta^2\right)-V(r).}
+For a free particle the stationary value is a minimum, but in general stationary does not always mean smallest. This is why the principle is called stationary action rather than universally least action.
 
-$$
+The free-particle and equilibrium examples motivate the form \(T+W\), but they do not logically force it. Stationary action is a physical principle whose consequences must agree with observed motion.
 
-The angular coordinate does not appear explicitly. Its Euler--Lagrange equation is
+## 11. Does the balance give the right motion?
 
-$$
+For a constant force \(F\), take \(W(x)=Fx\). Then
 
-\frac{\mathrm d }{\mathrm d t}\left(mr^2\dot\theta\right)=0,
+\[
+S=\int_0^\tau\left(\frac12m\dot x^2+Fx\right)dt.
+\]
 
-$$
+Alter the path by \(\delta x(t)\), with \(\delta x=0\) at the endpoints. The work contribution changes by
 
-so
+\[
+\delta\int_0^\tau W\,dt
+=\int_0^\tau F\,\delta x\,dt.
+\]
 
-$$
+The kinetic contribution changes by
 
-\boxed{mr^2\dot\theta=\ell_z=\text{constant}.}
+\[
+\delta\int_0^\tau T\,dt
+=\int_0^\tau m\dot x\,\delta\dot x\,dt
+=-\int_0^\tau m\ddot x\,\delta x\,dt,
+\]
 
-$$
+where integration by parts and the fixed endpoints were used. Therefore
 
-Angular momentum conservation is therefore visible before solving the orbit.
+\[
+\delta S=\int_0^\tau(F-m\ddot x)\delta x\,dt.
+\]
 
-The radial equation is
+If this vanishes for every permitted \(\delta x(t)\), then
 
-$$
+\[
+\boxed{m\ddot x=F.}
+\]
 
-m\ddot r-mr\dot\theta^2+\frac{\mathrm d V}{\mathrm d r}=0.
+Thus the kinetic response produces the acceleration term, the work response produces the force term, and stationarity balances them.
 
-$$
+## 12. Why call this a new formalism?
 
-The term $-mr\dot\theta^2$ arises from the coordinate geometry encoded in the kinetic energy.
+Newton's description begins with a force and asks for the resulting acceleration. Lagrange's description begins with a scalar \(L\), assigns an action to every possible history, and identifies the actual history through stationarity.
 
-## Generalised momentum
+For a simple particle the descriptions give the same motion. The Lagrangian viewpoint becomes especially useful when coordinates, constraints and systems become more complicated.
 
-For each coordinate define
+## 13. The whole intuition in one place
 
-$$
+1. **Start with inertia.** For fixed endpoints and elapsed time, uniform free motion minimizes accumulated kinetic energy; velocity fluctuations add a positive contribution.
+2. **Consider equilibrium.** A particle can remain where a small displacement produces no first-order work. Stability requires a restoring response.
+3. **Combine the ideas.** In a conservative force field, altering a trajectory changes both the accumulated kinetic energy and the position-dependent work contribution. The physical trajectory is stationary when their first-order changes balance:
 
-\boxed{p_i=\frac{\partial L}{\partial \dot q_i}.}
+\[
+\delta\int_0^\tau(T+W)\,dt=0,
+\]
 
-$$
+and because \(W=-V\),
 
-This is the momentum conjugate to $q_i$. It agrees with familiar momentum components in simple Cartesian systems, but it should not be assumed to equal $m\dot q_i$ in general.
+\[
+\boxed{\delta\int_0^\tau(T-V)\,dt=0.}
+\]
 
-For the polar angle,
-
-$$
-
-p_\theta=\frac{\partial L}{\partial \dot\theta}=mr^2\dot\theta,
-
-$$
-
-which is angular momentum, not ``mass times angular speed''.
-
-## Cyclic coordinates and conservation
-
-If $L$ does not depend explicitly on $q_j$, then
-
-$$
-
-\frac{\partial L}{\partial q_j}=0.
-
-$$
-
-The Euler--Lagrange equation gives
-
-$$
-
-\frac{\mathrm d p_j}{\mathrm d t}=0.
-
-$$
-
-**Cyclic-coordinate rule**
-
-If a coordinate is absent from the Lagrangian, its conjugate momentum is conserved. This is the simplest working form of the connection between symmetry and conservation.
-
-Examples include translational symmetry giving linear momentum and rotational symmetry giving angular momentum.
-
-## Energy from the Lagrangian
-
-Define
-
-$$
-
-E_L=\sum_i\dot q_i\frac{\partial L}{\partial \dot q_i}-L.
-
-$$
-
-Differentiate and use the Euler--Lagrange equations:
-
-$$
-\begin{aligned}
-\frac{\mathrm d E_L}{\mathrm d t}
-&=\sum_i\left(
-\ddot q_i\frac{\partial L}{\partial \dot q_i}
-+\dot q_i\frac{\mathrm d }{\mathrm d t}\frac{\partial L}{\partial \dot q_i}
-\right)-\frac{\mathrm d L}{\mathrm d t}\\
-&=-\frac{\partial L}{\partial t}.
-\end{aligned}
-$$
-
-Therefore, if $L$ has no explicit time dependence,
-
-$$
-
-\boxed{E_L=\text{constant}.}
-
-$$
-
-For ordinary systems with kinetic energy quadratic in velocities and a velocity-independent potential, $E_L=T+V$.
-
-## Constraints and Lagrange multipliers
-
-Sometimes it is inconvenient to eliminate a constraint $f(q_1,\ldots,q_n,t)=0$. Introduce a multiplier $\lambda(t)$ and use
-
-$$
-
-L'=L+\lambda f.
-
-$$
-
-Variation with respect to $\lambda$ recovers the constraint. Variation with respect to $q_i$ gives
-
-$$
-
-\frac{\mathrm d }{\mathrm d t}\frac{\partial L}{\partial \dot q_i}-\frac{\partial L}{\partial q_i}=\lambda\frac{\partial f}{\partial q_i}.
-
-$$
-
-The multiplier packages the constraint force. Its sign depends on whether $+\lambda f$ or $-\lambda f$ was chosen.
-
-## Small oscillations
-
-Near a stable equilibrium $q=q_0$, write $q=q_0+\xi$. Since $V'(q_0)=0$,
-
-$$
-
-V(q_0+\xi)\approx V(q_0)+\frac12V''(q_0)\xi^2.
-
-$$
-
-If $T\approx\tfrac12M\dot\xi^2$, then
-
-$$
-
-L\approx\frac12M\dot\xi^2-\frac12K\xi^2,
-\qquad K=V''(q_0).
-
-$$
-
-Thus
-
-$$
-
-M\ddot\xi+K\xi=0,
-\qquad
-\omega^2=K/M.
-
-$$
-
-Many complicated systems look like coupled harmonic oscillators when viewed close enough to a stable equilibrium.
-
-## Non-uniqueness and useful freedoms
-
-The equations of motion are unchanged if a constant is added to $L$. More generally,
-
-$$
-
-L\mapsto L+\frac{\mathrm d }{\mathrm d t}F(q,t)
-
-$$
-
-changes the action only by endpoint terms when the endpoints are fixed. The Lagrangian is therefore a generator of equations, not a uniquely measurable energy.
-
-## Common errors
-
-- Forgetting that basis vectors may depend on time in curvilinear coordinates.
-- Choosing dependent coordinates and then applying unconstrained equations.
-- Writing $V=mgy$ without declaring which direction is positive.
-- Treating $p_i$ as automatically equal to $m\dot q_i$.
-- Missing the total time derivative in $\frac{\mathrm d }{\mathrm d t}(\partial L/\partial\dot q_i)$.
-- Solving the differential equation before checking the model and signs.
-
-**The central habit**
-
-Do not begin with the Euler--Lagrange formula. Begin with the configuration, the independent coordinates, and the position of each mass. A correct $T$ and $V$ make the remaining calculation systematic.
+The action is not an ordinary cost that nature must always minimize. Its stationarity expresses a balance between the inertial and force-related effects of perturbing a possible history.
