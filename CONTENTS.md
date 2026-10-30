@@ -72,6 +72,10 @@ Fifteen progressive problems with generous working space, diagrams, and complete
 
 A patient illustrated derivation of the one-dimensional heat equation from an unbiased nearest-neighbour walk. It separates the exact discrete probability update from the smooth-profile assumption, builds the centred second difference geometrically, explains the scaling \(h^2/(2\tau)\to D\), and discusses parity, probability density, mean-square displacement, drift, and the limits of the argument.
 
+### [From a moving pattern to the transport equation](06-probability-and-partial-differential-equations/transport-equation/README.md)
+
+A 17-page illustrated derivation of \(u_t+c u_x=0\) from a pattern moving one site per tick. It explains the sign using fixed cameras, keeps \(h/\tau\to c\) fixed, checks \(u(x,t)=f(x-ct)\), and contrasts rigid translation with random-walk diffusion.
+
 ## Suggested routes
 
 ### Mechanics route
@@ -88,4 +92,4 @@ Dot products and projections → function spaces → self-adjoint operators → 
 
 ### Probability-to-PDE route
 
-Discrete paths and probabilities → lattice evolution rule → centred second difference → diffusive scaling → heat equation.
+Discrete lattice rules → one incoming neighbour and fixed-speed scaling → transport equation; two symmetric incoming neighbours and diffusive scaling → heat equation.

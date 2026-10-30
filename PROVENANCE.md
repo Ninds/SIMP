@@ -10,6 +10,7 @@ These items were present locally as complete LaTeX and PDF files and were copied
 - `polar-coordinate-vectors`
 - `spherical-laplacian`
 - `random-walk-to-heat-equation`
+- `transport-equation`
 
 Their mathematical content and diagrams were preserved. Markdown editions were created for repository browsing.
 

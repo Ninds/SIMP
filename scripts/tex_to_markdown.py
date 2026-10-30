@@ -18,6 +18,7 @@ TITLES = {
     "spherical-laplacian": "The Laplacian in Spherical Coordinates",
     "euler-lagrange-workbook": "Euler-Lagrange Equations: Illustrated Problem Workbook",
     "random-walk-to-heat-equation": "From a Random Walk to the Heat Equation",
+    "transport-equation": "From a Moving Pattern to the Transport Equation",
 }
 
 
@@ -124,8 +125,9 @@ def convert(source: Path) -> str:
         text = text.split("\\begin{document}", 1)[1]
     text = text.rsplit("\\end{document}", 1)[0]
 
-    if key == "random-walk-to-heat-equation":
-        first_box = text.find("\\begin{takeaway}")
+    if key in {"random-walk-to-heat-equation", "transport-equation"}:
+        opening_box = "takeaway" if key == "random-walk-to-heat-equation" else "pointbox"
+        first_box = text.find(f"\\begin{{{opening_box}}}")
         if first_box >= 0:
             text = text[first_box:]
 
@@ -157,6 +159,19 @@ def convert(source: Path) -> str:
     )
     text = text.replace("\\workingspace", "\n> Ruled working space is provided in the PDF edition.\n")
 
+    if key == "transport-equation":
+        section_number = 0
+
+        def transport_heading(value: str) -> str:
+            nonlocal section_number
+            section_number += 1
+            return f"\n## {section_number}. {value}\n"
+
+        text = balanced_command(text, "secstart", transport_heading)
+    else:
+        text = balanced_command(text, "secstart", lambda value: f"\n## {value}\n")
+    text = balanced_command(text, "substart", lambda value: f"\n### {value}\n")
+
     for command, marks in [
         ("part", ("#",)),
         ("chapter", ("##",)),
@@ -187,6 +202,14 @@ def convert(source: Path) -> str:
     text = text.replace("\\end{takeaway}", "\n")
     text = balanced_command(text, "ans", lambda value: f"\n\n**Answer.** {value}")
     text = balanced_command(text, "aside", lambda value: f"\n\n> {value}\n")
+    text = re.sub(r"\\begin\{thinkbox\}(?:\[[^\]]*\])?", "\n**Stop and think**\n\n", text)
+    text = text.replace("\\end{thinkbox}", "\n")
+    text = re.sub(r"\\begin\{pointbox\}(?:\[[^\]]*\])?", "\n**Key point**\n\n", text)
+    text = text.replace("\\end{pointbox}", "\n")
+    text = re.sub(r"\\answer(?![A-Za-z])", "\n\n**Answer.** ", text)
+    text = balanced_command(text, "captionline", lambda value: f"\n*{value}*\n")
+    text = balanced_command(text, "highlight", lambda value: f"**{value}**")
+    text = text.replace("\\smalldiv", "")
 
     box_names = [
         "intuition", "resultbox", "checkBox", "warningbox",
@@ -247,6 +270,8 @@ def convert(source: Path) -> str:
 
     text = re.sub(r"\\pd\{([^{}]*)\}\{([^{}]*)\}", r"\\frac{\\partial \1}{\\partial \2}", text)
     text = re.sub(r"\\td\{([^{}]*)\}\{([^{}]*)\}", r"\\frac{\\mathrm d \1}{\\mathrm d \2}", text)
+    text = re.sub(r"\\ut(?![A-Za-z])", r"\\frac{\\partial u}{\\partial t}", text)
+    text = re.sub(r"\\ux(?![A-Za-z])", r"\\frac{\\partial u}{\\partial x}", text)
     text = re.sub(r"\\dd(?![A-Za-z])", r"\\,\\mathrm d", text)
     text = re.sub(r"\\grad(?![A-Za-z])", r"\\boldsymbol\\nabla", text)
     text = re.sub(r"\\R(?![A-Za-z])", r"\\mathbb R", text)
@@ -311,6 +336,9 @@ def convert(source: Path) -> str:
     text = re.sub(r"[ \t]+\n", "\n", text)
     text = re.sub(r"(\*\*)\\quad\s+", r"\1 ", text)
     text = re.sub(r"(\*\*)\\\\\s*\n", r"\1\n\n", text)
+    text = re.sub(r"(\*\*)\\\\\s*(?=\*\*)", r"\1\n\n", text)
+    text = text.replace("\\\\\n**Answer:**", "\n\n**Answer:**")
+    text = re.sub(r"(\*\*Answer\.\*\*)\s{2,}", r"\1 ", text)
     text = re.sub(r"\n{3,}", "\n\n", text).strip()
 
     title = TITLES.get(key, key.replace("-", " ").title())

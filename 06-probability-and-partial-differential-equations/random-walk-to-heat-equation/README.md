@@ -24,4 +24,6 @@ The appendices discuss the parity alternation in the exact walk, probability-den
 
 These are discussion-first notes. The continuum passage is explained carefully but is not presented as a rigorous limit theorem.
 
+Compare this two-neighbour spreading rule with the [one-neighbour transport-equation derivation](../transport-equation/README.md), where a profile translates without flattening or widening.
+
 [Back to probability and PDEs](../README.md) · [Library home](../../README.md)

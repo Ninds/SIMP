@@ -7,7 +7,8 @@ The emphasis is on the bridge between scales: what is exact in the microscopic m
 ## Subtopics
 
 - [From a random walk to the heat equation](random-walk-to-heat-equation/README.md) — a patient illustrated derivation of the one-dimensional diffusion equation from an unbiased nearest-neighbour walk.
+- [From a moving pattern to the transport equation](transport-equation/README.md) — a guided derivation of one-dimensional advection from an exact one-neighbour translation rule.
 
-Useful preparation includes finite differences, probability rules, derivatives, and the geometric interpretation of the second derivative. The [vectors, operators, and function spaces](../01-linear-algebra-and-analysis/vectors-operators-and-function-spaces/README.md) notes provide a broader operator viewpoint.
+Useful preparation includes finite differences, probability rules, derivatives, and geometric interpretations of first and second derivatives. Reading the two notes together makes the contrast especially clear: one incoming neighbour produces translation and a first spatial derivative; two symmetric incoming neighbours produce spreading and a second spatial derivative. The [vectors, operators, and function spaces](../01-linear-algebra-and-analysis/vectors-operators-and-function-spaces/README.md) notes provide a broader operator viewpoint.
 
 [Back to the library home](../README.md)
