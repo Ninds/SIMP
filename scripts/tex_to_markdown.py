@@ -13,7 +13,7 @@ TITLES = {
     "schrodinger-operator-bridge": "The Schrödinger Equation as Operator Evolution",
     "action-and-calculus-of-variations": "Action and the Calculus of Variations",
     "lagrangian-mechanics": "Lagrangian Mechanics",
-    "hamiltonian-mechanics": "Why Hamiltonian Mechanics?",
+    "hamiltonian-mechanics": "Hamiltonian Mechanics: An Intuition-First Tutorial",
     "polar-coordinate-vectors": "Vectors in Polar Coordinates",
     "spherical-laplacian": "The Laplacian in Spherical Coordinates",
     "euler-lagrange-workbook": "Euler-Lagrange Equations: Illustrated Problem Workbook",
@@ -214,6 +214,7 @@ def convert(source: Path) -> str:
     box_names = [
         "intuition", "resultbox", "checkBox", "warningbox",
         "bridge", "caution", "summarybox", "idea", "notecheck", "result",
+        "pausebox", "keybox",
     ]
     for name in box_names:
         text = re.sub(
@@ -269,6 +270,12 @@ def convert(source: Path) -> str:
     text = braced(text, "norm", lambda m: rf"\left\lVert {m.group(1)}\right\rVert")
 
     text = re.sub(r"\\pd\{([^{}]*)\}\{([^{}]*)\}", r"\\frac{\\partial \1}{\\partial \2}", text)
+    text = re.sub(r"\\dt\{([^{}]*)\}", r"\\frac{\\mathrm d \1}{\\mathrm d t}", text)
+    text = balanced_command(text, "eqstep", lambda value: f"**{value}** ")
+    text = balanced_command(text, "smallcaps", lambda value: f"**{value}**")
+    text = re.sub(r"\\qdot(?![A-Za-z])", r"\\dot q", text)
+    text = re.sub(r"\\pdot(?![A-Za-z])", r"\\dot p", text)
+    text = re.sub(r"\\Lagr(?![A-Za-z])", r"\\mathcal L", text)
     text = re.sub(r"\\td\{([^{}]*)\}\{([^{}]*)\}", r"\\frac{\\mathrm d \1}{\\mathrm d \2}", text)
     text = re.sub(r"\\ut(?![A-Za-z])", r"\\frac{\\partial u}{\\partial t}", text)
     text = re.sub(r"\\ux(?![A-Za-z])", r"\\frac{\\partial u}{\\partial x}", text)
@@ -331,6 +338,7 @@ def convert(source: Path) -> str:
     text = re.sub(r"\\par(?![A-Za-z])", "\n", text)
     text = re.sub(r"\\label\{[^{}]*\}", "", text)
     text = re.sub(r"\\ref\{([^{}]*)\}", r"Section \1", text)
+    text = re.sub(r"\\eqref\{[^{}]*\}", "the displayed equation", text)
 
     text = re.sub(r"\n[ \t]+", "\n", text)
     text = re.sub(r"[ \t]+\n", "\n", text)

@@ -1,294 +1,856 @@
-\documentclass[11pt,a4paper]{article}
-\usepackage{../../intuitmath}
-\hypersetup{pdftitle={Why Hamiltonian Mechanics?},pdfauthor={Mathematics and Physics: Intuition First}}
-\renewcommand{\sectionmark}[1]{\markboth{#1}{}}
-
+\documentclass[11pt,a4paper,oneside]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{libertinus}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{geometry}
+\geometry{top=24mm,bottom=24mm,left=26mm,right=26mm,headheight=15pt}
+\usepackage[dvipsnames]{xcolor}
+\definecolor{ink}{HTML}{1B2935}
+\definecolor{deep}{HTML}{163C4C}
+\definecolor{teal}{HTML}{087C83}
+\definecolor{soft}{HTML}{EDF6F5}
+\definecolor{sand}{HTML}{F9F5EA}
+\definecolor{gold}{HTML}{AE7728}
+\definecolor{rulegray}{HTML}{D8E1E3}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{booktabs,tabularx,array}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,patterns,decorations.pathreplacing}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=teal,urlcolor=teal,pdftitle={Hamiltonian Mechanics: An Intuition-First Tutorial},pdfauthor={Study Notes},pdfsubject={From Lagrangian mechanics to Hamiltonian mechanics}}
+\usepackage{needspace}
+\usepackage{setspace}
+\setstretch{1.16}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5.5pt}
+\setlist[itemize]{topsep=3pt,itemsep=3pt,leftmargin=21pt}
+\setlist[enumerate]{topsep=3pt,itemsep=5pt,leftmargin=22pt}
+\titleformat{\section}[hang]{\Large\bfseries\color{deep}}{\thesection}{0.65em}{}[\vspace{-5pt}\color{rulegray}\titlerule]
+\titleformat{\subsection}{\large\bfseries\color{deep}}{\thesubsection}{0.7em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries\color{teal}}{\thesubsubsection}{0.6em}{}
+\titlespacing*{\section}{0pt}{20pt}{11pt}
+\titlespacing*{\subsection}{0pt}{13pt}{6pt}
+\fancyhf{}
+\fancyhead[L]{\small\color{deep}\textsc{Hamiltonian mechanics}}
+\fancyhead[R]{\small\color{teal}\textit{Intuition first}}
+\fancyfoot[L]{\small\color{ink!65}From action to phase space}
+\fancyfoot[R]{\small\color{ink!65}\thepage}
+\renewcommand{\headrulewidth}{0.35pt}
+\renewcommand{\footrulewidth}{0pt}
+\pagestyle{fancy}
+\color{ink}
+\newcommand{\dd}{\,\mathrm d}
+\newcommand{\pd}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\dt}[1]{\frac{\mathrm d #1}{\mathrm d t}}
+\newcommand{\qdot}{\dot q}
+\newcommand{\pdot}{\dot p}
+\newcommand{\Lagr}{\mathcal L}
+\newtcolorbox{intuition}[1][]{enhanced,breakable,colback=soft,colframe=teal!65!black,boxrule=0.6pt,arc=1mm,left=10pt,right=10pt,top=8pt,bottom=8pt,before skip=10pt,after skip=10pt,fonttitle=\bfseries,title={\strut The idea},#1}
+\newtcolorbox{pausebox}[1][]{enhanced,breakable,colback=sand,colframe=gold!55,boxrule=0.55pt,arc=1mm,left=10pt,right=10pt,top=8pt,bottom=8pt,before skip=9pt,after skip=9pt,fonttitle=\bfseries,title={\strut Check your intuition},#1}
+\newtcolorbox{keybox}[1][]{enhanced,breakable,colback=white,colframe=deep,boxrule=0.9pt,arc=1mm,left=10pt,right=10pt,top=8pt,bottom=8pt,before skip=11pt,after skip=11pt,#1}
+\newcommand{\eqstep}[1]{\vspace{2pt}\textbf{#1}\hspace{0.4em}}
+\newcommand{\smallcaps}[1]{{\color{teal}\textsc{#1}}}
 \begin{document}
-\tutorialtitle{Why Hamiltonian Mechanics?}{Predicting the next instant from position and momentum}{Discovering Hamilton's equations before deriving them}
+\begin{titlepage}
+\thispagestyle{empty}
+\vspace*{13mm}
+{\color{teal}\large\bfseries A GENTLE BRIDGE FROM LAGRANGIAN MECHANICS}\par
+\vspace{13mm}
+{\fontsize{32}{38}\selectfont\bfseries\color{deep} Hamiltonian\\[4pt]Mechanics}\par
+\vspace{7mm}
+{\Large\color{ink}Why momentum? Why a new energy function?\\Why these two equations?}\par
+\vspace{17mm}
+\begin{center}
+\begin{tikzpicture}[scale=1.13,>=Latex]
+  \draw[->,color=ink!75,line width=0.8pt] (-4.5,0)--(4.7,0) node[below] {$q$};
+  \draw[->,color=ink!75,line width=0.8pt] (0,-2.35)--(0,2.5) node[left] {$p$};
+  \draw[teal,line width=2.0pt] (0,0) ellipse (3.35 and 1.65);
+  \draw[teal!30,line width=1.0pt] (0,0) ellipse (2.1 and 1.04);
+  \fill[gold] (2.368,1.166) circle (3.0pt);
+  \draw[gold,line width=1.3pt,->] (2.368,1.166)--(2.84,0.86);
+  \draw[color=ink!65,dashed] (2.368,1.166)--(2.368,0);
+  \draw[color=ink!65,dashed] (2.368,1.166)--(0,1.166);
+  \node[anchor=west,align=left,text=deep] at (2.46,1.42) {current\\state $(q,p)$};
+  \node[align=center,text=ink!80] at (0,-2.15) {A moving system draws a path in \emph{phase space}};
+\end{tikzpicture}
+\end{center}
+\vfill
+\begin{minipage}{0.87\linewidth}
+\color{ink!85}\large
+\textbf{Teaching principle:} discover the need for each definition \emph{before} it is introduced. The algebra should confirm an idea, not conceal it.
+\end{minipage}
+\vspace{18mm}
+\color{ink!65}\small Self-contained study notes \quad\textbullet\quad Worked examples \quad\textbullet\quad Concept checks
+\end{titlepage}
+\setcounter{page}{1}
+
+\section*{Before we begin}
+\addcontentsline{toc}{section}{Before we begin}
+You have already met the action, the calculus of variations, and the Euler--Lagrange equation. You know that a Lagrangian can be written as $L=T-V$ for an ordinary conservative mechanical system, or as $T+W$ when $W=-V$ is the appropriate \emph{work potential} (up to an irrelevant constant).
+
+This tutorial takes that understanding as its starting point. Its goal is not to make you fluent in advanced calculations. It is to make Hamiltonian mechanics feel \emph{inevitable} rather than an arbitrary change of symbols.
+
+\begin{intuition}
+The whole journey fits into one chain of thoughts:
+\[
+\boxed{\text{action}\ \longrightarrow\ L(q,\dot q)\ \longrightarrow\ p=\pd{L}{\dot q}\ \longrightarrow\ H(q,p)\ \longrightarrow\ (\dot q,\dot p).}
+\]
+We shall spend most of our time on the \emph{why} behind the middle arrows.
+\end{intuition}
+
+\textbf{A word about notation.} We first study one coordinate $q(t)$, with velocity $\dot q=\mathrm dq/\mathrm dt$. Later, $q$ may mean an angle or any other \emph{generalised coordinate}: it need not be a distance. The symbol $p$ will always mean the momentum \emph{conjugate to that coordinate}.
+
+\clearpage
+\setcounter{tocdepth}{1}
 \tableofcontents
 \clearpage
 
-\section{The question that motivates the formalism}
-
-Lagrangian mechanics describes a configuration using $q$ and a velocity $\dot q$. It also introduces the conjugate momentum
+\section{Why invent another way to describe motion?}
+\subsection{A familiar question, asked in a different form}
+Imagine a particle travelling along a line in a potential $V(q)$. Newton's law says
 \[
-p=\pd{L}{\dot q}.
+ m\ddot q=-V'(q).
 \]
-For an ordinary particle, $p=m\dot q$, so position and momentum contain the same instantaneous information as position and velocity.
+This is a \emph{second-order} equation for position. To predict the future, we must know both the present position and velocity.
 
-This suggests a practical question:
+But we can rewrite exactly the same motion as a pair of \emph{first-order} equations. Define the familiar momentum $p=m\dot q$. Then
+\begin{equation}\label{eq:newtonpair}
+ \boxed{\dot q=\frac{p}{m},\qquad \dot p=-V'(q).}
+\end{equation}
+The first equation answers: \emph{how does position change?} The second answers: \emph{how does momentum change?}
 
-\begin{intuition}[What we actually need]
-If the particle is currently at $(q,p)$, how do we find its position and momentum a moment later?
+Nothing new has happened to the physics. We have merely described a moving state by a \emph{pair} $(q,p)$ instead of by a second-order equation for $q$ alone.
+
+\subsection{The quantity that gives both answers}
+For this particular system, its energy is
+\[
+ E=T+V=\tfrac12m\dot q^2+V(q)
+       =\frac{p^2}{2m}+V(q).
+\]
+For a moment, call this expression $H(q,p)$. Do two simple differentiations:
+\[
+ \pd{H}{p}=\frac{p}{m},\qquad \pd{H}{q}=V'(q).
+\]
+Compare these with the two equations in \eqref{eq:newtonpair}. We have \emph{discovered}, before introducing any new formalism, that
+\begin{keybox}
+\begin{equation}\label{eq:preview}
+ \boxed{\dot q=\pd{H}{p},\qquad
+ \dot p=-\pd{H}{q}.}
+\end{equation}
+These derivatives are not initially mysterious. In the simplest example, one derivative gives the velocity; the other gives minus the force.
+\end{keybox}
+
+This is the seed of Hamiltonian mechanics. A single function $H(q,p)$ supplies \emph{both} directions of change.
+
+\begin{pausebox}
+Why not write $E(q,\dot q)=\tfrac12m\dot q^2+V(q)$ and differentiate with respect to velocity? Because $\partial E/\partial\dot q=m\dot q=p$, \emph{not} $\dot q$. If we want the derivative of our new function to give velocity, $p$ is the more natural input variable.
+\end{pausebox}
+
+\subsection{A state is now a point in a plane}
+Every pair $(q,p)$ is one possible instantaneous state, represented by a point in \emph{phase space}. As the system evolves, the point traces a curve. Position and momentum are treated as independent coordinates for the purpose of describing the \emph{current state}; the equations then tell us how that point moves.
+
+This language becomes especially powerful when there are several coordinates, constraints, or interactions. We will return to phase-space pictures after deriving the general equations.
+
+\section{Why momentum rather than velocity?}
+\subsection{What the action was already trying to tell us}
+Recall the action for one coordinate:
+\[
+ S[q]=\int_{t_0}^{t_1}L(q,\dot q,t)\dd t.
+\]
+Perturb the path slightly: $q(t)\mapsto q(t)+\varepsilon\eta(t)$, so that $\dot q\mapsto\dot q+\varepsilon\dot\eta$.
+
+To first order, the change in the action is
+\[
+ \delta S=\int_{t_0}^{t_1}
+ \left(\pd{L}{q}\,\eta+\pd{L}{\dot q}\,\dot\eta\right)\dd t.
+\]
+Notice the factor multiplying the change in \emph{velocity}:
+\[
+ \boxed{\pd{L}{\dot q}.}
+\]
+It appears naturally, without us having chosen any new definition. The action itself is inviting us to give this quantity a name.
+
+\begin{keybox}
+\textbf{Definition (canonical or conjugate momentum).} For a coordinate $q$ with Lagrangian $L(q,\dot q,t)$, define
+\begin{equation}\label{eq:momentum}
+ \boxed{p:=\pd{L}{\dot q}.}
+\end{equation}
+For a conventional particle with $L=\tfrac12m\dot q^2-V(q)$, this reduces to $p=m\dot q$.
+\end{keybox}
+
+\subsection{Momentum is the sensitivity of the Lagrangian to velocity}
+Hold position and time fixed, and make a tiny change in velocity. Then
+\[
+ \Delta L\approx\pd{L}{\dot q}\,\Delta\dot q=p\,\Delta\dot q.
+\]
+So $p$ measures how strongly the Lagrangian responds to a small change in velocity. This is a subtler idea than simply memorising $p=m\dot q$.
+
+It is also why $p$ can be meaningful even when $q$ is not a distance and $\dot q$ is not an ordinary linear velocity.
+
+\subsection{The Euler--Lagrange equation is already an equation for momentum}
+The integration-by-parts step you know from the calculus of variations gives
+\[
+ \delta S=
+ \left[\pd{L}{\dot q}\,\eta\right]_{t_0}^{t_1}
+ +\int_{t_0}^{t_1}
+ \left(\pd{L}{q}-\dt{}\left(\pd{L}{\dot q}\right)\right)\eta\dd t.
+\]
+For fixed endpoints the boundary term vanishes. Requiring $\delta S=0$ leads to
+\[
+ \dt{}\left(\pd{L}{\dot q}\right)=\pd{L}{q}.
+\]
+Now use the natural name $p=\partial L/\partial\dot q$:
+\begin{equation}\label{eq:eulerp}
+ \boxed{\dot p=\pd{L}{q}.}
+\end{equation}
+
+\begin{intuition}
+The move from velocity to momentum is \emph{not} something Hamilton invented out of nowhere. The Euler--Lagrange equation is already telling us what changes in time: it is $\partial L/\partial\dot q$. Hamiltonian mechanics takes that quantity seriously as a variable in its own right.
 \end{intuition}
 
-For a short interval $\Delta t$,
+\subsection{A striking example: moving around a circle}
+Suppose a particle of mass $m$ is constrained to move on a circle of radius $R$, described by its angle $\theta$. Its speed is $R\dot\theta$, and
 \[
-q(t+\Delta t)\approx q(t)+\dot q\,\Delta t,
-\qquad
-p(t+\Delta t)\approx p(t)+\dot p\,\Delta t.
+ L(\theta,\dot\theta)=\tfrac12mR^2\dot\theta^2-V(\theta).
 \]
-We therefore need two rates:
+The momentum conjugate to $\theta$ is
 \[
-\dot q=f(q,p,t),
-\qquad
-\dot p=g(q,p,t).
+ \boxed{p_\theta=\pd{L}{\dot\theta}=mR^2\dot\theta=I\dot\theta,\qquad I=mR^2.}
 \]
-No partial derivatives of the Hamiltonian have been assumed. We have merely identified the information required to evolve the state.
+This is \emph{angular momentum}, not $m\dot\theta$. That is exactly as it should be: $\theta$ is an angle, so its conjugate momentum is the momentum associated with rotation.
 
-\section{Discovering the equations for a familiar particle}
+More generally, different coordinates can lead to different kinds of conjugate momentum. The universal definition $p=\partial L/\partial\dot q$ adapts automatically.
 
-For a particle in a potential $V(q)$, define
-\[
-H(q,p)=\frac{p^2}{2m}+V(q).
-\]
-We already know
-\[
-\dot q=\frac pm,
-\qquad
-\dot p=F=-\td{V}{q}.
-\]
-Now differentiate $H$:
-\[
-\pd{H}{p}=\frac pm=\dot q,
-\qquad
-\pd{H}{q}=\td{V}{q}=-\dot p.
-\]
+\begin{pausebox}
+What is the conjugate momentum for $L=\tfrac12a(q)\dot q^2-V(q)$, where $a(q)>0$? It is $p=a(q)\dot q$, not necessarily a constant multiple of velocity. We will use this example later.
+\end{pausebox}
 
-\begin{resultbox}[Hamilton's equations, discovered]
+\subsection{There is also a boundary interpretation}
+If we do \emph{not} hold the endpoints of the varied path fixed, the first-order variation along a true physical path reduces to
 \[
-\boxed{
-\dot q=\pd{H}{p},
-\qquad
-\dot p=-\pd{H}{q}.}
+ \delta S_{\mathrm{on\ shell}}=[p\,\delta q]_{t_0}^{t_1}.
 \]
-The two rates needed to predict the next instant are already contained in the two partial derivatives of a single function.
-\end{resultbox}
+With the initial endpoint fixed, a tiny displacement of the final endpoint changes the physical action by approximately $p(t_1)\,\delta q(t_1)$. Momentum tells us how sensitive the action is to a displacement of the endpoint.
 
-\section{Why this is significant}
+This observation is not needed to solve equations, but it gives the word \emph{conjugate} a deeper meaning: $p$ is naturally paired with changes in $q$.
 
-Newton's equation is usually second order:
+\section{The next puzzle: how to build a function of $(q,p)$}
+\subsection{We want to exchange velocity for momentum}
+In Lagrangian mechanics we feed $L$ a position and a velocity: $L(q,\dot q,t)$. We now want a function that takes position and momentum: $H(q,p,t)$.
+
+The first requirement is that we can recover the velocity from $p=\partial L/\partial\dot q$. For a standard mass, $p=m\dot q$ gives $\dot q=p/m$.
+
+When the Lagrangian has a sufficiently non-degenerate dependence on velocity, this inversion works locally. For several coordinates the relevant condition is that the velocity Hessian matrix $\bigl(\partial^2 L/\partial\dot q_i\partial\dot q_j\bigr)$ be invertible. Some constrained systems require extra machinery; we leave those aside.
+
+\subsection{Why not just substitute $\dot q(p)$ into $L$?}
+For our ordinary particle,
 \[
-m\ddot q=F(q).
+ L=\frac12m\dot q^2-V(q),\qquad
+ L\bigl(q,\dot q(p)\bigr)=\frac{p^2}{2m}-V(q).
 \]
-Hamilton's formulation replaces it with two coupled first-order equations for the state $(q,p)$. This is not less information: specifying $q$ and $p$ is equivalent to specifying $q$ and $\dot q$ for a regular mechanical system.
+Differentiate this substituted expression with respect to $p$. It gives $p/m=\dot q$: promising! But its derivative with respect to $q$ is $-V'(q)$, while the desired momentum equation $\dot p=-V'(q)$ would require the \emph{negative} derivative of the new function to equal the force. We need a function whose $q$-derivative has the opposite sign from the $q$-derivative of $L$.
 
-The pair $(q,p)$ is a point in \emph{phase space}. As time changes, the state traces a curve there.
+Indeed, simply replacing $\dot q$ by $p/m$ in $L$ does not produce the correct second equation. We need an adjustment, not a mere relabelling.
+
+\subsection{Invent the adjustment from what we want its derivative to do}
+For the moment, keep $q,t$ fixed and imagine $L$ as a curve against velocity $v=\dot q$. We know
+\[
+ p=\pd{L}{v}.
+\]
+The tangent line at the chosen velocity $v$ has slope $p$ and equation
+\[
+ \text{tangent}(u)=L(v)+p(u-v)=p\,u-\bigl(pv-L(v)\bigr).
+\]
+The \emph{negative of its vertical intercept} is $pv-L(v)$. This suggests a new quantity
+\begin{equation}\label{eq:legendre}
+ \boxed{H(q,p,t)=p\dot q-L(q,\dot q,t),\quad
+       \dot q=\dot q(q,p,t).}
+\end{equation}
+This procedure is called a \emph{Legendre transform}. You do not need the name to understand its role: it swaps the variable $\dot q$ for the slope $p$ of the $L$-versus-velocity curve.
 
 \begin{center}
-\begin{tikzpicture}[x=1.25cm,y=1.0cm,>=Latex]
-  \draw[->,ink!65] (-3.1,0)--(3.35,0) node[right]{$q$};
-  \draw[->,ink!65] (0,-2.4)--(0,2.65) node[above]{$p$};
-  \draw[blue,line width=1.6pt,->] (2.55,0) arc[start angle=0,end angle=325,x radius=2.55,y radius=1.75];
-  \fill[teal] (1.35,1.49) circle (3pt) node[above right]{$(q,p)$};
-  \draw[->,gold,line width=1.2pt] (1.35,1.49)--++(-.75,.32) node[above left]{$(\dot q,\dot p)$};
-  \node[ink] at (2.35,2.15){one oscillator orbit};
+\begin{tikzpicture}[scale=0.97]
+\begin{axis}[
+width=.89\linewidth,height=6.1cm,
+axis lines=middle,xmin=-.3,xmax=3.1,ymin=-1.45,ymax=3.65,
+xtick={1.4},xticklabels={$v_0$},ytick={-0.98},yticklabels={$-H$},
+axis line style={->,thick,ink!75},
+xlabel={$v=\dot q$},ylabel={$L$},xlabel style={at={(axis description cs:.99,.33)},anchor=north},
+ylabel style={at={(axis description cs:.095,.99)},rotate=0,anchor=south},
+clip=false,grid=none]
+\addplot[domain=-.2:2.7,samples=100,thick,teal]{0.5*x*x};
+\addplot[domain=-.15:3.0,samples=2,thick,gold]{1.4*x-0.98};
+\addplot[densely dashed,color=ink!60] coordinates {(1.4,-1.3) (1.4,0.98)};
+\addplot[only marks,mark=*,mark size=2pt,color=teal] coordinates {(1.4,.98)};
+\node[anchor=west,color=teal] at (axis cs:2.32,2.68) {$L(v)$};
+\node[anchor=west,color=gold] at (axis cs:2.0,1.54) {slope $p$};
+\node[anchor=west,color=deep] at (axis cs:0.10,-1.12) {intercept $-H$};
+\end{axis}
 \end{tikzpicture}
 \end{center}
+{\small\color{ink!70}The geometry is shown for $L(v)=\tfrac12v^2$ with $q,t$ fixed. For a nonzero potential, the curve shifts vertically, but the tangent-slope construction is unchanged.}
 
-At every point, Hamilton's equations assign the tangent vector
-\[
-(\dot q,\dot p)=\left(\pd{H}{p},-\pd{H}{q}\right).
-\]
-The Hamiltonian is therefore a rule for the flow through phase space.
-
-\section{Why change variables from velocity to momentum?}
-
-The Lagrangian is naturally a function of $(q,\dot q,t)$. We want a new function of $(q,p,t)$. Merely replacing symbols is not enough because $p$ is defined by a derivative of $L$.
-
-The required change is the Legendre transform:
-\[
-\boxed{H(q,p,t)=p\dot q-L(q,\dot q,t),}
-\]
-where $\dot q$ is re-expressed in terms of $(q,p,t)$ using
-\[
-p=\pd{L}{\dot q}.
-\]
-
-\begin{intuition}[What the Legendre transform does]
-It replaces the slope-like variable $\dot q$ by the conjugate slope $p$. The correction term $p\dot q$ preserves the information while changing which variable is independent.
+\begin{intuition}
+The Legendre transform is not an arbitrary trick for changing a minus sign. It is the natural way to exchange a variable (velocity) for the slope associated with that variable (momentum), while retaining enough information to recover the original motion.
 \end{intuition}
 
-For
-\[
-L=\frac12m\dot q^2-V(q),
-\qquad p=m\dot q,
-\]
-we have $\dot q=p/m$ and
+\subsection{See $T-V$ turn into $T+V$}
+For $L=\frac12m\dot q^2-V(q)$ and $p=m\dot q$,
 \begin{align*}
-H&=p\frac pm-\left[\frac12m\left(\frac pm\right)^2-V(q)\right]\\
-&=\frac{p^2}{2m}+V(q)=T+V.
+ H&=p\dot q-L\\
+  &=m\dot q^2-\left(\frac12m\dot q^2-V\right)\\
+  &=\frac12m\dot q^2+V\\
+  &=\boxed{\frac{p^2}{2m}+V(q)}.
 \end{align*}
-This familiar equality relies on ordinary quadratic kinetic energy and a velocity-independent potential; $H$ is not automatically ``the energy'' in every model.
+The change $T-V\to T+V$ is not inserted as a new axiom. It emerges from the Legendre transform. In this familiar class of systems, $H$ equals the total mechanical energy.
 
-\section{General derivation of Hamilton's equations}
+\begin{pausebox}
+The Hamiltonian is not \emph{defined} as $T+V$. It is defined as $p\dot q-L$, with velocity eliminated in favour of $p$. It happens to equal $T+V$ in many ordinary systems. Keeping this distinction will prevent confusion later.
+\end{pausebox}
 
-Begin with
+\section{Why exactly are Hamilton's equations these two equations?}
+\subsection{Start by asking what we need to predict next}
+At any instant a state is $(q,p)$. To predict what happens an instant later, we need two rates of change:
 \[
-H=p\dot q-L.
+ (q,p)\ \longrightarrow\ \bigl(q+\dot q\,\Delta t,\ p+\dot p\,\Delta t\bigr).
 \]
-Take a total differential:
-\[
-\dd H=\dot q\,\dd p+p\,\dd\dot q-\dd L.
-\]
-Since
-\[
-\dd L=\pd{L}{q}\dd q+\pd{L}{\dot q}\dd\dot q+\pd{L}{t}\dd t
-\]
-and $p=\partial L/\partial\dot q$, the two terms containing $\dd\dot q$ cancel:
-\[
-\dd H=\dot q\,\dd p-\pd{L}{q}\dd q-\pd{L}{t}\dd t.
-\]
-The Euler--Lagrange equation gives
-\[
-\pd{L}{q}=\dot p.
-\]
-Therefore
-\[
-\dd H=\dot q\,\dd p-\dot p\,\dd q-\pd{L}{t}\dd t.
-\]
-But $H=H(q,p,t)$ also implies
-\[
-\dd H=\pd{H}{q}\dd q+\pd{H}{p}\dd p+\pd{H}{t}\dd t.
-\]
-Comparing independent coefficients yields
-\[
-\boxed{
-\dot q=\pd{H}{p},
-\qquad
-\dot p=-\pd{H}{q},
-\qquad
-\pd{H}{t}=-\pd{L}{t}.}
-\]
+So Hamiltonian mechanics must provide $\dot q$ \emph{and} $\dot p$ from the current $(q,p)$. We have already seen, in the elementary particle example, that $H_p$ gives velocity and $-H_q$ gives force.
 
-\section{Many degrees of freedom}
+The question is: does this happen for \emph{any regular Lagrangian}, or was it a coincidence of $p=m\dot q$?
 
-For coordinates $q_i$ and momenta
+\subsection{Follow the small changes in $H$}
+Write $v=\dot q$ temporarily to make the chain rule clearer. We have
 \[
-p_i=\pd{L}{\dot q_i},
+ H(q,p,t)=p\,v(q,p,t)-L\bigl(q,v(q,p,t),t\bigr).
 \]
-define
-\[
-H(\vect q,\vect p,t)=\sum_i p_i\dot q_i-L.
-\]
-Then
-\[
-\boxed{
-\dot q_i=\pd{H}{p_i},
-\qquad
-\dot p_i=-\pd{H}{q_i}.}
-\]
-The phase space has dimension $2n$: one coordinate and one conjugate momentum for each degree of freedom.
-
-\section{Worked example: harmonic oscillator}
-
-For
-\[
-H(q,p)=\frac{p^2}{2m}+\frac12kq^2,
-\]
-Hamilton's equations give
-\[
-\dot q=\frac pm,
-\qquad
-\dot p=-kq.
-\]
-Differentiate the first equation and insert the second:
-\[
-\ddot q=\frac{\dot p}{m}=-\frac kmq.
-\]
-Thus
-\[
-\ddot q+\omega^2q=0,
-\qquad \omega=\sqrt{k/m}.
-\]
-
-The constant-energy curves satisfy
-\[
-\frac{p^2}{2m}+\frac12kq^2=E,
-\]
-which are ellipses in the $(q,p)$ plane. The oscillator moves around one ellipse without crossing to another energy.
-
-\section{Conservation of the Hamiltonian}
-
-Along a trajectory,
+Consider a tiny change in $q$, $p$, and $t$. By the product rule and chain rule,
 \begin{align*}
-\td{H}{t}
-&=\pd{H}{q}\dot q+\pd{H}{p}\dot p+\pd{H}{t}\\
-&=(-\dot p)\dot q+(\dot q)\dot p+\pd{H}{t}\\
-&=\pd{H}{t}.
+ \dd H
+  &=v\dd p+p\dd v
+       -\pd{L}{q}\dd q-\pd{L}{v}\dd v-\pd{L}{t}\dd t\\
+  &=v\dd p+\underbrace{\left(p-\pd{L}{v}\right)}_{=\,0}\dd v
+       -\pd{L}{q}\dd q-\pd{L}{t}\dd t.
 \end{align*}
-Therefore, if $H$ has no explicit time dependence,
+The terms involving $\dd v$ \emph{cancel exactly} because we defined $p=\partial L/\partial v$. This cancellation is the decisive reason for the Legendre-transform construction.
+
+What remains is strikingly simple:
+\begin{equation}\label{eq:dh}
+ \boxed{\dd H=v\dd p-\pd{L}{q}\dd q-\pd{L}{t}\dd t.}
+\end{equation}
+But because $H$ is now a function of $(q,p,t)$, its ordinary total differential is also
 \[
-\boxed{H=\text{constant along the motion}.}
+ \dd H=\pd{H}{q}\dd q+\pd{H}{p}\dd p+\pd{H}{t}\dd t.
+\]
+Comparing coefficients gives
+\[
+ \pd{H}{p}=v=\dot q,\qquad
+ \pd{H}{q}=-\pd{L}{q},\qquad
+ \pd{H}{t}=-\pd{L}{t}.
+\]
+Finally the Euler--Lagrange equation told us $\dot p=\partial L/\partial q$. Therefore
+\begin{keybox}
+\begin{equation}\label{eq:hamilton}
+ \boxed{\dot q=\pd{H}{p},\qquad\dot p=-\pd{H}{q}.}
+\end{equation}
+\textbf{Hamilton's equations are not a guess.} They are the Euler--Lagrange equation rewritten using the natural slope $p=\partial L/\partial\dot q$ and the natural transformed function $H=p\dot q-L$.
+\end{keybox}
+
+\subsection{A physical reading of each derivative}
+\begin{itemize}
+ \item $\dot q=H_p$: how sensitively the Hamiltonian changes when you vary momentum at fixed position tells you how quickly position moves.
+ \item $\dot p=-H_q$: how sensitively the Hamiltonian changes when you vary position at fixed momentum tells you how quickly the conjugate momentum changes, with a minus sign.
+\end{itemize}
+
+For $H=p^2/(2m)+V(q)$, the second relation becomes $\dot p=-V'(q)$, which is exactly the familiar force law. The negative sign reflects the way a conservative force points toward decreasing potential energy.
+
+\begin{intuition}
+The equations are \emph{crossed}: differentiate with respect to momentum to find the rate of change of position; differentiate with respect to position to find the rate of change of momentum. Their opposite signs make a remarkably symmetric pair. A displacement in either state variable drives change in the other.
+\end{intuition}
+
+\subsection{The many-coordinate version}
+If there are generalised coordinates $q_1,\ldots,q_n$, define
+\[
+ p_i=\pd{L}{\dot q_i},\qquad
+ H=\sum_{i=1}^{n}p_i\dot q_i-L.
+\]
+Provided we can express all $\dot q_i$ in terms of $(q,p,t)$, the same cancellation works component by component:
+\begin{equation}\label{eq:many}
+ \boxed{\dot q_i=\pd{H}{p_i},\qquad
+        \dot p_i=-\pd{H}{q_i},\qquad i=1,\ldots,n.}
+\end{equation}
+A system with $n$ coordinates now has $2n$ first-order equations. The physics is unchanged, but its mathematical organisation has changed dramatically.
+
+\section{The variational principle survives the change}
+\subsection{A new-looking action, with the same physics}
+Starting from $H=p\dot q-L$, rearrange:
+\[
+ L=p\dot q-H.
+\]
+The original action can therefore be written, along a path where $p=\partial L/\partial\dot q$, as
+\[
+ S=\int_{t_0}^{t_1}[p\dot q-H(q,p,t)]\dd t.
+\]
+Now comes the interesting idea: regard $q(t)$ and $p(t)$ as \emph{independent functions to vary}. Define the \emph{phase-space action}
+\begin{equation}\label{eq:phaseaction}
+ \boxed{S_H[q,p]=\int_{t_0}^{t_1}\bigl[p\dot q-H(q,p,t)\bigr]\dd t.}
+\end{equation}
+Why is $p$ allowed to vary independently? Because the equation obtained by varying $p$ will itself enforce the correct velocity--momentum relationship.
+
+\subsection{Vary momentum first}
+Let $p\mapsto p+\varepsilon\xi$, with $q$ held fixed. To first order,
+\[
+ \delta_p S_H=\int_{t_0}^{t_1}\left(\dot q-\pd{H}{p}\right)\xi\dd t.
+\]
+If the action is stationary for arbitrary small $\xi(t)$, then
+\[
+ \boxed{\dot q=H_p.}
+\]
+This is one of Hamilton's equations, coming directly from the variation of momentum.
+
+\subsection{Now vary position}
+Let $q\mapsto q+\varepsilon\eta$, with $p$ fixed and $\eta(t_0)=\eta(t_1)=0$. Then
+\[
+ \delta_q S_H=\int_{t_0}^{t_1}
+ \left(p\dot\eta-H_q\eta\right)\dd t.
+\]
+Integrate the first term by parts:
+\[
+ \delta_q S_H=[p\eta]_{t_0}^{t_1}
+ -\int_{t_0}^{t_1}\left(\dot p+H_q\right)\eta\dd t.
+\]
+The endpoint term vanishes, and hence
+\[
+ \boxed{\dot p=-H_q.}
 \]
 
-\section{Poisson brackets}
+\begin{intuition}
+This gives a second, especially beautiful answer to \emph{why those equations?} The phase-space action contains $p\dot q-H$. Vary $p$ and you get the velocity equation. Vary $q$ and, after integration by parts, you get the momentum equation and its minus sign. The whole pair still comes from stationary action.
+\end{intuition}
 
-For functions $A(q,p,t)$ and $B(q,p,t)$ define
+\section{Is the Hamiltonian always the total energy?}
+\subsection{Usually, in the examples you first meet}
+For the common Lagrangian
 \[
-\{A,B\}=\pd{A}{q}\pd{B}{p}-\pd{A}{p}\pd{B}{q}.
+ L(q,\dot q)=\tfrac12m\dot q^2-V(q),
 \]
-Hamilton's equations can be written
+we have shown $H=T+V$. For many particles with ordinary kinetic energy, the conclusion is similar. Energy conservation can then be understood through the Hamiltonian.
+
+Differentiate $H(q(t),p(t),t)$ along a physical trajectory:
+\begin{align*}
+ \dt{H}
+ &=H_q\dot q+H_p\dot p+H_t\\
+ &=H_q H_p+H_p(-H_q)+H_t\\
+ &=\boxed{H_t}.
+\end{align*}
+Thus, if $H$ has no explicit time dependence, it is conserved.
+
+\subsection{Two distinctions that matter}
+\textbf{First: conserved does not automatically mean ``mechanical energy''.} The Hamiltonian is defined by the Legendre transform, not by the phrase $T+V$. In standard time-independent natural coordinates the two often coincide, but in more general formulations the identification needs checking.
+
+\textbf{Second: being an energy does not automatically mean being conserved.} Take
 \[
-\dot q=\{q,H\},
+ L=\tfrac12m\dot q^2-V(q,t),\quad
+ H=\frac{p^2}{2m}+V(q,t).
+\]
+This $H$ is still kinetic plus potential energy, yet it can change because $V$ changes explicitly with time:
+\[
+ \dt H=\pd{V}{t}.
+\]
+A time-dependent environment can supply or remove energy.
+
+\begin{pausebox}
+If $H(q,p)$ is constant along a trajectory, why does that not imply $q$ and $p$ are each constant? Because a point can move \emph{along a level curve} of a function while the value of that function stays unchanged. A swinging pendulum and a mass on a spring do exactly this.
+\end{pausebox}
+
+\section{Worked example I: the free particle}
+This is the place to feel how little machinery is actually needed.
+
+\eqstep{1. Write the Lagrangian.} For a particle on a frictionless line, choose the zero of potential energy so that
+\[
+ L=\tfrac12m\dot q^2.
+\]
+\eqstep{2. Identify conjugate momentum.}
+\[
+ p=\pd{L}{\dot q}=m\dot q,\qquad\dot q=\frac{p}{m}.
+\]
+\eqstep{3. Legendre transform.}
+\[
+ H=p\dot q-L=\frac{p^2}{2m}.
+\]
+\eqstep{4. Apply the two equations.}
+\[
+ \dot q=\pd{H}{p}=\frac{p}{m},\qquad
+ \dot p=-\pd{H}{q}=0.
+\]
+\eqstep{5. Interpret.} $p$ stays fixed because $H$ has no $q$-dependence. With $p(t)=p_0$,
+\[
+ \boxed{q(t)=q_0+\frac{p_0}{m}\,t.}
+\]
+An unchanged momentum gives a constant velocity. This is Newton's first law in Hamiltonian language.
+
+\begin{intuition}
+Here a single glance at the shape of $H$ already reveals the motion. No $q$ in $H$ means no change in $p$. A quadratic dependence on $p$ means velocity is proportional to momentum.
+\end{intuition}
+
+\section{Worked example II: a mass on a spring}
+A mass $m$ is attached to an ideal spring of stiffness $k$, with displacement $q$ measured from equilibrium.
+
+\subsection{Construct the Hamiltonian}
+The potential is $V(q)=\tfrac12kq^2$, so
+\[
+ L=\frac12m\dot q^2-\frac12kq^2,\qquad
+ p=m\dot q.
+\]
+The Hamiltonian is
+\begin{equation}\label{eq:springH}
+ \boxed{H(q,p)=\frac{p^2}{2m}+\frac12kq^2.}
+\end{equation}
+Hamilton's equations are
+\begin{equation}\label{eq:springpair}
+ \boxed{\dot q=\frac{p}{m},\qquad\dot p=-kq.}
+\end{equation}
+
+\subsection{See the motion without solving anything}
+Suppose the mass is displaced to the right ($q>0$) and released ($p=0$). Then $\dot q=0$ at that instant, but $\dot p=-kq<0$: its momentum immediately begins becoming negative. It starts moving left.
+
+At equilibrium ($q=0$), we have $\dot p=0$, yet momentum need not vanish. In fact, speed is greatest there. On the left ($q<0$), $\dot p>0$, and momentum eventually turns positive.
+
+This describes oscillation in two lines. Position tells you how momentum is being changed by the spring; momentum tells you how position is changing.
+
+\subsection{Connect to the familiar second-order equation}
+Differentiate $\dot q=p/m$ with respect to time and insert $\dot p=-kq$:
+\[
+ \ddot q=\frac{\dot p}{m}=-\frac{k}{m}q,
+\qquad\text{so}\qquad m\ddot q+kq=0.
+\]
+We have exactly the standard harmonic oscillator. Nothing was replaced physically: one second-order equation became two first-order equations.
+
+With $\omega=\sqrt{k/m}$ and initial data $(q_0,p_0)$, its motion is
+\begin{align*}
+ q(t)&=q_0\cos(\omega t)+\frac{p_0}{m\omega}\sin(\omega t),\\
+ p(t)&=p_0\cos(\omega t)-m\omega q_0\sin(\omega t).
+\end{align*}
+You do not need to memorise these expressions for the conceptual journey.
+
+\subsection{Look at the motion in phase space}
+Because $H$ is conserved, a physical state stays on
+\[
+ \frac{p^2}{2m}+\frac{kq^2}{2}=E.
+\]
+For fixed $E>0$, this is an \emph{ellipse} in the $(q,p)$ plane. The particle does not move along a line in this plane: as $q$ and $p$ change, the point runs around the ellipse.
+
+\begin{center}
+\begin{tikzpicture}[scale=0.94,>=Latex]
+\draw[->,thick] (-4.25,0)--(4.45,0) node[below] {$q$};
+\draw[->,thick] (0,-2.45)--(0,2.55) node[left] {$p$};
+\draw[teal,line width=1.8pt] (0,0) ellipse (3.45 and 1.88);
+\draw[teal!32,line width=0.95pt] (0,0) ellipse (2.25 and 1.23);
+\fill[gold] (2.44,1.33) circle (2.8pt);
+\draw[gold,line width=1.4pt,->] (2.44,1.33)--(2.92,0.98);
+\draw[color=ink!60,dashed] (2.44,1.33)--(2.44,0);
+\draw[color=ink!60,dashed] (2.44,1.33)--(0,1.33);
+\node[below] at (3.45,0) {$+A$};
+\node[below] at (-3.45,0) {$-A$};
+\node[anchor=west,text=deep] at (2.6,2.12) {$H=E$};
+\node[anchor=east,text=ink!75] at (-1.2,2.06) {higher $p$};
+\node[anchor=west,text=ink!75] at (1.2,-2.15) {clockwise motion};
+\end{tikzpicture}
+\end{center}
+Here the arrows point clockwise: at $q>0,p=0$, $\dot p=-kq<0$, so the phase point initially moves downward. The particular ellipse depends on the mass, spring constant, and energy.
+
+\begin{intuition}
+The energy equation gives the \emph{shape of the allowed path}. Hamilton's equations give its \emph{direction and speed of traversal}. The Hamiltonian is therefore more than a conserved number: through its derivatives it organises the entire motion.
+\end{intuition}
+
+\section{Worked example III: gravity along a vertical line}
+Choose $q$ as height, positive upwards. In a uniform gravitational field,
+\[
+ V(q)=mgq,\qquad L=\tfrac12m\dot q^2-mgq.
+\]
+As usual, $p=m\dot q$, and
+\[
+ H(q,p)=\frac{p^2}{2m}+mgq.
+\]
+The two equations are
+\[
+ \dot q=\frac{p}{m},\qquad\dot p=-mg.
+\]
+The second says the momentum decreases by $mg$ every second: gravity exerts a constant downward force. Therefore,
+\[
+ p(t)=p_0-mgt,
 \qquad
-\dot p=\{p,H\}.
+ q(t)=q_0+\frac{p_0}{m}t-\frac12gt^2.
 \]
-More generally,
+This is precisely the familiar constant-acceleration motion.
+
+There is an instructive contrast: for the free particle, $H$ had no $q$ term and momentum stayed fixed; adding the term $mgq$ creates a constant $q$-slope, so $p$ changes at a constant rate.
+
+\section{Worked example IV: the pendulum and angular momentum}
+A pendulum consists of a mass $m$ suspended from a light rod of length $\ell$. Let $\theta=0$ at the lowest point, and take the potential to vanish there.
 \[
-\boxed{\td{A}{t}=\{A,H\}+\pd{A}{t}.}
+ T=\tfrac12m\ell^2\dot\theta^2,
+\qquad V=mg\ell(1-\cos\theta).
 \]
-If $A$ has no explicit time dependence and $\{A,H\}=0$, then $A$ is conserved.
-
-The basic bracket is
+Define $I=m\ell^2$. The Lagrangian and conjugate momentum are
 \[
-\{q,p\}=1.
+ L=\tfrac12I\dot\theta^2-mg\ell(1-\cos\theta),
+\qquad p_\theta=I\dot\theta.
 \]
-This compact algebra becomes the classical precursor of commutators in quantum mechanics.
+The Hamiltonian is
+\begin{equation}\label{eq:pendH}
+ \boxed{H(\theta,p_\theta)=\frac{p_\theta^2}{2I}+mg\ell(1-\cos\theta).}
+\end{equation}
+Its equations become
+\begin{equation}\label{eq:pendpair}
+ \boxed{\dot\theta=\frac{p_\theta}{I},\qquad
+ \dot p_\theta=-mg\ell\sin\theta.}
+\end{equation}
 
-\section{Phase-space geometry}
+\subsection{Why this example matters}
+The natural position variable is an \emph{angle}, and its natural momentum is \emph{angular momentum}. Nevertheless, Hamilton's equations have exactly the same form as for an ordinary particle on a line.
 
-In two-dimensional phase space the velocity field is
+Use $p_\theta=I\dot\theta$ in $\dot p_\theta=-mg\ell\sin\theta$ to recover
 \[
-\vect v_{\rm ph}=\left(\pd{H}{p},-\pd{H}{q}\right).
+ I\ddot\theta=-mg\ell\sin\theta.
 \]
-Its divergence is
+For small angles, $\sin\theta\approx\theta$ and the pendulum behaves approximately like a harmonic oscillator. For larger angles the nonlinearity matters; Hamilton's equations themselves need no approximation.
+
+\begin{pausebox}
+At the turning point of a swinging pendulum, $\dot\theta=0$ so $p_\theta=0$. Does that mean the system is momentarily at equilibrium? No: unless $\sin\theta=0$, the angular momentum is \emph{changing} and the pendulum immediately reverses direction.
+\end{pausebox}
+
+\section{The deeper reason: generalised momentum is not always $m\dot q$}
+\subsection{A coordinate-dependent kinetic coefficient}
+Take a one-dimensional Lagrangian of the form
+\begin{equation}\label{eq:aql}
+ L(q,\dot q)=\frac12a(q)\dot q^2-V(q),\qquad a(q)>0.
+\end{equation}
+You might encounter this because of a complicated coordinate system or a mechanical constraint. The key point is that the coefficient of $\dot q^2$ changes with position.
+
+Directly from the definition,
 \[
-\pd{}{q}\left(\pd{H}{p}\right)
-+\pd{}{p}\left(-\pd{H}{q}\right)=0
+ p=\pd{L}{\dot q}=a(q)\dot q,
+\qquad\dot q=\frac{p}{a(q)}.
 \]
-when mixed derivatives commute. Small phase-space areas are neither compressed nor expanded by Hamiltonian flow. This is the local heart of Liouville's theorem.
-
-\section{When the Legendre transform can fail}
-
-To solve $p=\partial L/\partial\dot q$ for $\dot q$, the velocity Hessian must be invertible. In one dimension this means
+The Legendre transform is
 \[
-\frac{\partial^2L}{\partial\dot q^2}\neq0.
+ \boxed{H(q,p)=\frac{p^2}{2a(q)}+V(q).}
 \]
-If it is singular, the system contains constraints and needs a more careful Hamiltonian treatment. The standard equations remain correct for regular Lagrangians.
+And Hamilton's equations are
+\begin{equation}\label{eq:aqham}
+ \boxed{\dot q=\frac{p}{a(q)},\qquad
+ \dot p=\frac{a'(q)p^2}{2a(q)^2}-V'(q).}
+\end{equation}
+The momentum rate now has a term involving $a'(q)$. This is not an extra physical force magically introduced by the formalism. It accounts for the way the chosen coordinate measures motion differently at different positions.
 
-\section{A numerical viewpoint}
-
-Hamilton's equations are an initial-value system. Given $(q_0,p_0)$, a simple first step is
+\subsection{Check that it is exactly Euler--Lagrange}
+Euler--Lagrange, applied directly to \eqref{eq:aql}, says
 \[
-q_{n+1}=q_n+\Delta t\,\pd{H}{p}(q_n,p_n),
-\qquad
-p_{n+1}=p_n-\Delta t\,\pd{H}{q}(q_n,p_n).
+ \dt{}\bigl(a(q)\dot q\bigr)=\tfrac12a'(q)\dot q^2-V'(q).
 \]
-This explicit Euler rule is easy but does not preserve Hamiltonian geometry well over long times. Symplectic methods alter the update order to respect phase-space structure more faithfully.
+Expand the derivative and rearrange:
+\[
+ a(q)\ddot q+\tfrac12a'(q)\dot q^2+V'(q)=0.
+\]
+Now take the Hamiltonian result, use $p=a(q)\dot q$, and compare:
+\[
+ \dot p=a(q)\ddot q+a'(q)\dot q^2
+       =\tfrac12a'(q)\dot q^2-V'(q).
+\]
+They are identical.
 
-\section{What to remember}
+\begin{intuition}
+\textbf{This is the strongest reason not to define momentum by $m\dot q$ in advance.} In generalised coordinates the correct momentum is whatever the Lagrangian tells us via $p=\partial L/\partial\dot q$. Hamiltonian mechanics works with that quantity directly, preserving the same simple pair of equations in very different settings.
+\end{intuition}
 
-\begin{enumerate}
-\item Position and momentum specify the instantaneous state.
-\item Predicting the next instant requires $\dot q$ and $\dot p$.
-\item For a familiar particle, these rates are the two partial derivatives of $H$ with opposite signs.
-\item The Legendre transform proves that the same structure follows generally from a regular Lagrangian.
-\item The Hamiltonian generates a flow through phase space.
+\subsection{A useful extension: motion in polar coordinates}
+For a mass $m$ moving in a plane under a central potential $V(r)$,
+\[
+ L=\tfrac12m\left(\dot r^2+r^2\dot\theta^2\right)-V(r).
+\]
+There are \emph{two} conjugate momenta:
+\[
+ p_r=m\dot r,\qquad p_\theta=mr^2\dot\theta.
+\]
+The Hamiltonian is
+\begin{equation}\label{eq:polarH}
+ \boxed{H=\frac{p_r^2}{2m}+\frac{p_\theta^2}{2mr^2}+V(r).}
+\end{equation}
+From its derivatives, all four equations follow:
+\begin{align*}
+ \dot r&=\frac{p_r}{m},
+ &\dot\theta&=\frac{p_\theta}{mr^2},\\
+ \dot p_r&=\frac{p_\theta^2}{mr^3}-V'(r),
+ &\dot p_\theta&=0.
+\end{align*}
+
+The last equation is particularly satisfying: $H$ is independent of $\theta$, so $p_\theta$ is conserved. This is conservation of angular momentum emerging directly from the form of the Hamiltonian. The positive $p_\theta^2/(mr^3)$ term in the radial equation reflects radial motion in polar coordinates, not a newly added fundamental force.
+
+\section{Phase space is more than a diagram}
+\subsection{Energy contours and the direction of motion}
+For a time-independent Hamiltonian $H(q,p)$, motion lies on a contour $H=E$. A tiny displacement $(\dd q,\dd p)$ tangent to such a contour obeys
+\[
+ H_q\dd q+H_p\dd p=0.
+\]
+Hamilton's equations prescribe
+\[
+ \begin{pmatrix}\dot q\\\dot p\end{pmatrix}
+ =\begin{pmatrix}0&1\\-1&0\end{pmatrix}
+ \begin{pmatrix}H_q\\H_p\end{pmatrix}.
+\]
+In words, the velocity of the \emph{phase-space point} is obtained by turning the gradient of $H$ through a right angle, with a particular orientation. Thus the motion is automatically tangent to the level curves, rather than crossing them.
+
+\begin{center}
+\begin{tikzpicture}[>=Latex,scale=1.0]
+\draw[->] (-3,0)--(3.3,0) node[below] {$q$};
+\draw[->] (0,-2.0)--(0,2.5) node[left] {$p$};
+\draw[teal,line width=1.5pt] (0,0) ellipse (2.35 and 1.40);
+\fill[gold] (1.65,0.99) circle (2.6pt);
+\draw[->,line width=1.3pt,color=teal] (1.65,0.99)--(2.16,0.62);
+\draw[->,line width=1.3pt,color=gold] (1.65,0.99)--(2.14,1.71);
+\node[anchor=west,text=teal] at (-0.55,2.14) {$(\dot q,\dot p)$: tangent};
+\node[anchor=west,text=gold] at (2.04,1.79) {$\nabla H$};
+\node[text=ink!70] at (-2.28,-1.62) {$H(q,p)=E$};
+\end{tikzpicture}
+\end{center}
+This picture is schematic: it communicates the geometry, not a particular mass or spring constant.
+
+\subsection{Equilibrium is a stationary point of the Hamiltonian}
+An equilibrium phase-space state satisfies $\dot q=\dot p=0$, so for a smooth one-coordinate Hamiltonian
+\[
+ H_p=0,\qquad H_q=0.
+\]
+For the spring $H=p^2/(2m)+kq^2/2$, the only equilibrium is $(q,p)=(0,0)$. The surrounding energy contours are closed, so small displacements cause oscillation rather than escape.
+
+For the pendulum there are also upright equilibria at $\theta=\pi$ (modulo $2\pi$), which are unstable. The shape of the Hamiltonian, and not merely the individual differential equations, helps us understand these qualitative differences.
+
+\section{A glimpse ahead: momentum can differ from mechanical momentum}
+We have seen angular momentum and coordinate-dependent momentum. There is one further distinction worth knowing now, even if you postpone the algebra.
+
+For a charged particle of charge $e$ in electromagnetic potentials $\boldsymbol A(q,t)$ and $\phi(q,t)$, a standard Lagrangian is
+\[
+ L=\frac12m\lVert\dot{\boldsymbol q}\rVert^2
+ +e\boldsymbol A\cdot\dot{\boldsymbol q}-e\phi.
+\]
+Its canonical momentum is
+\[
+ \boxed{\boldsymbol p=m\dot{\boldsymbol q}+e\boldsymbol A.}
+\]
+The mechanical momentum is $m\dot{\boldsymbol q}$; the canonical momentum is $\boldsymbol p$. They need not be the same. The Hamiltonian is
+\[
+ H=\frac{\lVert\boldsymbol p-e\boldsymbol A\rVert^2}{2m}+e\phi.
+\]
+And still $\dot{\boldsymbol q}=\partial H/\partial\boldsymbol p$.
+
+This is precisely why the \emph{definition} $p=\partial L/\partial\dot q$ is more general than the school-level formula $p=mv$. Hamiltonian mechanics is built around the momentum \emph{conjugate to the coordinate}, not a preconceived notion of linear momentum.
+
+\section{A short preview: Poisson brackets}
+You do not need this for the basics, but it reveals how tightly the structure fits together. For any smooth quantity $F(q,p,t)$, the chain rule and Hamilton's equations give
+\begin{align*}
+ \dt F
+ &=F_q\dot q+F_p\dot p+F_t\\
+ &=F_qH_p-F_pH_q+F_t.
+\end{align*}
+Define the \emph{Poisson bracket} of two functions by
+\[
+ \{F,G\}:=F_qG_p-F_pG_q.
+\]
+Then the entire time evolution of any observable can be written as
+\begin{equation}\label{eq:PB}
+ \boxed{\dt F=\{F,H\}+\pd{F}{t}.}
+\end{equation}
+For $F=q$ it gives $\dot q=H_p$; for $F=p$ it gives $\dot p=-H_q$. So the two Hamilton equations are special cases of a single rule describing how every physical quantity evolves.
+
+\section{Guided practice: think before calculating}
+Try each question first without manipulating equations. Then use the short solutions that follow.
+
+\begin{enumerate}[label=\textbf{\arabic*.}]
+\item \textbf{Recognising what changes.} A Hamiltonian is $H(q,p)=p^2/(2m)+U_0$, where $U_0$ is constant. What happens to momentum? What does the particle do?
+\item \textbf{Finding the force.} A particle has $H(q,p)=p^2/(2m)+\tfrac12kq^2+F_0q$. Write Hamilton's equations. What is the equilibrium position?
+\item \textbf{Momentum is not always $m\dot q$.} A coordinate $x$ has $L=\tfrac12(1+x^2)\dot x^2-\tfrac12x^2$. Find $p$, eliminate $\dot x$, and construct $H(x,p)$.
+\item \textbf{Conserved coordinate momentum.} If $H(q_1,q_2,p_1,p_2)$ does not depend on $q_2$, which momentum is conserved? Which Hamilton equation tells you this?
+\item \textbf{Energy versus conservation.} For $H(q,p,t)=p^2/(2m)+\tfrac12k(t)q^2$, is $H$ necessarily constant? What is $\dd H/\dd t$ along the motion?
+\item \textbf{Qualitative pendulum.} At a pendulum's lowest point with $\theta=0$ and $p_\theta>0$, which way does its angle initially change? What is $\dot p_\theta$ at that precise instant?
 \end{enumerate}
 
-\begin{checkBox}[The central insight]
-Hamilton's equations are not arbitrary formulas involving partial derivatives. They say that a single scalar function contains the two local rates needed to move the complete state $(q,p)$ forward in time.
-\end{checkBox}
+\subsection*{Answers and the reason behind them}
+\addcontentsline{toc}{subsection}{Guided practice answers}
+\textbf{1.} $\dot p=-H_q=0$, and $\dot q=p/m$ is constant. The additive constant $U_0$ does not affect the motion.
 
+\textbf{2.} $\dot q=p/m$ and $\dot p=-kq-F_0$. Equilibrium requires $p=0$ and $-kq-F_0=0$, hence $q_{\rm eq}=-F_0/k$. Adding a linear potential term changes the force by a constant.
+
+\textbf{3.} $p=(1+x^2)\dot x$, so $\dot x=p/(1+x^2)$ and
+\[
+ H(x,p)=\frac{p^2}{2(1+x^2)}+\frac12x^2.
+\]
+The coordinate-dependent kinetic coefficient has been transferred to the denominator of the momentum term.
+
+\textbf{4.} $\dot p_2=-\partial H/\partial q_2=0$, so $p_2$ is conserved. This is the simplest form of the connection between an absent coordinate (a \emph{cyclic coordinate}) and a conserved conjugate momentum.
+
+\textbf{5.} Not necessarily: $\dd H/\dd t=\partial H/\partial t=\tfrac12k'(t)q^2$. Changing the spring stiffness externally can do work on the system.
+
+\textbf{6.} $\dot\theta=p_\theta/I>0$, so the angle is increasing. At $\theta=0$, $\dot p_\theta=-mg\ell\sin0=0$. A zero \emph{instantaneous rate of change of momentum} does not imply zero momentum.
+
+\section{One-page mental map}
+\begin{keybox}
+\textbf{The input from Lagrangian mechanics}
+\[
+ S[q]=\int L(q,\dot q,t)\dd t,
+ \qquad \dt{}\left(\pd{L}{\dot q}\right)=\pd{L}{q}.
+\]
+\textbf{What the action tells us to call momentum}
+\[
+ \boxed{p=\pd{L}{\dot q}.}
+\]
+\textbf{What we want to achieve}
+
+Use $(q,p)$ to describe the current state and obtain its two rates of change directly.
+
+\textbf{How we change variables}
+\[
+ \boxed{H(q,p,t)=p\dot q-L(q,\dot q,t),\quad
+        \dot q=\dot q(q,p,t).}
+\]
+\textbf{What follows (not what we must guess)}
+\[
+ \boxed{\dot q=\pd{H}{p},\qquad\dot p=-\pd{H}{q}.}
+\]
+\textbf{Why it works}
+
+The unwanted $\dd\dot q$ terms cancel in $\dd H$ because $p=\partial L/\partial\dot q$; the remaining $q$ derivative agrees with Euler--Lagrange. Alternatively, both equations come from stationarity of $\int(p\dot q-H)\dd t$.
+
+\textbf{How to read it}
+
+Momentum determines how position changes. Position determines how momentum changes. Taken together, these rates move the state through phase space.
+\end{keybox}
+
+\subsection*{Five ideas to retain}
+\begin{enumerate}[leftmargin=22pt]
+ \item Hamiltonian mechanics describes the \emph{same physical motion} as Newtonian and Lagrangian mechanics.
+ \item The key variable is \emph{conjugate} momentum, $p=L_{\dot q}$, not always $m\dot q$.
+ \item The Legendre transform exchanges velocity for momentum by using the slope of $L$ as the new variable.
+ \item Hamilton's crossed, opposite-sign equations are forced by that transform and the variational principle.
+ \item The Hamiltonian often equals total energy, but its \emph{definition} is $\sum p_i\dot q_i-L$, and its chief job is to generate motion.
+\end{enumerate}
+
+\section*{Final perspective}
+\addcontentsline{toc}{section}{Final perspective}
+Lagrangian mechanics asks which entire path makes the action stationary. Hamiltonian mechanics asks how the present state $(q,p)$ flows into the next state. It has not abandoned the action principle: it has reorganised it, exposing a paired structure that was present all along.
+
+The most important step is the least arbitrary one. Because the action already gives $\partial L/\partial\dot q$ a special role, we call it momentum. Because we want a function of this momentum, we perform a Legendre transform. And because of how that transform works, Hamilton's equations follow.
+
+\begin{intuition}[title={\strut The thought worth taking away}]
+\emph{Velocity tells us how position is changing. Conjugate momentum tells us which velocity-related quantity the action singles out. Hamiltonian mechanics uses that natural momentum so that one function can describe both the evolution of position and the evolution of momentum.}
+\end{intuition}
+
+\vfill
+{\color{ink!55}\small End of tutorial \quad\textbullet\quad Suggested next topic: symmetries, cyclic coordinates, and Poisson brackets.}
 \end{document}

@@ -21,16 +21,17 @@ The two-document mechanics sequence was recovered as PDF-only originals:
 
 They are preserved in that order. No matching LaTeX sources were found, so the earlier reconstructed `.tex` files have been removed and are not represented as originals. The Markdown files are transparent reading editions prepared from the recovered PDFs.
 
+`hamiltonian-mechanics` was subsequently recovered as a matching 22-page PDF and LaTeX source. These replace the earlier reconstructed PDF and source; its Markdown edition is generated as a repository-friendly reading version from the recovered LaTeX.
+
 `schrodinger-equation-worked-models` was also recovered locally, but in a different form: its editable source was a complete illustrated HTML publication with an accompanying PDF, not LaTeX. The repository edition removes institution-specific identifiers, adds an explicit index of thirteen demonstrations, updates navigation and metadata, and supplies a Markdown reading edition. The HTML remains the editable source; no unavailable LaTeX original is claimed.
 
 ## Reconstructed editions
 
-The following earlier files were referred to in chat history but their original sandbox files were not available in the local workspace:
+The following earlier file was referred to in chat history but its original sandbox file was not available in the local workspace:
 
-- Hamiltonian-mechanics tutorial
 - illustrated Euler-Lagrange workbook
 
-The repository versions are new, self-contained reconstructions based on the recoverable discussion, stated learning goals, and a fresh mathematical check. They are not represented as byte-for-byte copies of unavailable originals.
+The repository version is a new, self-contained reconstruction based on the recoverable discussion, stated learning goals, and a fresh mathematical check. It is not represented as a byte-for-byte copy of an unavailable original.
 
 ## Derived companion
 

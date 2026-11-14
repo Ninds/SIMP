@@ -42,7 +42,7 @@ The intended companion to the preceding notes. It moves from functions to functi
 
 ### [Hamiltonian mechanics](03-variational-and-classical-mechanics/hamiltonian-mechanics/README.md)
 
-Starts from the practical question: if position and momentum are known now, how do they change next? Hamilton’s equations are recognised for a familiar particle before the Legendre-transform derivation.
+Builds a gentle bridge from Lagrangian mechanics to phase space. It motivates conjugate momentum and the Legendre transform before deriving Hamilton's equations, then develops worked examples, conservation, phase portraits, and links to quantum mechanics.
 
 ## 4. Quantum mechanics
 
