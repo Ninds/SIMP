@@ -115,76 +115,105 @@ We shall spend most of our time on the \emph{why} behind the middle arrows.
 
 \section{Why invent another way to describe motion?}
 \subsection{A familiar question, asked in a different form}
-Imagine a particle travelling along a line in a potential $V(q)$. Newton's law says
+Imagine a particle moving on a line in a potential $V(q)$. In Newtonian mechanics, the equation is
 \[
  m\ddot q=-V'(q).
 \]
-This is a \emph{second-order} equation for position. To predict the future, we must know both the present position and velocity.
+It is a \emph{second-order} equation for the unknown trajectory $q(t)$. Knowing only $q$ at the present instant is insufficient: we must also know its velocity $\dot q$. The Lagrangian description likewise works with $q$ and $\dot q$ when determining the motion.
 
-But we can rewrite exactly the same motion as a pair of \emph{first-order} equations. Define the familiar momentum $p=m\dot q$. Then
+For the ordinary kinetic energy $T=\tfrac12m\dot q^2$, we already know what momentum means: $p=m\dot q$. We can therefore rewrite Newton's law, without changing its physical content, as
 \begin{equation}\label{eq:newtonpair}
  \boxed{\dot q=\frac{p}{m},\qquad \dot p=-V'(q).}
 \end{equation}
-The first equation answers: \emph{how does position change?} The second answers: \emph{how does momentum change?}
+These are two first-order equations rather than one second-order equation. They invite a deliberate change of viewpoint.
 
-Nothing new has happened to the physics. We have merely described a moving state by a \emph{pair} $(q,p)$ instead of by a second-order equation for $q$ alone.
+\subsection{Our deliberate decision: make $(q,p)$ the state}
+\begin{intuition}[title={\strut The decision that defines our new viewpoint}]
+\textbf{We decide to reformulate classical mechanics using the pair $(q,p)$ as the state.} We will stop treating velocity as one of the two state variables and use \emph{momentum} instead. A rule of evolution is now indispensable: given today's $q$ and $p$, what will their values be an instant later?
+\end{intuition}
+The problem we have set ourselves is precise. We want a pair of rules that takes \emph{the present state} $(q,p)$ and returns its two rates of change $(\dot q,\dot p)$. Once we have those rates, we can move forward a small time $\Delta t$:
+\[
+(q,p)\ \longmapsto\
+\bigl(q+\dot q\,\Delta t,\ p+\dot p\,\Delta t\bigr).
+\]
+So we need \emph{two} evolution equations, not just an equation for $q$.
 
-\subsection{The quantity that gives both answers}
-For this particular system, its energy is
+\textbf{A subtle but important point about notation.} Previously our unknown motion was a function $q(t)$, determined by initial position and velocity. Now the unknown motion consists of \emph{two} functions, $q(t)$ and $p(t)$, determined by initial position and momentum. We may write
 \[
- E=T+V=\tfrac12m\dot q^2+V(q)
-       =\frac{p^2}{2m}+V(q).
+ q=q(t;q_0,p_0),\qquad p=p(t;q_0,p_0)
 \]
-For a moment, call this expression $H(q,p)$. Do two simple differentiations:
+to display the dependence on the chosen initial state. We do \emph{not} generally write $q=q(p,t)$: the instantaneous $q$ and $p$ are independent coordinates in the space of possible states, not a universal functional relationship between them. A particular trajectory may relate them, but it is the evolution law that determines that trajectory.
+
+\textbf{Discover the evolution law in the simple case first.} Consider only an ordinary particle with
 \[
- \pd{H}{p}=\frac{p}{m},\qquad \pd{H}{q}=V'(q).
+ T=\tfrac12m v^2,\qquad v=\dot q,\qquad p=mv,
 \]
-Compare these with the two equations in \eqref{eq:newtonpair}. We have \emph{discovered}, before introducing any new formalism, that
+and a conservative potential $V(q)$. Its total energy, expressed in our \emph{chosen} state variables, is
+\[
+ E=T+V=\frac{p^2}{2m}+V(q).
+\]
+For now, give this function the provisional name
+\[
+ H(q,p):=\frac{p^2}{2m}+V(q).
+\]
+Differentiate, taking $q$ and $p$ as independent inputs:
+\[
+ \left.\pd{H}{p}\right|_q=\frac{p}{m}=\dot q,
+ \qquad
+ \left.\pd{H}{q}\right|_p=V'(q)=-\dot p.
+\]
+The first equality uses $p=m\dot q$; the second uses Newton's force law $\dot p=-V'(q)$. Hence, \emph{for this simple system}, we have derived
 \begin{keybox}
 \begin{equation}\label{eq:preview}
  \boxed{\dot q=\pd{H}{p},\qquad
  \dot p=-\pd{H}{q}.}
 \end{equation}
-These derivatives are not initially mysterious. In the simplest example, one derivative gives the velocity; the other gives minus the force.
+\textbf{This is a first discovery, not yet a general theorem.} In the $T=\tfrac12m v^2$ case, \emph{one function} $H(q,p)$ supplies both rules of evolution. The two derivatives answer our original question: how do position and momentum change?
 \end{keybox}
-
-This is the seed of Hamiltonian mechanics. A single function $H(q,p)$ supplies \emph{both} directions of change.
+The next question is the one that motivates the rest of the tutorial: \emph{is this an accident of $p=mv$ and quadratic kinetic energy, or can we construct a similar rule for much more general Lagrangians?} We shall not assume the answer. We shall earn it by abstraction, just as we would in mathematics.
 
 \begin{pausebox}
-Why not write $E(q,\dot q)=\tfrac12m\dot q^2+V(q)$ and differentiate with respect to velocity? Because $\partial E/\partial\dot q=m\dot q=p$, \emph{not} $\dot q$. If we want the derivative of our new function to give velocity, $p$ is the more natural input variable.
+Why not simply differentiate $E(q,\dot q)=\tfrac12m\dot q^2+V(q)$ with respect to velocity? That gives $\partial E/\partial\dot q=m\dot q=p$, not $\dot q$. Our chosen state variable $p$ is exactly what makes the $p$-derivative of $H$ yield the velocity in this elementary example.
 \end{pausebox}
 
 \subsection{A state is now a point in a plane}
-Every pair $(q,p)$ is one possible instantaneous state, represented by a point in \emph{phase space}. As the system evolves, the point traces a curve. Position and momentum are treated as independent coordinates for the purpose of describing the \emph{current state}; the equations then tell us how that point moves.
+Every admissible pair $(q,p)$ is a possible instantaneous state, represented by a point in \emph{phase space}. As the system evolves, that point traces a curve.
 
-This language becomes especially powerful when there are several coordinates, constraints, or interactions. We will return to phase-space pictures after deriving the general equations.
+In this new formalism \emph{state} and \emph{trajectory} must not be confused. A state is a pair of numbers $(q,p)$ at one instant; a trajectory is the time-dependent pair $(q(t),p(t))$ obtained by applying the evolution equations. In the next section we explain how to define momentum when $p=mv$ is no longer sufficient; then we will generalise the function $H$ and prove that the same form of evolution law survives.
 
-\section{Why momentum rather than velocity?}
-\subsection{What the action was already trying to tell us}
-Recall the action for one coordinate:
+\section{Momentum: retain what works, then generalise}
+\subsection{The familiar formula must remain true in its proper setting}
+In our elementary particle example, the choice $p=mv$ was entirely legitimate. It is the momentum familiar from Newtonian mechanics, and it gave exactly the correct evolution equations. \emph{We are not trying to replace a correct formula with an incompatible one.}
+
+But in a more general formulation $q$ need not measure distance. It might be an angle, or the kinetic energy might depend on position. A universal definition of momentum cannot simply be $m\dot q$ in every coordinate. This is the same intellectual move we often make in pure mathematics:
+\begin{enumerate}
+ \item Begin with a definition that works in an important special case.
+ \item Identify the mathematical feature that makes the definition work.
+ \item Use that feature to make a more general definition.
+ \item \textbf{Check backward compatibility:} the new definition must recover the old one whenever the old assumptions hold.
+\end{enumerate}
+Here the action supplies the mathematical feature we need. Recall
 \[
  S[q]=\int_{t_0}^{t_1}L(q,\dot q,t)\dd t.
 \]
-Perturb the path slightly: $q(t)\mapsto q(t)+\varepsilon\eta(t)$, so that $\dot q\mapsto\dot q+\varepsilon\dot\eta$.
-
-To first order, the change in the action is
+If we perturb a path, $q\mapsto q+\varepsilon\eta$ and $\dot q\mapsto\dot q+\varepsilon\dot\eta$, then to first order
 \[
- \delta S=\int_{t_0}^{t_1}
- \left(\pd{L}{q}\,\eta+\pd{L}{\dot q}\,\dot\eta\right)\dd t.
+ \delta S=\int_{t_0}^{t_1}\left(\pd{L}{q}\,\eta+\pd{L}{\dot q}\,\dot\eta\right)\dd t.
 \]
-Notice the factor multiplying the change in \emph{velocity}:
-\[
- \boxed{\pd{L}{\dot q}.}
-\]
-It appears naturally, without us having chosen any new definition. The action itself is inviting us to give this quantity a name.
-
+The quantity $\partial L/\partial\dot q$ appears naturally as the coefficient of a change in velocity. This suggests the general definition:
 \begin{keybox}
-\textbf{Definition (canonical or conjugate momentum).} For a coordinate $q$ with Lagrangian $L(q,\dot q,t)$, define
+\textbf{Definition (canonical or conjugate momentum).} For a generalised coordinate $q$ and Lagrangian $L(q,\dot q,t)$, define
 \begin{equation}\label{eq:momentum}
  \boxed{p:=\pd{L}{\dot q}.}
 \end{equation}
-For a conventional particle with $L=\tfrac12m\dot q^2-V(q)$, this reduces to $p=m\dot q$.
+\textbf{Backward-compatibility check.} In the ordinary Newtonian case,
+\[
+ L=\tfrac12m\dot q^2-V(q),\qquad
+ \pd{L}{\dot q}=m\dot q.
+\]
+Thus the abstract definition reduces \emph{exactly} to the familiar $p=mv$. It extends that formula without contradicting it.
 \end{keybox}
+This is not a change to Newton's observations. It is a mathematical generalisation of the quantity we have decided to use as a state coordinate.
 
 \subsection{Momentum is the sensitivity of the Lagrangian to velocity}
 Hold position and time fixed, and make a tiny change in velocity. Then
@@ -233,22 +262,24 @@ More generally, different coordinates can lead to different kinds of conjugate m
 What is the conjugate momentum for $L=\tfrac12a(q)\dot q^2-V(q)$, where $a(q)>0$? It is $p=a(q)\dot q$, not necessarily a constant multiple of velocity. We will use this example later.
 \end{pausebox}
 
-\subsection{There is also a boundary interpretation}
-If we do \emph{not} hold the endpoints of the varied path fixed, the first-order variation along a true physical path reduces to
+\section{The abstraction: construct the general Hamiltonian}
+\subsection{From the special case to a general construction}
+\begin{intuition}[title={\strut Our generalisation project}]
+In Sections 1 and 2 we established the model in the simplest situation: use $(q,p)$ as the state; with $T=\tfrac12mv^2$ and $p=mv$, the function $H=p^2/(2m)+V(q)$ generates the two evolution equations. We also obtained a \emph{backward-compatible general definition} $p=L_{\dot q}$. Now we must generalise the \emph{function} $H$ and, later, establish the evolution equations without relying on $p=mv$.
+\end{intuition}
+In the familiar Lagrangian description the function is $L(q,\dot q,t)$; it takes position and velocity as inputs. Our deliberate change of state demands a function $H(q,p,t)$ instead. We want a method that starts from an arbitrary suitable Lagrangian and produces that function.
+
+\textbf{The key abstraction:} rather than insist on the special formula $p=m\dot q$, use the definition we discovered,
 \[
- \delta S_{\mathrm{on\ shell}}=[p\,\delta q]_{t_0}^{t_1}.
+ p=\pd{L}{\dot q},
 \]
-With the initial endpoint fixed, a tiny displacement of the final endpoint changes the physical action by approximately $p(t_1)\,\delta q(t_1)$. Momentum tells us how sensitive the action is to a displacement of the endpoint.
+and, when possible, solve it for velocity as a function of the desired state variables:
+\[
+ \dot q=v(q,p,t).
+\]
+For the simple particle this gives $v=p/m$. For more complicated Lagrangians the relation can be different, but the guiding idea is the same.
 
-This observation is not needed to solve equations, but it gives the word \emph{conjugate} a deeper meaning: $p$ is naturally paired with changes in $q$.
-
-\section{The next puzzle: how to build a function of $(q,p)$}
-\subsection{We want to exchange velocity for momentum}
-In Lagrangian mechanics we feed $L$ a position and a velocity: $L(q,\dot q,t)$. We now want a function that takes position and momentum: $H(q,p,t)$.
-
-The first requirement is that we can recover the velocity from $p=\partial L/\partial\dot q$. For a standard mass, $p=m\dot q$ gives $\dot q=p/m$.
-
-When the Lagrangian has a sufficiently non-degenerate dependence on velocity, this inversion works locally. For several coordinates the relevant condition is that the velocity Hessian matrix $\bigl(\partial^2 L/\partial\dot q_i\partial\dot q_j\bigr)$ be invertible. Some constrained systems require extra machinery; we leave those aside.
+\textbf{A technical boundary on the generalisation.} The velocity-to-momentum map must be invertible, at least locally. In several coordinates the velocity Hessian $\bigl(\partial^2L/\partial\dot q_i\partial\dot q_j\bigr)$ must be nonsingular. Constrained or degenerate systems require additional ideas; our derivation concerns ordinary regular Lagrangians.
 
 \subsection{Why not just substitute $\dot q(p)$ into $L$?}
 For our ordinary particle,
@@ -302,21 +333,30 @@ clip=false,grid=none]
 The Legendre transform is not an arbitrary trick for changing a minus sign. It is the natural way to exchange a variable (velocity) for the slope associated with that variable (momentum), while retaining enough information to recover the original motion.
 \end{intuition}
 
-\subsection{See $T-V$ turn into $T+V$}
-For $L=\frac12m\dot q^2-V(q)$ and $p=m\dot q$,
+\subsection{See $T-V$ turn into $T+V$---and identify the definition}
+Return to the simple case $L=\tfrac12m\dot q^2-V(q)$ and $p=m\dot q$. The new construction gives
 \begin{align*}
  H&=p\dot q-L\\
-  &=m\dot q^2-\left(\frac12m\dot q^2-V\right)\\
-  &=\frac12m\dot q^2+V\\
+  &=m\dot q^2-\left(\tfrac12m\dot q^2-V\right)\\
+  &=\tfrac12m\dot q^2+V\\
   &=\boxed{\frac{p^2}{2m}+V(q)}.
 \end{align*}
-The change $T-V\to T+V$ is not inserted as a new axiom. It emerges from the Legendre transform. In this familiar class of systems, $H$ equals the total mechanical energy.
+The familiar energy function from Section 1 has reappeared, \emph{but this time as the outcome of a general construction}. The change $T-V\to T+V$ is a consequence of that construction, not a new axiom.
 
-\begin{pausebox}
-The Hamiltonian is not \emph{defined} as $T+V$. It is defined as $p\dot q-L$, with velocity eliminated in favour of $p$. It happens to equal $T+V$ in many ordinary systems. Keeping this distinction will prevent confusion later.
+\begin{pausebox}[title={\strut Essential definition---do not confuse it with a special-case result},boxrule=1.15pt,colframe=gold!85!black,colback=sand!95!white]
+\textbf{The Hamiltonian is DEFINED by the Legendre transform:}
+\begin{equation}\label{eq:hamdefemphasis}
+\boxed{\displaystyle H(q,p,t)\;:=\;p\dot q-L(q,\dot q,t),
+\qquad\dot q=v(q,p,t).}
+\end{equation}
+This means: first find $p=\partial L/\partial\dot q$, then eliminate $\dot q$ in favour of $p$. The result is a function of our chosen state variables $(q,p)$ (and possibly $t$).
+
+\textbf{It is NOT defined as $T+V$.} The identity $H=T+V$ holds for the simple mechanical systems considered so far; it is a \emph{theorem about that special case}, not the defining formula. In more general systems the form of $H$ must be derived, not guessed from an energy mnemonic.
+
+This is exactly the kind of abstraction we wanted: the new definition agrees with the elementary construction when its assumptions apply, but it continues to make sense far beyond them.
 \end{pausebox}
 
-\section{Why exactly are Hamilton's equations these two equations?}
+\section{Do the evolution equations survive the generalisation?}
 \subsection{Start by asking what we need to predict next}
 At any instant a state is $(q,p)$. To predict what happens an instant later, we need two rates of change:
 \[
@@ -324,7 +364,7 @@ At any instant a state is $(q,p)$. To predict what happens an instant later, we 
 \]
 So Hamiltonian mechanics must provide $\dot q$ \emph{and} $\dot p$ from the current $(q,p)$. We have already seen, in the elementary particle example, that $H_p$ gives velocity and $-H_q$ gives force.
 
-The question is: does this happen for \emph{any regular Lagrangian}, or was it a coincidence of $p=m\dot q$?
+The question is now the promised one: does this happen for \emph{any regular Lagrangian}, or was it a coincidence of $p=m\dot q$? We will derive the answer, rather than quietly assume it.
 
 \subsection{Follow the small changes in $H$}
 Write $v=\dot q$ temporarily to make the chain rule clearer. We have
